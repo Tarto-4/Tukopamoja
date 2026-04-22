@@ -1,0 +1,22 @@
+[project]
+id = "quizarena"
+name = "QuizArena"
+
+[api]
+port = 54321
+schemas = ["public", "storage"]
+extra_search_path = ["public", "extensions"]
+
+[db]
+port = 54322
+major_version = 15
+
+[studio]
+port = 54323
+
+[auth]
+site_url = "http://localhost:3000"
+additional_redirect_urls = ["http://localhost:3000/auth/callback", "quizarena://auth/callback"]
+
+[auth.external.google]
+enabled = false

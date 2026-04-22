@@ -1,0 +1,6 @@
+// Dashboard home — redirects to templates list
+import { redirect } from "next/navigation";
+
+export default function DashboardPage() {
+  redirect("/dashboard/templates");
+}

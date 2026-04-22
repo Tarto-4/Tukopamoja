@@ -1,0 +1,23 @@
+{
+  "name": "quizarena",
+  "private": true,
+  "workspaces": [
+    "packages/shared",
+    "packages/web",
+    "packages/mobile"
+  ],
+  "scripts": {
+    "dev:web": "npm -w packages/web run dev",
+    "dev:mobile": "npm -w packages/mobile run start",
+    "build:web": "npm -w packages/web run build",
+    "build:shared": "npm -w packages/shared run build",
+    "db:migrate": "supabase db push",
+    "db:reset": "supabase db reset",
+    "db:types": "supabase gen types typescript --local > packages/shared/src/types/database.ts",
+    "lint": "npm run lint --workspaces",
+    "typecheck": "npm run typecheck --workspaces"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
