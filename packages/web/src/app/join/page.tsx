@@ -1,17 +1,12 @@
-// ─────────────────────────────────────────────────────────────
-// QuizArena Web — Join redirect page (web fallback for QR deep links)
-// When scanned on a device without the app, shows a join link.
-// ─────────────────────────────────────────────────────────────
+"use client";
 
-import Link from "next/link";
+import { Suspense } from "react";
 import { Button } from "@/components/ui/button";
+import { useSearchParams } from "next/navigation";
 
-interface Props {
-  searchParams: { pin?: string };
-}
-
-export default function JoinPage({ searchParams }: Props) {
-  const pin = searchParams.pin || "";
+function JoinPageContent() {
+  const searchParams = useSearchParams();
+  const pin = searchParams.get("pin") || "";
   const mobileScheme = process.env.NEXT_PUBLIC_MOBILE_SCHEME || "quizarena";
   const deepLink = `${mobileScheme}://join?pin=${pin}`;
 
@@ -39,10 +34,18 @@ export default function JoinPage({ searchParams }: Props) {
             </a>
 
             <p className="text-xs text-muted-foreground">
-              Don't have the app?{" "}
-              <a href="#" className="text-primary underline">
-                Download it here
+              Don't have the app open yet?{" "}
+              <a
+                href="https://expo.dev/go"
+                target="_blank"
+                rel="noreferrer"
+                className="text-primary underline"
+              >
+                Install Expo Go
               </a>
+            </p>
+            <p className="text-xs text-muted-foreground">
+              Then open the QuizArena app and enter this PIN manually.
             </p>
           </div>
         )}
@@ -54,5 +57,19 @@ export default function JoinPage({ searchParams }: Props) {
         )}
       </div>
     </div>
+  );
+}
+
+export default function JoinPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="game-screen items-center justify-center gradient-dark px-4">
+          <p className="text-muted-foreground animate-pulse">Loading...</p>
+        </div>
+      }
+    >
+      <JoinPageContent />
+    </Suspense>
   );
 }

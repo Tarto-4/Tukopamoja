@@ -1,13 +1,7 @@
-// ─────────────────────────────────────────────────────────────
-// QuizArena — Live Host Screen
-// Drives the game from the host's perspective:
-//   Lobby (QR + PIN) → Question → Evaluating → Leaderboard → Game Over
-// ─────────────────────────────────────────────────────────────
-
 "use client";
 
-import { useEffect } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { Suspense, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { useGameStore } from "@/stores/useGameStore";
 import { useRealtimeGame } from "@/hooks/useRealtimeGame";
 import HostLobby from "@/components/host/HostLobby";
@@ -15,25 +9,29 @@ import HostQuestion from "@/components/host/HostQuestion";
 import HostLeaderboard from "@/components/host/HostLeaderboard";
 import HostGameOver from "@/components/host/HostGameOver";
 
-export default function HostSessionPage() {
-  const { sessionId } = useParams<{ sessionId: string }>();
-  const router = useRouter();
+function HostSessionContent() {
+  const searchParams = useSearchParams();
+  const sessionId = searchParams.get("sessionId") || "";
   const { session, loadSession } = useGameStore();
 
-  // Load session data on mount
   useEffect(() => {
     if (sessionId) loadSession(sessionId);
   }, [sessionId, loadSession]);
 
-  // Connect to realtime channel
   useRealtimeGame(sessionId, "host");
+
+  if (!sessionId) {
+    return (
+      <div className="game-screen items-center justify-center gradient-dark">
+        <p className="text-muted-foreground">Missing session id.</p>
+      </div>
+    );
+  }
 
   if (!session) {
     return (
       <div className="game-screen items-center justify-center gradient-dark">
-        <p className="text-muted-foreground animate-pulse">
-          Loading session...
-        </p>
+        <p className="text-muted-foreground animate-pulse">Loading session...</p>
       </div>
     );
   }
@@ -51,4 +49,18 @@ export default function HostSessionPage() {
     default:
       return null;
   }
+}
+
+export default function HostSessionPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="game-screen items-center justify-center gradient-dark">
+          <p className="text-muted-foreground animate-pulse">Loading...</p>
+        </div>
+      }
+    >
+      <HostSessionContent />
+    </Suspense>
+  );
 }

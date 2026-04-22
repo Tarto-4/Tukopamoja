@@ -1,13 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: "export",
+  trailingSlash: true,
   transpilePackages: ["@quizarena/shared"],
   images: {
-    remotePatterns: [
-      { protocol: "https", hostname: "**" },
-    ],
-  },
-  experimental: {
-    serverActions: { bodySizeLimit: "2mb" },
+    unoptimized: true,
   },
 };
 

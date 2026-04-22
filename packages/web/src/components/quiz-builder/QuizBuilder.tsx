@@ -232,7 +232,6 @@ export default function QuizBuilder({
       if (qErr) throw qErr;
 
       router.push("/dashboard/templates");
-      router.refresh();
     } catch (err: any) {
       setError(err.message || "Failed to save");
     } finally {
@@ -259,7 +258,9 @@ export default function QuizBuilder({
       });
 
       if (fnErr) throw fnErr;
-      router.push(`/host/${data.id}`);
+      const sessionId = (data as any)?.id ?? data;
+      if (!sessionId) throw new Error("Session creation returned no id");
+      router.push(`/host?sessionId=${sessionId}`);
     } catch (err: any) {
       setError(err.message || "Failed to create session");
     } finally {

@@ -1,56 +1,54 @@
-import { redirect } from "next/navigation";
-import Link from "next/link";
-import { createServerSupabase } from "@/lib/supabase/server";
+"use client";
 
-export default async function DashboardLayout({
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import AuthGuard from "@/components/AuthGuard";
+
+export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = await createServerSupabase();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const pathname = usePathname();
 
-  if (!user) redirect("/auth/login");
+  const navItems = [
+    { href: "/dashboard/templates", label: "Templates" },
+    { href: "/dashboard/sessions", label: "Sessions" },
+    { href: "/dashboard/branding", label: "Branding" },
+  ];
 
   return (
-    <div className="min-h-[100dvh] flex flex-col">
-      {/* Top nav bar */}
-      <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-40">
-        <div className="page-container flex items-center justify-between py-3">
-          <Link
-            href="/dashboard"
-            className="text-xl font-display font-black gradient-primary bg-clip-text text-transparent"
-          >
-            QuizArena
-          </Link>
-
-          <nav className="flex items-center gap-4 sm:gap-6 text-sm">
+    <AuthGuard>
+      <div className="min-h-[100dvh] flex flex-col">
+        <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-40">
+          <div className="page-container flex items-center justify-between py-3">
             <Link
               href="/dashboard/templates"
-              className="text-muted-foreground hover:text-foreground transition-colors"
+              className="text-xl font-display font-black gradient-primary bg-clip-text text-transparent"
             >
-              Templates
+              QuizArena
             </Link>
-            <Link
-              href="/dashboard/sessions"
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Sessions
-            </Link>
-            <Link
-              href="/dashboard/branding"
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Branding
-            </Link>
-          </nav>
-        </div>
-      </header>
 
-      {/* Content */}
-      <main className="flex-1">{children}</main>
-    </div>
+            <nav className="flex items-center gap-4 sm:gap-6 text-sm">
+              {navItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`transition-colors ${
+                    pathname?.startsWith(item.href)
+                      ? "text-foreground font-medium"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
+        </header>
+
+        <main className="flex-1">{children}</main>
+      </div>
+    </AuthGuard>
   );
 }

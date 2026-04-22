@@ -4,7 +4,6 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
 import { useGameStore } from "@/stores/useGameStore";
 import { useBrandingStore } from "@/stores/useBrandingStore";
 import { Button } from "@/components/ui/button";
@@ -17,9 +16,10 @@ export default function HostLobby() {
 
   if (!session) return null;
 
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "";
   const joinUrl =
     typeof window !== "undefined"
-      ? `${window.location.origin}/join?pin=${session.pin}`
+      ? `${(appUrl || window.location.origin).replace(/\/$/, "")}/join/?pin=${session.pin}`
       : "";
 
   return (
@@ -98,7 +98,6 @@ export default function HostLobby() {
         <Button
           size="xl"
           onClick={startGame}
-          disabled={players.length < 1}
           className="gradient-primary border-0 text-xl"
         >
           <Play className="w-5 h-5 mr-2" />

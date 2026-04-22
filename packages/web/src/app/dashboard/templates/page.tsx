@@ -1,20 +1,39 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { createServerSupabase } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Template } from "@quizarena/shared";
-import { Plus, Play, FileText } from "lucide-react";
+import { Plus, FileText } from "lucide-react";
 
-export default async function TemplatesPage() {
-  const supabase = await createServerSupabase();
-  const { data: templates } = await supabase
-    .from("templates")
-    .select("*")
-    .order("updated_at", { ascending: false });
+export default function TemplatesPage() {
+  const [templates, setTemplates] = useState<Template[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase
+      .from("templates")
+      .select("*")
+      .order("updated_at", { ascending: false })
+      .then(({ data }) => {
+        if (data) setTemplates(data as Template[]);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="page-container">
+        <p className="text-muted-foreground animate-pulse">Loading templates...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="page-container">
-      {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-display font-black">Templates</h1>
@@ -30,8 +49,7 @@ export default async function TemplatesPage() {
         </Link>
       </div>
 
-      {/* Template Grid */}
-      {!templates?.length ? (
+      {!templates.length ? (
         <Card className="text-center py-16">
           <CardContent>
             <FileText className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
@@ -49,10 +67,10 @@ export default async function TemplatesPage() {
         </Card>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {(templates as Template[]).map((template) => (
+          {templates.map((template) => (
             <Link
               key={template.id}
-              href={`/dashboard/templates/${template.id}`}
+              href={`/dashboard/templates/edit?id=${template.id}`}
             >
               <Card className="hover:border-primary/50 transition-colors cursor-pointer h-full">
                 <CardHeader>
@@ -73,7 +91,7 @@ export default async function TemplatesPage() {
                 <CardContent>
                   <div className="flex items-center gap-4 text-sm text-muted-foreground">
                     <span>{template.question_count} questions</span>
-                    <span>•</span>
+                    <span>&bull;</span>
                     <span>Played {template.play_count}x</span>
                   </div>
                 </CardContent>

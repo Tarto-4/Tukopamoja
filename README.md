@@ -278,6 +278,76 @@ npm run dev:mobile  # → Expo DevTools
 
 ---
 
+## Exact Launch Sequence (Host + Player)
+
+Use this sequence when running locally and testing with a presenter + participants.
+
+### 1) Start all services
+
+Open 3 terminals from repository root:
+
+```bash
+# Terminal 1: backend
+supabase start
+
+# Terminal 2: web host dashboard
+npm run dev:web
+
+# Terminal 3: mobile player app (Expo)
+npm run dev:mobile
+```
+
+### 2) Open Host Dashboard (presenter side)
+
+1. Open `http://localhost:3000/auth/login`
+2. Sign in
+3. Go to **Templates**
+4. Create a template (or open existing)
+5. Click **Save Template**
+6. Click **Start Game**
+
+This opens the host presenter screen at `/host?sessionId=...` where you can:
+- watch players join in lobby
+- start the first question
+- move to leaderboard
+- launch next question
+- finish game
+
+### 3) Join as a player (same device or different device)
+
+#### Option A — Real mobile app (recommended for testing)
+
+1. Install/open **Expo Go** on the phone
+2. From Terminal 3, scan the Expo QR and open the mobile app
+3. On host screen, scan the game QR or manually type the PIN in mobile app
+4. Tap **Join Game**
+
+#### Option B — QR from host on devices without app installed
+
+If the app is not installed/published yet, QR opens web fallback `/join/?pin=...`.
+That page shows the PIN and an Expo Go link. In this case:
+
+1. Install/open Expo Go
+2. Launch mobile app from Expo
+3. Enter shown PIN manually
+
+### 4) Presenter controls during game
+
+From host screen:
+- **Start Game** begins question 1
+- **Show Leaderboard** transitions to rankings
+- **Next Question** advances to next question
+- **End Game / Finish** completes the session
+
+### 5) Common issues checklist
+
+- If players do not appear: verify `supabase start` is running
+- If login fails: verify `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- If cross-device fails: run web with LAN access and set `NEXT_PUBLIC_APP_URL` to reachable URL
+- If QR opens fallback only: app is not installed yet (expected in dev)
+
+---
+
 ## Scoring Algorithm
 
 ```
@@ -350,77 +420,100 @@ supabase db push
 
 ---
 
-## Deploying the Web App
+## Deploying the Web App on GitHub (Detailed)
 
-### Option A: Vercel (Recommended)
+This project is configured for static export + GitHub Pages using:
 
-```bash
-# 1. Install Vercel CLI
-npm i -g vercel
+- `.github/workflows/deploy-pages.yml`
+- `packages/web/next.config.js` with `output: "export"`
 
-# 2. Deploy from the web package
-cd packages/web
-vercel
+### Step 1 — Confirm repository and default branch
 
-# 3. Set environment variables in Vercel Dashboard:
-#    NEXT_PUBLIC_SUPABASE_URL
-#    NEXT_PUBLIC_SUPABASE_ANON_KEY
-#    NEXT_PUBLIC_APP_URL (your Vercel domain)
-#    NEXT_PUBLIC_MOBILE_SCHEME=quizarena
-```
+1. Repository exists on enterprise GitHub: `https://ens.ghe.com/tmongwe/quizarena`
+2. Default branch is `main`
+3. Your latest local fixes are pushed to `main`
 
-Or connect your GitHub repo to Vercel:
-1. Go to [vercel.com/new](https://vercel.com/new)
-2. Import your `quizarena` repository
-3. Set **Root Directory** to `packages/web`
-4. Framework Preset: **Next.js**
-5. Add the environment variables above
-6. Deploy
+### Step 2 — Enable GitHub Pages via Actions
 
-### Option B: GitHub Actions CI/CD (Auto-deploy on push)
+1. Open repository settings on enterprise GitHub
+2. Go to **Pages**
+3. Under **Build and deployment**, choose:
+   - **Source**: `GitHub Actions`
 
-Create `.github/workflows/deploy-web.yml`:
+This allows workflow `.github/workflows/deploy-pages.yml` to publish site artifacts.
 
-```yaml
-name: Deploy Web App
+### Step 3 — Add required repository secrets and variables
 
-on:
-  push:
-    branches: [main]
-    paths:
-      - 'packages/web/**'
-      - 'packages/shared/**'
+Go to **Settings → Secrets and variables → Actions**.
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+Add **Secrets**:
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
+| Name | Value |
+|------|-------|
+| `NEXT_PUBLIC_SUPABASE_URL` | `https://<your-supabase-project>.supabase.co` |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anon key |
 
-      - run: npm ci
+Add **Variable**:
 
-      - name: Build Web App
-        env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
-          NEXT_PUBLIC_APP_URL: ${{ vars.APP_URL }}
-          NEXT_PUBLIC_MOBILE_SCHEME: quizarena
-        run: npm run build:web
+| Name | Value |
+|------|-------|
+| `NEXT_PUBLIC_APP_URL` | Your final GitHub Pages URL |
 
-      - name: Deploy to Vercel
-        uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          vercel-args: '--prod'
-          working-directory: packages/web
-```
+Set `NEXT_PUBLIC_APP_URL` to your real Pages URL (including repo path if your enterprise Pages requires one). This value is used to generate QR join links.
+
+### Step 4 — Trigger deployment
+
+Any push to `main` touching web/shared files triggers deployment automatically.
+
+Manual trigger options:
+
+1. **Actions** tab
+2. Select **Deploy Web to GitHub Pages**
+3. Click **Run workflow**
+
+### Step 5 — Verify deployment status
+
+In Actions, verify both jobs pass:
+
+1. `build`
+2. `deploy`
+
+On success, GitHub shows deployed page URL in workflow summary/environment.
+
+### Step 6 — Post-deploy validation
+
+Open deployed URL and verify:
+
+1. Login page opens: `/auth/login/`
+2. Template list opens: `/dashboard/templates/`
+3. Create template + start game works
+4. Host page opens: `/host/?sessionId=...`
+5. QR points to deployed `/join/?pin=...` URL
+
+### Step 7 — Configure Supabase Auth for deployed domain
+
+In Supabase Dashboard:
+
+1. **Authentication → URL Configuration**
+2. Set **Site URL** to deployed Pages URL
+3. Add redirect URL pattern for your deployed domain/path
+
+Without this, auth callbacks/session behavior can fail in production.
+
+### Step 8 — Update when URL changes
+
+If repository name, domain, or Pages path changes:
+
+1. Update `NEXT_PUBLIC_APP_URL` repository variable
+2. Re-run workflow
+3. Re-test QR join
+
+### Troubleshooting deployment
+
+- **404 on app routes**: confirm static export build succeeded and site path is correct
+- **Login fails in production**: check Supabase URL/anon key secrets and Auth URL config
+- **QR opens wrong host**: `NEXT_PUBLIC_APP_URL` not set correctly
+- **Actions not running**: verify Pages source is set to GitHub Actions
 
 ---
 

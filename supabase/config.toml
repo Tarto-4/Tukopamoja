@@ -1,6 +1,4 @@
-[project]
-id = "quizarena"
-name = "QuizArena"
+project_id = "quizarena"
 
 [api]
 port = 54321
