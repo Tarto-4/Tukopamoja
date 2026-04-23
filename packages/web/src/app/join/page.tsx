@@ -149,16 +149,6 @@ function JoinPageContent() {
           </Button>
         </form>
 
-        {/* Optional app link */}
-        <p className="text-center text-xs text-muted-foreground">
-          Have the mobile app?{" "}
-          <a
-            href={`${process.env.NEXT_PUBLIC_MOBILE_SCHEME || "quizarena"}://join?pin=${pin}`}
-            className="text-primary underline"
-          >
-            Open in app
-          </a>
-        </p>
       </div>
     </div>
   );

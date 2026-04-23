@@ -20,8 +20,7 @@ export function useRealtimeGame(
   sessionId: string | undefined,
   role: Role
 ) {
-  const supabase = createClient();
-  const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null);
+  const channelRef = useRef<ReturnType<ReturnType<typeof createClient>["channel"]> | null>(null);
 
   const {
     setSession,
@@ -36,8 +35,15 @@ export function useRealtimeGame(
 
   useEffect(() => {
     if (!sessionId) return;
+    let channel: ReturnType<ReturnType<typeof createClient>["channel"]> | null = null;
 
-    const channel = supabase.channel(`session:${sessionId}`);
+    try {
+      const supabase = createClient();
+      channel = supabase.channel(`session:${sessionId}`);
+    } catch (error) {
+      console.error("[Realtime] Failed to initialize Supabase client:", error);
+      return;
+    }
 
     // 1. Listen for session row changes (status, current_q_index)
     channel.on(
@@ -143,7 +149,7 @@ export function useRealtimeGame(
 
     return () => {
       stopTimer();
-      channel.unsubscribe();
+      channel?.unsubscribe();
     };
-  }, [sessionId]);
+  }, [sessionId, role, setSession, addPlayer, removePlayer, incrementAnswered, setLeaderboard, startTimer, stopTimer, loadSession]);
 }
