@@ -18,11 +18,11 @@ echo "[1/10] Ensuring we are on ${SOURCE_BRANCH}..."
 git checkout "$SOURCE_BRANCH" >/dev/null
 
 echo "[2/10] Validating environment variables..."
-node scripts/validate-env.mjs || {
+node scripts/validate-env.mjs --production || {
   echo ""
-  echo "✗ Deploy aborted — fix environment variables first."
-  echo "  Copy packages/web/.env.local.example → .env.local"
-  echo "  Or packages/web/.env.production.example for prod."
+  echo "✗ Deploy aborted — production environment variables are missing/invalid."
+  echo "  Set production vars in shell OR create packages/web/.env.production"
+  echo "  from packages/web/.env.production.example"
   exit 1
 }
 

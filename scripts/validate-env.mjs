@@ -11,9 +11,11 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const envFile = resolve(__dirname, "../packages/web/.env.local");
+const localEnvFile = resolve(__dirname, "../packages/web/.env.local");
+const productionEnvFile = resolve(__dirname, "../packages/web/.env.production");
 
-if (existsSync(envFile)) {
+function loadEnvFile(envFile) {
+  if (!existsSync(envFile)) return;
   const lines = readFileSync(envFile, "utf-8").split("\n");
   for (const line of lines) {
     const trimmed = line.trim();
@@ -27,6 +29,12 @@ if (existsSync(envFile)) {
 }
 
 const isProd = process.argv.includes("--production");
+
+if (isProd) {
+  loadEnvFile(productionEnvFile);
+} else {
+  loadEnvFile(localEnvFile);
+}
 
 const REQUIRED = [
   { key: "NEXT_PUBLIC_SUPABASE_URL", validate: isUrl },
@@ -55,27 +63,24 @@ function isLocalhost(val) {
 }
 
 const errors = [];
-const warnings = [];
 
 for (const { key, validate } of REQUIRED) {
   const val = process.env[key];
   if (!val || !validate(val)) {
     errors.push(`  ✗ ${key} = ${val ?? "(unset)"}`);
   } else if (isProd && isUrl(val) && isLocalhost(val)) {
-    warnings.push(`  ⚠ ${key} points to localhost in production mode: ${val}`);
+    errors.push(`  ✗ ${key} points to localhost in production mode: ${val}`);
   }
-}
-
-if (warnings.length > 0) {
-  console.warn("\n⚠  Environment warnings:\n");
-  warnings.forEach((w) => console.warn(w));
-  console.warn("");
 }
 
 if (errors.length > 0) {
   console.error("\n✗  Environment validation failed:\n");
   errors.forEach((e) => console.error(e));
-  console.error("\nCopy .env.local.example → .env.local and fill in real values.\n");
+  if (isProd) {
+    console.error("\nSet production vars in shell or create packages/web/.env.production from .env.production.example.\n");
+  } else {
+    console.error("\nCopy .env.local.example → .env.local and fill in real values.\n");
+  }
   process.exit(1);
 }
 

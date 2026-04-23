@@ -33,19 +33,26 @@ export function validateEnv(): EnvConfig {
   const isProd = process.env.NODE_ENV === "production";
   const errors: string[] = [];
 
+  const rawEnv: EnvConfig = {
+    NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL ?? "",
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "",
+    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL ?? "",
+    NEXT_PUBLIC_MOBILE_SCHEME: process.env.NEXT_PUBLIC_MOBILE_SCHEME ?? "",
+  };
+
   for (const key of REQUIRED_VARS) {
-    const value = process.env[key];
+    const value = rawEnv[key];
     if (!value || value === "placeholder" || value.trim() === "") {
       errors.push(`  ✗ ${key} is missing or placeholder`);
     }
   }
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
+  const supabaseUrl = rawEnv.NEXT_PUBLIC_SUPABASE_URL;
   if (supabaseUrl && !isValidUrl(supabaseUrl)) {
     errors.push(`  ✗ NEXT_PUBLIC_SUPABASE_URL is not a valid URL: "${supabaseUrl}"`);
   }
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "";
+  const appUrl = rawEnv.NEXT_PUBLIC_APP_URL;
   if (appUrl && !isValidUrl(appUrl)) {
     errors.push(`  ✗ NEXT_PUBLIC_APP_URL is not a valid URL: "${appUrl}"`);
   }
@@ -89,15 +96,15 @@ export function validateEnv(): EnvConfig {
       : "http://localhost:3000";
 
   const resolvedAnonKey =
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY &&
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY !== "placeholder"
-      ? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    rawEnv.NEXT_PUBLIC_SUPABASE_ANON_KEY &&
+    rawEnv.NEXT_PUBLIC_SUPABASE_ANON_KEY !== "placeholder"
+      ? rawEnv.NEXT_PUBLIC_SUPABASE_ANON_KEY
       : "local-dev-anon-key";
 
   const resolvedMobileScheme =
-    process.env.NEXT_PUBLIC_MOBILE_SCHEME &&
-    process.env.NEXT_PUBLIC_MOBILE_SCHEME !== "placeholder"
-      ? process.env.NEXT_PUBLIC_MOBILE_SCHEME
+    rawEnv.NEXT_PUBLIC_MOBILE_SCHEME &&
+    rawEnv.NEXT_PUBLIC_MOBILE_SCHEME !== "placeholder"
+      ? rawEnv.NEXT_PUBLIC_MOBILE_SCHEME
       : "quizarena";
 
   return {
