@@ -1,22 +1,56 @@
 // ─────────────────────────────────────────────────────────────
 // QuizArena — Host Question Screen
-// Shows question, options, timer, and answer count.
+// Shows question, options, timer, answer count, and
+// presenter controls (end question / show leaderboard / skip).
 // ─────────────────────────────────────────────────────────────
 
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { useGameStore } from "@/stores/useGameStore";
+import { Button } from "@/components/ui/button";
 import { OPTION_COLORS } from "@quizarena/shared";
+import { SkipForward, BarChart3, StopCircle } from "lucide-react";
 
 export default function HostQuestion() {
-  const { session, currentQuestion, answeredCount, timeLeft } = useGameStore();
+  const {
+    session,
+    currentQuestion,
+    answeredCount,
+    timeLeft,
+    showLeaderboard,
+    nextQuestion,
+    endGame,
+    stopTimer,
+  } = useGameStore();
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   if (!session || !currentQuestion) return null;
 
   const totalQuestions = session.questions_snapshot?.length || 0;
   const qIndex = session.current_q_index;
   const isEvaluating = session.status === "evaluating";
+  const isLastQuestion = qIndex >= totalQuestions - 1;
+  const allAnswered = answeredCount >= session.player_count && session.player_count > 0;
+  const timerDone = timeLeft <= 0;
+
+  // Shared action handler with loading + error guard
+  async function handleAction(action: () => Promise<void>, label: string) {
+    if (loading) return;
+    setLoading(true);
+    setError("");
+    try {
+      stopTimer();
+      await action();
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : `Failed to ${label}`);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <div className="game-screen p-4 sm:p-8 gradient-dark">
@@ -80,14 +114,66 @@ export default function HostQuestion() {
       </div>
 
       {/* Answer counter */}
-      <div className="bg-card rounded-xl p-4 text-center">
+      <div className="bg-card rounded-xl p-4 text-center mb-4">
         <p className="text-sm text-muted-foreground">Answers</p>
         <p className="text-3xl font-display font-black">
           <span className="text-quiz-green">{answeredCount}</span>
           <span className="text-muted-foreground"> / </span>
           <span>{session.player_count}</span>
         </p>
+        {allAnswered && (
+          <p className="text-xs text-quiz-green mt-1">All players answered!</p>
+        )}
       </div>
+
+      {/* ─── Presenter Controls ───────────────────────────────── */}
+      <div className="flex flex-wrap items-center justify-center gap-3">
+        {/* Show Leaderboard — primary action when timer done or all answered */}
+        <Button
+          size="lg"
+          disabled={loading}
+          onClick={() => handleAction(showLeaderboard, "show leaderboard")}
+          className={`${
+            timerDone || allAnswered
+              ? "gradient-primary border-0 animate-pulse"
+              : "bg-card border hover:bg-accent"
+          }`}
+        >
+          <BarChart3 className="w-4 h-4 mr-2" />
+          {loading ? "Loading..." : "Show Leaderboard"}
+        </Button>
+
+        {/* Skip to next question */}
+        {!isLastQuestion && (
+          <Button
+            size="lg"
+            variant="outline"
+            disabled={loading}
+            onClick={() => handleAction(nextQuestion, "skip question")}
+          >
+            <SkipForward className="w-4 h-4 mr-2" />
+            Skip to Next
+          </Button>
+        )}
+
+        {/* End game early */}
+        <Button
+          size="lg"
+          variant="destructive"
+          disabled={loading}
+          onClick={() => handleAction(endGame, "end game")}
+        >
+          <StopCircle className="w-4 h-4 mr-2" />
+          End Game
+        </Button>
+      </div>
+
+      {/* Error feedback */}
+      {error && (
+        <p className="text-sm text-quiz-red text-center mt-3" role="alert">
+          {error}
+        </p>
+      )}
     </div>
   );
 }

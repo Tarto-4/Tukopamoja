@@ -252,15 +252,25 @@ export default function QuizBuilder({
 
     setSaving(true);
     try {
+      const supabase = createClient();
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
+
+      if (userError || !user) {
+        throw new Error("Please sign in again to start a game session.");
+      }
+
       const { data, error: fnErr } = await supabase.rpc("create_session", {
         p_template_id: existingTemplate.id,
-        p_host_id: (await supabase.auth.getUser()).data.user!.id,
+        p_host_id: user.id,
       });
 
       if (fnErr) throw fnErr;
       const sessionId = (data as any)?.id ?? data;
       if (!sessionId) throw new Error("Session creation returned no id");
-      router.push(`/host?sessionId=${sessionId}`);
+      router.push(`/host/?sessionId=${sessionId}`);
     } catch (err: any) {
       setError(err.message || "Failed to create session");
     } finally {

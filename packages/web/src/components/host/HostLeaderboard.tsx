@@ -4,6 +4,7 @@
 
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { useGameStore } from "@/stores/useGameStore";
 import { Button } from "@/components/ui/button";
@@ -11,6 +12,8 @@ import { MEDALS } from "@quizarena/shared";
 
 export default function HostLeaderboard() {
   const { session, leaderboard, nextQuestion } = useGameStore();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   if (!session) return null;
 
@@ -68,11 +71,33 @@ export default function HostLeaderboard() {
 
       <Button
         size="xl"
-        onClick={nextQuestion}
+        disabled={loading}
+        onClick={async () => {
+          if (loading) return;
+          setLoading(true);
+          setError("");
+          try {
+            await nextQuestion();
+          } catch (err: unknown) {
+            setError(err instanceof Error ? err.message : "Failed to advance");
+          } finally {
+            setLoading(false);
+          }
+        }}
         className="gradient-primary border-0"
       >
-        {isLastQuestion ? "🏁 Finish Game" : "➡️ Next Question"}
+        {loading
+          ? "Loading..."
+          : isLastQuestion
+            ? "🏁 Finish Game"
+            : "➡️ Next Question"}
       </Button>
+
+      {error && (
+        <p className="text-sm text-quiz-red text-center mt-3" role="alert">
+          {error}
+        </p>
+      )}
     </div>
   );
 }

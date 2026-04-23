@@ -9,13 +9,27 @@ TEMP_BRANCH="gh-pages-clean"
 
 cd "$REPO_ROOT"
 
-echo "[1/8] Ensuring we are on ${SOURCE_BRANCH}..."
+echo "╔══════════════════════════════════════════════════════╗"
+echo "║          QuizArena — Deploy to GitHub Pages          ║"
+echo "╚══════════════════════════════════════════════════════╝"
+echo ""
+
+echo "[1/10] Ensuring we are on ${SOURCE_BRANCH}..."
 git checkout "$SOURCE_BRANCH" >/dev/null
 
-echo "[2/8] Building static web output..."
+echo "[2/10] Validating environment variables..."
+node scripts/validate-env.mjs || {
+  echo ""
+  echo "✗ Deploy aborted — fix environment variables first."
+  echo "  Copy packages/web/.env.local.example → .env.local"
+  echo "  Or packages/web/.env.production.example for prod."
+  exit 1
+}
+
+echo "[3/10] Building static web output..."
 npm run build:web
 
-echo "[3/8] Recreating temporary worktree..."
+echo "[4/10] Recreating temporary worktree..."
 rm -rf "$WORKTREE_DIR"
 git worktree prune
 
@@ -27,26 +41,40 @@ else
   git worktree add -f -b "$TARGET_BRANCH" "$WORKTREE_DIR"
 fi
 
-echo "[4/8] Creating clean orphan history in worktree..."
+echo "[5/10] Creating clean orphan history in worktree..."
 cd "$WORKTREE_DIR"
 git checkout --orphan "$TEMP_BRANCH"
 git rm -rf . >/dev/null 2>&1 || true
 
-echo "[5/8] Copying static files from packages/web/out..."
+echo "[6/10] Copying static files from packages/web/out..."
 rsync -a --exclude='.git' "$REPO_ROOT/packages/web/out/" ./
 
 touch .nojekyll
 
-echo "[6/8] Committing static site..."
+echo "[7/10] Committing static site..."
 git add -A
 git commit -m "Deploy static site" >/dev/null
 
-echo "[7/8] Force-pushing clean ${TARGET_BRANCH} history..."
+echo "[8/10] Force-pushing clean ${TARGET_BRANCH} history..."
 git push -f origin "$TEMP_BRANCH:$TARGET_BRANCH"
 
-echo "[8/8] Cleaning up local temp state..."
+echo "[9/10] Cleaning up local temp state..."
 cd "$REPO_ROOT"
 git worktree remove -f "$WORKTREE_DIR"
 git branch -D "$TEMP_BRANCH" >/dev/null 2>&1 || true
 
+echo "[10/10] Post-deploy verification..."
+echo ""
+echo "┌─────────────────────────────────────────────────┐"
+echo "│         POST-DEPLOY VERIFICATION CHECKLIST       │"
+echo "├─────────────────────────────────────────────────┤"
+echo "│  □  Open deployed URL and confirm page loads    │"
+echo "│  □  Login with a test account                   │"
+echo "│  □  Create or open a template                   │"
+echo "│  □  Start Game → verify lobby displays          │"
+echo "│  □  QR code URL points to deployed domain       │"
+echo "│  □  Scan QR from phone → confirm join page      │"
+echo "│  □  Open browser console → no env/fetch errors  │"
+echo "└─────────────────────────────────────────────────┘"
+echo ""
 echo "✅ Deployment complete. ${TARGET_BRANCH} updated successfully."

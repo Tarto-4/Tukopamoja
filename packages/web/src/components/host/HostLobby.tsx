@@ -4,6 +4,7 @@
 
 "use client";
 
+import { useState } from "react";
 import { useGameStore } from "@/stores/useGameStore";
 import { useBrandingStore } from "@/stores/useBrandingStore";
 import { Button } from "@/components/ui/button";
@@ -13,13 +14,49 @@ import { Play, Users } from "lucide-react";
 export default function HostLobby() {
   const { session, players, startGame } = useGameStore();
   const { branding } = useBrandingStore();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  async function handleStart() {
+    if (loading) return;
+    setLoading(true);
+    setError("");
+    try {
+      await startGame();
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Failed to start game");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   if (!session) return null;
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "";
   const joinUrl =
     typeof window !== "undefined"
-      ? `${(appUrl || window.location.origin).replace(/\/$/, "")}/join/?pin=${session.pin}`
+      ? (() => {
+          const normalize = (value: string) => value.replace(/\/$/, "");
+          const isLocalhost = (value: string) => {
+            try {
+              const hostname = new URL(value).hostname;
+              return ["localhost", "127.0.0.1", "0.0.0.0", "::1"].includes(hostname);
+            } catch {
+              return false;
+            }
+          };
+
+          const origin = normalize(window.location.origin);
+          const envUrl = normalize(appUrl);
+
+          const baseUrl = !isLocalhost(origin)
+            ? origin
+            : envUrl && !isLocalhost(envUrl)
+              ? envUrl
+              : origin;
+
+          return `${baseUrl}/join/?pin=${session.pin}`;
+        })()
       : "";
 
   return (
@@ -97,12 +134,21 @@ export default function HostLobby() {
         {/* Start button */}
         <Button
           size="xl"
-          onClick={startGame}
+          onClick={handleStart}
+          disabled={loading}
           className="gradient-primary border-0 text-xl"
         >
           <Play className="w-5 h-5 mr-2" />
-          Start Game ({players.length} player{players.length !== 1 ? "s" : ""})
+          {loading
+            ? "Starting..."
+            : `Start Game (${players.length} player${players.length !== 1 ? "s" : ""})`}
         </Button>
+
+        {error && (
+          <p className="text-sm text-quiz-red text-center" role="alert">
+            {error}
+          </p>
+        )}
       </div>
     </div>
   );

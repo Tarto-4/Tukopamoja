@@ -9,6 +9,8 @@
   "scripts": {
     "dev:web": "npm -w packages/web run dev",
     "dev:mobile": "npm -w packages/mobile run start",
+    "validate-env": "node scripts/validate-env.mjs",
+    "validate-env:prod": "node scripts/validate-env.mjs --production",
     "build:web": "npm -w packages/web run build",
     "deploy:pages": "bash ./scripts/deploy-pages.sh",
     "build:shared": "npm -w packages/shared run build",

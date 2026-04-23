@@ -134,14 +134,32 @@ export const useGameStore = create<GameState>((set, get) => ({
     if (!session) return;
 
     const supabase = createClient();
-    await supabase
+    const startedAt = new Date().toISOString();
+    const { error } = await supabase
       .from("sessions")
       .update({
         status: "question_active",
         current_q_index: 0,
-        started_at: new Date().toISOString(),
+        started_at: startedAt,
       })
       .eq("id", session.id);
+
+    if (error) throw error;
+
+    set((s) => {
+      if (!s.session) return s;
+      return {
+        ...s,
+        session: {
+          ...s.session,
+          status: "question_active",
+          current_q_index: 0,
+          started_at: startedAt,
+        },
+        currentQuestion: s.session.questions_snapshot?.[0] || null,
+        answeredCount: 0,
+      };
+    });
   },
 
   nextQuestion: async () => {
@@ -155,21 +173,52 @@ export const useGameStore = create<GameState>((set, get) => ({
 
     if (next >= total) {
       // End game
-      await supabase
+      const endedAt = new Date().toISOString();
+      const { error } = await supabase
         .from("sessions")
         .update({
           status: "finished",
-          ended_at: new Date().toISOString(),
+          ended_at: endedAt,
         })
         .eq("id", session.id);
+
+      if (error) throw error;
+
+      set((s) => {
+        if (!s.session) return s;
+        return {
+          ...s,
+          session: {
+            ...s.session,
+            status: "finished",
+            ended_at: endedAt,
+          },
+        };
+      });
     } else {
-      await supabase
+      const { error } = await supabase
         .from("sessions")
         .update({
           status: "question_active",
           current_q_index: next,
         })
         .eq("id", session.id);
+
+      if (error) throw error;
+
+      set((s) => {
+        if (!s.session) return s;
+        return {
+          ...s,
+          session: {
+            ...s.session,
+            status: "question_active",
+            current_q_index: next,
+          },
+          currentQuestion: s.session.questions_snapshot?.[next] || null,
+          answeredCount: 0,
+        };
+      });
     }
   },
 
@@ -178,10 +227,23 @@ export const useGameStore = create<GameState>((set, get) => ({
     if (!session) return;
 
     const supabase = createClient();
-    await supabase
+    const { error } = await supabase
       .from("sessions")
       .update({ status: "leaderboard" })
       .eq("id", session.id);
+
+    if (error) throw error;
+
+    set((s) => {
+      if (!s.session) return s;
+      return {
+        ...s,
+        session: {
+          ...s.session,
+          status: "leaderboard",
+        },
+      };
+    });
   },
 
   endGame: async () => {
@@ -189,13 +251,28 @@ export const useGameStore = create<GameState>((set, get) => ({
     if (!session) return;
 
     const supabase = createClient();
-    await supabase
+    const endedAt = new Date().toISOString();
+    const { error } = await supabase
       .from("sessions")
       .update({
         status: "finished",
-        ended_at: new Date().toISOString(),
+        ended_at: endedAt,
       })
       .eq("id", session.id);
+
+    if (error) throw error;
+
+    set((s) => {
+      if (!s.session) return s;
+      return {
+        ...s,
+        session: {
+          ...s.session,
+          status: "finished",
+          ended_at: endedAt,
+        },
+      };
+    });
   },
 
   reset: () =>
