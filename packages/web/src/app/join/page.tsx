@@ -57,15 +57,18 @@ function JoinPageContent() {
   }
 
   return (
-    <div className="game-screen items-center justify-center gradient-dark px-4">
-      <div className="w-full max-w-sm space-y-6">
+    <div className="game-screen items-center justify-center gradient-dark px-4 relative overflow-hidden">
+      {/* Ambient glow */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[400px] h-[400px] rounded-full bg-ens-crimson/5 blur-[100px] pointer-events-none" />
+
+      <div className="w-full max-w-sm space-y-6 relative z-10">
         {/* Header */}
         <div className="text-center space-y-2">
           <Gamepad2 className="w-12 h-12 mx-auto text-primary" />
-          <h1 className="text-3xl font-display font-black gradient-primary bg-clip-text text-transparent">
+          <h1 className="text-3xl font-serif font-black gradient-ens bg-clip-text text-transparent">
             QuizArena
           </h1>
-          <p className="text-muted-foreground text-sm">
+          <p className="text-ens-slate-light text-sm">
             Join a live quiz game
           </p>
         </div>
@@ -99,7 +102,7 @@ function JoinPageContent() {
               placeholder="123456"
               value={pin}
               onChange={(e) => setPin(e.target.value.replace(/\D/g, ""))}
-              className="w-full h-14 text-center text-3xl font-display font-black tracking-[0.3em]
+              className="w-full h-14 text-center text-3xl font-serif font-black tracking-[0.3em]
                          rounded-xl border bg-card px-4 focus:outline-none focus:ring-2 focus:ring-primary"
               autoFocus={!initialPin}
             />
@@ -133,7 +136,7 @@ function JoinPageContent() {
             type="submit"
             size="xl"
             disabled={joining}
-            className="w-full gradient-primary border-0 text-lg"
+            className="w-full gradient-primary border-0 text-lg btn-3d text-white font-semibold"
           >
             {joining ? (
               "Joining..."

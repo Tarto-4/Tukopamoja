@@ -57,11 +57,11 @@ export default function HostQuestion() {
     <div className="game-screen p-4 sm:p-8 gradient-dark">
       {/* Top bar: progress + timer */}
       <div className="flex items-center justify-between mb-4 sm:mb-6">
-        <span className="text-sm font-display text-muted-foreground">
+        <span className="text-sm font-serif text-ens-slate-light">
           Question {qIndex + 1} / {totalQuestions}
         </span>
         <div
-          className={`text-4xl sm:text-5xl font-display font-black ${
+          className={`text-4xl sm:text-5xl font-serif font-black ${
             timeLeft <= 5 ? "text-quiz-red animate-pulse" : ""
           }`}
         >
@@ -74,9 +74,9 @@ export default function HostQuestion() {
         key={qIndex}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-card rounded-2xl p-6 sm:p-8 text-center mb-6 sm:mb-8"
+        className="glass-card-elevated rounded-2xl p-6 sm:p-8 text-center mb-6 sm:mb-8"
       >
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold leading-tight">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif font-bold leading-tight">
           {currentQuestion.question_text}
         </h2>
         {currentQuestion.image_url && (
@@ -102,7 +102,7 @@ export default function HostQuestion() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: i * 0.1 }}
               className={`rounded-xl p-4 sm:p-6 flex items-center justify-center text-white
-                         font-display font-bold text-base sm:text-xl md:text-2xl shadow-lg
+                         font-sans font-bold text-base sm:text-xl md:text-2xl shadow-ens-lg
                          transition-opacity ${showWrong ? "opacity-40" : ""}`}
               style={{ backgroundColor: color.bg }}
             >
@@ -115,9 +115,9 @@ export default function HostQuestion() {
       </div>
 
       {/* Answer counter + distribution */}
-      <div className="bg-card rounded-xl p-4 text-center mb-4">
-        <p className="text-sm text-muted-foreground">Answers</p>
-        <p className="text-3xl font-display font-black">
+      <div className="glass-card rounded-xl p-4 text-center mb-4">
+        <p className="text-sm text-ens-slate-light">Answers</p>
+        <p className="text-3xl font-serif font-black">
           <span className="text-quiz-green">{answeredCount}</span>
           <span className="text-muted-foreground"> / </span>
           <span>{session.player_count}</span>
@@ -161,8 +161,8 @@ export default function HostQuestion() {
           onClick={() => handleAction(showLeaderboard, "show leaderboard")}
           className={`${
             timerDone || allAnswered
-              ? "gradient-primary border-0 animate-pulse"
-              : "bg-card border hover:bg-accent"
+              ? "gradient-primary border-0 animate-pulse-glow btn-3d text-white"
+              : "glass-card border hover:bg-accent"
           }`}
         >
           <BarChart3 className="w-4 h-4 mr-2" />

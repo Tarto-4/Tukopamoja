@@ -38,22 +38,22 @@ export default function PlayerQuestion() {
           {answerResult.isCorrect ? (
             <>
               <CheckCircle className="w-20 h-20 mx-auto text-quiz-green" />
-              <h2 className="text-3xl font-display font-black text-quiz-green">
+              <h2 className="text-3xl font-serif font-black text-quiz-green">
                 Correct!
               </h2>
             </>
           ) : (
             <>
               <XCircle className="w-20 h-20 mx-auto text-quiz-red" />
-              <h2 className="text-3xl font-display font-black text-quiz-red">
+              <h2 className="text-3xl font-serif font-black text-quiz-red">
                 Wrong
               </h2>
             </>
           )}
 
-          <div className="bg-card rounded-2xl p-6 space-y-3">
-            <p className="text-sm text-muted-foreground">Points earned</p>
-            <p className="text-4xl font-display font-black">
+          <div className="glass-card rounded-2xl p-6 space-y-3">
+            <p className="text-sm text-ens-slate-light">Points earned</p>
+            <p className="text-4xl font-serif font-black">
               +{answerResult.pointsAwarded}
             </p>
             <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground">
@@ -84,7 +84,7 @@ export default function PlayerQuestion() {
           className="text-center space-y-6"
         >
           <Clock className="w-20 h-20 mx-auto text-muted-foreground" />
-          <h2 className="text-3xl font-display font-black">Time&apos;s Up!</h2>
+          <h2 className="text-3xl font-serif font-black">Time&apos;s Up!</h2>
           <p className="text-muted-foreground">You didn&apos;t answer in time</p>
           <p className="text-muted-foreground text-sm animate-pulse">
             Waiting for next question...
@@ -99,11 +99,11 @@ export default function PlayerQuestion() {
     <div className="game-screen p-4 gradient-dark">
       {/* Top bar */}
       <div className="flex items-center justify-between mb-3">
-        <span className="text-xs font-display text-muted-foreground">
+        <span className="text-xs font-serif text-ens-slate-light">
           {qIndex + 1} / {totalQuestions}
         </span>
         <div
-          className={`text-3xl font-display font-black ${
+          className={`text-3xl font-serif font-black ${
             timeLeft <= 5 ? "text-quiz-red animate-pulse" : ""
           }`}
         >
@@ -116,9 +116,9 @@ export default function PlayerQuestion() {
         key={qIndex}
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-card rounded-xl p-4 text-center mb-4"
+        className="glass-card rounded-xl p-4 text-center mb-4"
       >
-        <h2 className="text-lg sm:text-xl font-display font-bold leading-tight">
+        <h2 className="text-lg sm:text-xl font-serif font-bold leading-tight">
           {currentQuestion.question_text}
         </h2>
         {currentQuestion.image_url && (
@@ -143,7 +143,7 @@ export default function PlayerQuestion() {
               onClick={() => submitAnswer(i)}
               disabled={hasAnswered}
               className="rounded-xl p-5 flex items-center justify-center text-white
-                        font-display font-bold text-lg shadow-lg active:scale-95
+                        font-sans font-bold text-lg shadow-ens-lg active:scale-95
                         transition-transform disabled:opacity-50"
               style={{ backgroundColor: color.bg }}
             >

@@ -32,7 +32,7 @@ export default function PlayerGameOver() {
           ) : (
             <Trophy className="w-16 h-16 mx-auto text-quiz-yellow" />
           )}
-          <h1 className="text-3xl font-display font-black">Game Over!</h1>
+          <h1 className="text-3xl font-serif font-black">Game Over!</h1>
         </motion.div>
 
         {/* Player result card */}
@@ -40,20 +40,20 @@ export default function PlayerGameOver() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="bg-card rounded-2xl p-6 space-y-3"
+          className="glass-card-elevated rounded-2xl p-6 space-y-3"
         >
           <div className="text-4xl">{avatar}</div>
-          <p className="font-display font-bold text-lg">{nickname}</p>
+          <p className="font-serif font-bold text-lg">{nickname}</p>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <p className="text-xs text-muted-foreground">Final Score</p>
-              <p className="text-2xl font-display font-black text-primary">
+              <p className="text-2xl font-serif font-black text-primary">
                 {totalScore.toLocaleString()}
               </p>
             </div>
             <div>
               <p className="text-xs text-muted-foreground">Rank</p>
-              <p className="text-2xl font-display font-black">
+              <p className="text-2xl font-serif font-black">
                 {rank ? `#${rank}` : "—"}
               </p>
             </div>
@@ -68,7 +68,7 @@ export default function PlayerGameOver() {
             transition={{ delay: 0.5 }}
             className="space-y-2"
           >
-            <h3 className="text-sm font-display text-muted-foreground">
+            <h3 className="text-sm font-serif text-ens-slate-light">
               Final Standings
             </h3>
             {top5.map((entry, i) => {
@@ -92,7 +92,7 @@ export default function PlayerGameOver() {
                     {entry.nickname}
                     {isMe && " (you)"}
                   </span>
-                  <span className="text-sm font-display font-bold tabular-nums">
+                  <span className="text-sm font-serif font-bold tabular-nums">
                     {entry.score.toLocaleString()}
                   </span>
                 </div>

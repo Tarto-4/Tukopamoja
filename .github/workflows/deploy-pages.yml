@@ -22,7 +22,9 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    # GitHub Enterprise: hosted runners disabled. Use self-hosted or deploy locally.
+    # To deploy locally instead: npm run deploy:pages
+    runs-on: self-hosted
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -65,7 +67,7 @@ jobs:
 
   deploy:
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

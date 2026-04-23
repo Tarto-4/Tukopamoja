@@ -25,7 +25,7 @@ export default function HostLeaderboard() {
       <motion.h1
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-3xl sm:text-5xl font-display font-black mb-2"
+        className="text-3xl sm:text-5xl font-serif font-black mb-2"
       >
         🏆 Leaderboard
       </motion.h1>
@@ -41,19 +41,19 @@ export default function HostLeaderboard() {
             initial={{ opacity: 0, x: -40 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: index * 0.08 }}
-            className="flex items-center gap-3 sm:gap-4 bg-card rounded-xl p-3 sm:p-4"
+            className="flex items-center gap-3 sm:gap-4 glass-card rounded-xl p-3 sm:p-4"
           >
             <div className="w-10 text-center">
               {entry.rank <= 3 ? (
                 <span className="text-2xl">{MEDALS[entry.rank - 1]}</span>
               ) : (
-                <span className="text-lg font-display font-bold text-muted-foreground">
+                <span className="text-lg font-serif font-bold text-ens-slate-light">
                   #{entry.rank}
                 </span>
               )}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-display font-bold truncate text-sm sm:text-base">
+              <p className="font-serif font-bold truncate text-sm sm:text-base">
                 {entry.avatar} {entry.nickname}
               </p>
               {entry.streak > 1 && (
@@ -62,7 +62,7 @@ export default function HostLeaderboard() {
                 </p>
               )}
             </div>
-            <span className="text-lg sm:text-xl font-display font-black">
+            <span className="text-lg sm:text-xl font-serif font-black">
               {entry.score.toLocaleString()}
             </span>
           </motion.div>
@@ -84,7 +84,7 @@ export default function HostLeaderboard() {
             setLoading(false);
           }
         }}
-        className="gradient-primary border-0"
+        className="gradient-primary border-0 btn-3d text-white font-semibold"
       >
         {loading
           ? "Loading..."

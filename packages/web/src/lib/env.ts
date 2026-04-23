@@ -30,6 +30,7 @@ function isValidUrl(value: string): boolean {
  * Throws with a detailed error listing every problem found.
  */
 export function validateEnv(): EnvConfig {
+  const isProd = process.env.NODE_ENV === "production";
   const errors: string[] = [];
 
   for (const key of REQUIRED_VARS) {
@@ -49,7 +50,7 @@ export function validateEnv(): EnvConfig {
     errors.push(`  ✗ NEXT_PUBLIC_APP_URL is not a valid URL: "${appUrl}"`);
   }
 
-  if (errors.length > 0) {
+  if (errors.length > 0 && isProd) {
     const msg = [
       "",
       "╔══════════════════════════════════════════════════════╗",
@@ -67,11 +68,43 @@ export function validateEnv(): EnvConfig {
     throw new Error(msg);
   }
 
+  if (errors.length > 0 && !isProd) {
+    console.warn(
+      [
+        "[QuizArena] Missing/invalid env vars detected in development.",
+        "Using safe local defaults for development mode.",
+        ...errors,
+      ].join("\n")
+    );
+  }
+
+  const resolvedSupabaseUrl =
+    supabaseUrl && isValidUrl(supabaseUrl)
+      ? supabaseUrl
+      : "http://127.0.0.1:54321";
+
+  const resolvedAppUrl =
+    appUrl && isValidUrl(appUrl)
+      ? appUrl
+      : "http://localhost:3000";
+
+  const resolvedAnonKey =
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY &&
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY !== "placeholder"
+      ? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+      : "local-dev-anon-key";
+
+  const resolvedMobileScheme =
+    process.env.NEXT_PUBLIC_MOBILE_SCHEME &&
+    process.env.NEXT_PUBLIC_MOBILE_SCHEME !== "placeholder"
+      ? process.env.NEXT_PUBLIC_MOBILE_SCHEME
+      : "quizarena";
+
   return {
-    NEXT_PUBLIC_SUPABASE_URL: supabaseUrl,
-    NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    NEXT_PUBLIC_APP_URL: appUrl,
-    NEXT_PUBLIC_MOBILE_SCHEME: process.env.NEXT_PUBLIC_MOBILE_SCHEME!,
+    NEXT_PUBLIC_SUPABASE_URL: resolvedSupabaseUrl,
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: resolvedAnonKey,
+    NEXT_PUBLIC_APP_URL: resolvedAppUrl,
+    NEXT_PUBLIC_MOBILE_SCHEME: resolvedMobileScheme,
   };
 }
 

@@ -4,30 +4,48 @@
 
 @layer base {
   :root {
-    --background: 222 47% 6%;
-    --foreground: 210 40% 98%;
-    --card: 222 47% 9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222 47% 9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 262 65% 63%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 174 100% 40%;
-    --secondary-foreground: 222 47% 6%;
-    --muted: 217 33% 17%;
-    --muted-foreground: 215 20% 65%;
-    --accent: 217 33% 17%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217 33% 17%;
-    --input: 217 33% 17%;
-    --ring: 262 65% 63%;
+    /* ─── ENS-Future Dark Theme ─────────────────────────────── */
+    /* Carbon Black base with Crimson accents + 3D depth         */
+    --background: 0 0% 7%;              /* #111111 Carbon Black  */
+    --foreground: 0 0% 95%;             /* Off-white text        */
+    --card: 0 0% 10%;                   /* Elevated surface      */
+    --card-foreground: 0 0% 95%;
+    --popover: 0 0% 10%;
+    --popover-foreground: 0 0% 95%;
+    --primary: 357 76% 33%;             /* #8E191E ENS Crimson   */
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 24%;              /* #3A3A3C Slate Gray    */
+    --secondary-foreground: 0 0% 95%;
+    --muted: 0 0% 15%;                  /* Dark muted surface    */
+    --muted-foreground: 0 0% 55%;       /* #8C8C8C              */
+    --accent: 0 0% 18%;
+    --accent-foreground: 0 0% 95%;
+    --destructive: 0 84% 50%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 18%;
+    --input: 0 0% 15%;
+    --ring: 357 76% 33%;
     --radius: 0.75rem;
 
-    /* Brand overrides — set dynamically */
-    --brand-primary: #6C5CE7;
-    --brand-secondary: #00CEC9;
+    /* ─── ENS Brand Tokens ─────────────────────────────────── */
+    --ens-crimson: #8E191E;
+    --ens-crimson-light: #B22229;
+    --ens-crimson-dark: #6B1216;
+    --ens-carbon: #111111;
+    --ens-slate: #3A3A3C;
+    --ens-slate-light: #636366;
+    --ens-gold: #C9A84C;
+
+    /* ─── 3D Depth Tokens ──────────────────────────────────── */
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.4), 0 1px 3px rgba(0,0,0,0.2);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.5), 0 2px 4px rgba(0,0,0,0.3);
+    --shadow-lg: 0 10px 25px rgba(0,0,0,0.6), 0 4px 10px rgba(0,0,0,0.4);
+    --shadow-xl: 0 20px 50px rgba(0,0,0,0.7), 0 8px 20px rgba(0,0,0,0.5);
+    --shadow-glow: 0 0 20px rgba(142,25,30,0.3), 0 0 40px rgba(142,25,30,0.1);
+
+    /* Legacy compat */
+    --brand-primary: var(--ens-crimson);
+    --brand-secondary: var(--ens-gold);
     --font-sans: "Inter", system-ui, sans-serif;
     --font-display: "Inter", system-ui, sans-serif;
   }
@@ -53,11 +71,80 @@
     @apply min-h-[100dvh] flex flex-col;
   }
 
+  /* ─── ENS-Future Gradients ──────────────────────────────── */
   .gradient-primary {
-    background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
+    background: linear-gradient(135deg, var(--ens-crimson), var(--ens-crimson-light));
   }
 
   .gradient-dark {
-    background: linear-gradient(135deg, hsl(222 47% 6%), hsl(222 47% 12%));
+    background: linear-gradient(160deg, #0a0a0a 0%, #151515 50%, #1a1012 100%);
+  }
+
+  .gradient-ens {
+    background: linear-gradient(135deg, var(--ens-crimson), var(--ens-gold));
+  }
+
+  /* ─── 3D Glass Cards ────────────────────────────────────── */
+  .glass-card {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .glass-card-elevated {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: var(--shadow-xl);
+  }
+
+  /* ─── Beveled Buttons ───────────────────────────────────── */
+  .btn-3d {
+    position: relative;
+    box-shadow:
+      0 4px 0 var(--ens-crimson-dark),
+      0 6px 12px rgba(0, 0, 0, 0.4);
+    transform: translateY(0);
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+  }
+
+  .btn-3d:hover {
+    transform: translateY(-1px);
+    box-shadow:
+      0 5px 0 var(--ens-crimson-dark),
+      0 8px 16px rgba(0, 0, 0, 0.5);
+  }
+
+  .btn-3d:active {
+    transform: translateY(2px);
+    box-shadow:
+      0 2px 0 var(--ens-crimson-dark),
+      0 3px 6px rgba(0, 0, 0, 0.3);
+  }
+
+  .btn-3d:focus-visible {
+    outline: 2px solid var(--ens-gold);
+    outline-offset: 2px;
+  }
+
+  /* ─── Glow Effects ──────────────────────────────────────── */
+  .glow-crimson {
+    box-shadow: var(--shadow-glow);
+  }
+
+  .text-glow {
+    text-shadow: 0 0 20px rgba(142, 25, 30, 0.5), 0 0 40px rgba(142, 25, 30, 0.2);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }

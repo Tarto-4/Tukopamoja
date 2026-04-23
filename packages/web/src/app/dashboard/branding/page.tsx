@@ -28,12 +28,12 @@ const FONT_OPTIONS = [
 ];
 
 const COLOR_PRESETS = [
-  { primary: "#6C5CE7", secondary: "#00CEC9", name: "Purple Teal" },
-  { primary: "#0984E3", secondary: "#00B894", name: "Blue Green" },
-  { primary: "#E17055", secondary: "#FDCB6E", name: "Coral Gold" },
-  { primary: "#D63031", secondary: "#E84393", name: "Red Pink" },
-  { primary: "#2D3436", secondary: "#636E72", name: "Dark Slate" },
-  { primary: "#00B894", secondary: "#55EFC4", name: "Mint" },
+  { primary: "#8E191E", secondary: "#C9A84C", name: "Executive Crimson" },
+  { primary: "#6B1216", secondary: "#D5B35B", name: "Heritage Gold" },
+  { primary: "#1F2A44", secondary: "#C9A84C", name: "Midnight Gold" },
+  { primary: "#184E45", secondary: "#D8C27A", name: "Emerald Brass" },
+  { primary: "#4C2A3D", secondary: "#D4A85F", name: "Aubergine Copper" },
+  { primary: "#2A2A2E", secondary: "#8F9399", name: "Carbon Slate" },
 ];
 
 export default function BrandingPage() {
@@ -104,7 +104,7 @@ export default function BrandingPage() {
   return (
     <div className="page-container max-w-2xl">
       <div className="mb-8">
-        <h1 className="text-3xl font-display font-black">Company Branding</h1>
+        <h1 className="text-3xl font-serif font-black">Company Branding</h1>
         <p className="text-muted-foreground mt-1">
           Customize how your brand appears to players
         </p>
@@ -176,7 +176,7 @@ export default function BrandingPage() {
               Colors
             </CardTitle>
             <CardDescription>
-              Choose colors that match your brand
+              Choose a polished, high-contrast palette for hosts and players
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -258,7 +258,7 @@ export default function BrandingPage() {
 
             {/* Live preview */}
             <div
-              className="rounded-lg p-6 text-center text-white font-display font-bold text-xl"
+              className="rounded-lg p-6 text-center text-white font-serif font-bold text-xl"
               style={{
                 background: `linear-gradient(135deg, ${org.primary_color}, ${org.secondary_color})`,
               }}
@@ -302,7 +302,7 @@ export default function BrandingPage() {
           <Button
             onClick={handleSave}
             disabled={saving}
-            className="gradient-primary border-0"
+            className="gradient-primary border-0 btn-3d text-white font-semibold"
             size="lg"
           >
             <Save className="w-4 h-4 mr-2" />

@@ -44,11 +44,21 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Game colors
-        "quiz-red": "#E21B3C",
-        "quiz-blue": "#1368CE",
-        "quiz-yellow": "#D89E00",
-        "quiz-green": "#26890C",
+        // ENS-Future brand colors
+        ens: {
+          crimson: "#8E191E",
+          "crimson-light": "#B22229",
+          "crimson-dark": "#6B1216",
+          carbon: "#111111",
+          slate: "#3A3A3C",
+          "slate-light": "#636366",
+          gold: "#C9A84C",
+        },
+        // Game answer colors (muted for ENS aesthetic)
+        "quiz-red": "#C62828",
+        "quiz-blue": "#1565C0",
+        "quiz-yellow": "#F9A825",
+        "quiz-green": "#2E7D32",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -58,6 +68,15 @@ const config: Config = {
       fontFamily: {
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
         display: ["var(--font-display)", "system-ui", "sans-serif"],
+        serif: ["Georgia", "Cambria", "serif"],
+      },
+      boxShadow: {
+        "ens-sm": "0 1px 2px rgba(0,0,0,0.4), 0 1px 3px rgba(0,0,0,0.2)",
+        "ens-md": "0 4px 6px rgba(0,0,0,0.5), 0 2px 4px rgba(0,0,0,0.3)",
+        "ens-lg": "0 10px 25px rgba(0,0,0,0.6), 0 4px 10px rgba(0,0,0,0.4)",
+        "ens-xl": "0 20px 50px rgba(0,0,0,0.7), 0 8px 20px rgba(0,0,0,0.5)",
+        "ens-glow": "0 0 20px rgba(142,25,30,0.3), 0 0 40px rgba(142,25,30,0.1)",
+        "ens-gold-glow": "0 0 20px rgba(201,168,76,0.3), 0 0 40px rgba(201,168,76,0.1)",
       },
       keyframes: {
         "accordion-down": {
@@ -68,10 +87,20 @@ const config: Config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        "pulse-glow": {
+          "0%, 100%": { boxShadow: "0 0 20px rgba(142,25,30,0.3)" },
+          "50%": { boxShadow: "0 0 40px rgba(142,25,30,0.6)" },
+        },
+        shimmer: {
+          "0%": { backgroundPosition: "-200% 0" },
+          "100%": { backgroundPosition: "200% 0" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "pulse-glow": "pulse-glow 2s ease-in-out infinite",
+        shimmer: "shimmer 2s linear infinite",
       },
     },
   },

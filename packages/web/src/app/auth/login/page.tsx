@@ -36,10 +36,13 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="game-screen items-center justify-center gradient-dark px-4">
-      <Card className="w-full max-w-md">
+    <div className="game-screen items-center justify-center gradient-dark px-4 relative overflow-hidden">
+      {/* Ambient glow */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full bg-ens-crimson/5 blur-[120px] pointer-events-none" />
+
+      <Card className="w-full max-w-md glass-card-elevated relative z-10">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-display">
+          <CardTitle className="text-2xl font-serif">
             {isSignUp ? "Create Account" : "Welcome Back"}
           </CardTitle>
           <CardDescription>
@@ -80,7 +83,7 @@ export default function LoginPage() {
 
             <Button
               type="submit"
-              className="w-full gradient-primary border-0"
+              className="w-full gradient-primary border-0 btn-3d text-white font-semibold"
               size="lg"
               disabled={loading}
             >

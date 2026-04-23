@@ -9,8 +9,8 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "QuizArena — Host Dashboard",
-  description: "Create quizzes, host live games, and engage your team.",
+  title: "QuizArena — ENS Africa",
+  description: "Premium real-time quiz platform. Create, host, and engage.",
 };
 
 export default function RootLayout({
@@ -20,7 +20,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
-      <body className="min-h-[100dvh] font-sans antialiased">
+      <body className="min-h-[100dvh] font-sans antialiased bg-[#111111]">
         {children}
       </body>
     </html>

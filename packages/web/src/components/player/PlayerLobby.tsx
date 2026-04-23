@@ -18,14 +18,14 @@ export default function PlayerLobby() {
         {/* Player identity */}
         <div className="space-y-2">
           <div className="text-6xl">{avatar}</div>
-          <h2 className="text-2xl font-display font-bold">{nickname}</h2>
+          <h2 className="text-2xl font-serif font-bold">{nickname}</h2>
           <p className="text-muted-foreground text-sm">You&apos;re in!</p>
         </div>
 
         {/* Waiting indicator */}
-        <div className="bg-card rounded-2xl p-6 space-y-4">
+        <div className="glass-card rounded-2xl p-6 space-y-4">
           <Loader2 className="w-8 h-8 mx-auto text-primary animate-spin" />
-          <p className="text-lg font-display">Waiting for host to start...</p>
+          <p className="text-lg font-serif">Waiting for host to start...</p>
           <p className="text-muted-foreground text-sm">
             Game PIN: <span className="font-mono font-bold tracking-wider">{session.pin}</span>
           </p>

@@ -16,8 +16,8 @@ create table public.organization (
   name          text not null default 'QuizArena',
   tagline       text default 'Real-time Quiz Platform',
   logo_url      text,                          -- Supabase Storage URL
-  primary_color text not null default '#6C5CE7',
-  secondary_color text not null default '#00CEC9',
+  primary_color text not null default '#8E191E',
+  secondary_color text not null default '#C9A84C',
   font_family   text not null default 'Inter',
   created_at    timestamptz not null default now(),
   updated_at    timestamptz not null default now()

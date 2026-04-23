@@ -33,7 +33,7 @@ export default function HostGameOver() {
         >
           🎉
         </motion.span>
-        <h1 className="text-4xl sm:text-6xl font-display font-black">
+        <h1 className="text-4xl sm:text-6xl font-serif font-black">
           Game Over!
         </h1>
       </motion.div>
@@ -54,7 +54,7 @@ export default function HostGameOver() {
               className="flex-1 flex flex-col items-center"
             >
               <span className="text-3xl mb-2">{MEDALS[entry.rank - 1]}</span>
-              <p className="font-display font-bold text-sm truncate max-w-full mb-1">
+              <p className="font-serif font-bold text-sm truncate max-w-full mb-1">
                 {entry.nickname}
               </p>
               <p className="text-xs text-muted-foreground mb-2">
@@ -63,7 +63,7 @@ export default function HostGameOver() {
               <div
                 className={`w-full ${heights[podiumIndex]} rounded-t-xl`}
                 style={{
-                  background: `linear-gradient(180deg, ${branding?.primary_color || "#6C5CE7"}, ${branding?.secondary_color || "#00CEC9"})`,
+                  background: `linear-gradient(180deg, ${branding?.primary_color || "#8E191E"}, ${branding?.secondary_color || "#C9A84C"})`,
                 }}
               />
             </motion.div>

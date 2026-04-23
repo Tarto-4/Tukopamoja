@@ -71,7 +71,7 @@ export default function HostLobby() {
               className="w-10 h-10 rounded object-contain"
             />
           )}
-          <span className="font-display font-bold text-lg">
+          <span className="font-serif font-bold text-lg">
             {branding?.name || "QuizArena"}
           </span>
         </div>
@@ -83,7 +83,7 @@ export default function HostLobby() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-2xl w-full">
           {/* QR Code */}
           <div className="flex flex-col items-center gap-4">
-            <h2 className="text-lg font-display text-muted-foreground">
+            <h2 className="text-lg font-serif text-ens-slate-light">
               Scan to Join
             </h2>
             <QRCodeDisplay value={joinUrl} />
@@ -91,13 +91,13 @@ export default function HostLobby() {
 
           {/* PIN display */}
           <div className="flex flex-col items-center justify-center gap-4">
-            <h2 className="text-lg font-display text-muted-foreground">
+            <h2 className="text-lg font-serif text-ens-slate-light">
               Game PIN
             </h2>
             <div
-              className="text-6xl sm:text-7xl font-display font-black tracking-[0.2em] py-4 px-8 rounded-2xl"
+              className="text-6xl sm:text-7xl font-serif font-black tracking-[0.2em] py-4 px-8 rounded-2xl glow-crimson"
               style={{
-                background: `linear-gradient(135deg, ${branding?.primary_color || "#6C5CE7"}, ${branding?.secondary_color || "#00CEC9"})`,
+                background: `linear-gradient(135deg, ${branding?.primary_color || "#8E191E"}, ${branding?.secondary_color || "#C9A84C"})`,
               }}
             >
               {session.pin}
@@ -122,7 +122,7 @@ export default function HostLobby() {
               {players.map((p) => (
                 <span
                   key={p.id}
-                  className="px-3 py-1.5 rounded-full bg-card border text-sm font-medium"
+                  className="px-3 py-1.5 rounded-full glass-card text-sm font-medium"
                 >
                   {p.avatar} {p.nickname}
                 </span>
@@ -136,7 +136,7 @@ export default function HostLobby() {
           size="xl"
           onClick={handleStart}
           disabled={loading}
-          className="gradient-primary border-0 text-xl"
+          className="gradient-primary border-0 text-xl btn-3d text-white font-semibold"
         >
           <Play className="w-5 h-5 mr-2" />
           {loading

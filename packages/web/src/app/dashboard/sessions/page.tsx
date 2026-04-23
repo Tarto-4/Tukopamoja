@@ -32,7 +32,7 @@ export default function SessionsPage() {
   return (
     <div className="page-container">
       <div className="mb-8">
-        <h1 className="text-3xl font-display font-black">Game Sessions</h1>
+        <h1 className="text-3xl font-serif font-black">Game Sessions</h1>
         <p className="text-muted-foreground mt-1">
           History of all hosted game sessions
         </p>

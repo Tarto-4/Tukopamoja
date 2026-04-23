@@ -36,13 +36,13 @@ export default function TemplatesPage() {
     <div className="page-container">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-display font-black">Templates</h1>
+          <h1 className="text-3xl font-serif font-black">Templates</h1>
           <p className="text-muted-foreground mt-1">
             Create and manage your quiz templates
           </p>
         </div>
         <Link href="/dashboard/templates/new">
-          <Button className="gradient-primary border-0">
+          <Button className="gradient-primary border-0 btn-3d text-white font-semibold">
             <Plus className="w-4 h-4 mr-2" />
             New Template
           </Button>
@@ -58,7 +58,7 @@ export default function TemplatesPage() {
               Create your first quiz template to get started.
             </p>
             <Link href="/dashboard/templates/new">
-              <Button className="gradient-primary border-0">
+              <Button className="gradient-primary border-0 btn-3d text-white font-semibold">
                 <Plus className="w-4 h-4 mr-2" />
                 Create Template
               </Button>

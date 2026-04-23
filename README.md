@@ -263,8 +263,8 @@ npm install
 supabase start
 
 # Configure env
-cp packages/web/.env.example packages/web/.env.local
-# Edit with Supabase URL and anon key from `supabase status`
+npm run setup:env
+# Edit with values from `supabase status` and your LAN app URL
 
 # Run migrations
 npm run db:migrate
@@ -275,6 +275,23 @@ npm run dev:web     # → http://localhost:3000
 # Start mobile (separate terminal)
 npm run dev:mobile  # → Expo DevTools
 ```
+
+Required web env vars:
+
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `NEXT_PUBLIC_APP_URL`
+- `NEXT_PUBLIC_MOBILE_SCHEME`
+
+If the app throws an environment configuration runtime error, run:
+
+```bash
+npm run setup:env
+```
+
+Then fill `packages/web/.env.local` with real values and restart `npm run dev:web`.
+
+Note: development mode falls back to safe local defaults if env vars are missing; production remains strict and fails fast.
 
 ---
 
@@ -392,12 +409,27 @@ Add these as **Repository Secrets** in GitHub (Settings → Secrets and variable
 
 | Secret | Value | Where to find |
 |--------|-------|---------------|
-| `SUPABASE_URL` | `https://xxxx.supabase.co` | Supabase Dashboard → Settings → API |
-| `SUPABASE_ANON_KEY` | `eyJhbG...` | Supabase Dashboard → Settings → API |
-| `SUPABASE_SERVICE_ROLE_KEY` | `eyJhbG...` | Supabase Dashboard → Settings → API |
+| `NEXT_PUBLIC_SUPABASE_URL` | `https://xxxx.supabase.co` | Supabase Dashboard → Settings → API |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | `eyJhbG...` | Supabase Dashboard → Settings → API |
 | `SUPABASE_PROJECT_ID` | `xxxxxxxxxxxx` | Supabase Dashboard → Settings → General |
+| `SUPABASE_ACCESS_TOKEN` | Personal access token | Supabase Dashboard → Account → Access Tokens |
 | `SUPABASE_DB_PASSWORD` | Your DB password | Set during project creation |
 | `EXPO_TOKEN` | EAS token | https://expo.dev/accounts/settings |
+
+Add this as a **Repository Variable**:
+
+| Variable | Value |
+|----------|-------|
+| `NEXT_PUBLIC_APP_URL` | Your GitHub Pages production URL |
+
+For local/CI deterministic integration tests:
+
+| Secret/Env | Purpose |
+|------------|---------|
+| `QUIZARENA_SUPABASE_ANON_KEY` | Used by `scripts/e2e-test.sh` |
+| `QUIZARENA_SUPABASE_URL` | Optional Supabase base URL override (default `http://127.0.0.1:54321`) |
+| `QUIZARENA_WEB_URL` | Optional web URL override for smoke checks (default `http://localhost:3000`) |
+| `QUIZARENA_WEB_CHECKS` | Optional route checks in E2E (`1` = enable, default `0`) |
 
 ### 3. Set Up Supabase (Production)
 
@@ -432,6 +464,15 @@ This project is configured for static export + GitHub Pages using:
 1. Repository exists on enterprise GitHub: `https://ens.ghe.com/tmongwe/quizarena`
 2. Default branch is `main`
 3. Your latest local fixes are pushed to `main`
+
+### Step 1.5 — Confirm self-hosted runner availability
+
+Current workflows run on `self-hosted` runners. Ensure at least one runner is online for this repo and has:
+
+1. Node.js 20+
+2. npm available
+3. Supabase CLI (for migration workflow)
+4. Network egress to GitHub + Supabase
 
 ### Step 2 — Enable GitHub Pages via Actions
 
@@ -569,7 +610,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
 
@@ -611,7 +652,7 @@ on:
 
 jobs:
   migrate:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
 
@@ -654,6 +695,33 @@ EXPO_PUBLIC_APP_URL=https://your-domain.com
 
 ---
 
+## Deterministic Test Commands
+
+```bash
+# Verify scoring and session flow rules
+npm run test:rules
+
+# Verify RLS migration coverage
+npm run test:rls
+
+# Run end-to-end deterministic smoke flow
+# Requires QUIZARENA_SUPABASE_ANON_KEY (or NEXT_PUBLIC_SUPABASE_ANON_KEY)
+npm run test:integration
+
+# Run both checks
+npm run test:all
+```
+
+---
+
+## Accessibility and Operations Artifacts
+
+- Accessibility audit checklist and remediation tracker: `docs/accessibility-audit.md`
+- Structured logging and monitoring baseline: `docs/observability.md`
+- Production incident and recovery runbook: `docs/operations-runbook.md`
+
+---
+
 ## Complete Deployment Checklist
 
 - [ ] Create Supabase project on [supabase.com](https://supabase.com)
@@ -661,13 +729,14 @@ EXPO_PUBLIC_APP_URL=https://your-domain.com
 - [ ] Run seed SQL to create organization row
 - [ ] Create a GitHub repo and push code
 - [ ] Add repository secrets in GitHub Settings
-- [ ] Deploy web to Vercel (connect GitHub or use CLI)
-- [ ] Set environment variables in Vercel
+- [ ] Confirm self-hosted runner is online
+- [ ] Deploy web via GitHub Pages workflow
+- [ ] Set environment variables in your deploy target
 - [ ] Update `NEXT_PUBLIC_APP_URL` to deployed URL
 - [ ] Configure Supabase Auth redirect URLs
 - [ ] Build mobile app with EAS (`eas build`)
 - [ ] Distribute mobile app (APK sideload or App Store)
-- [ ] (Optional) Set up GitHub Actions workflows for CI/CD
+- [ ] Run `npm run test:all`
 - [ ] Create first admin user (sign up via the login page)
 - [ ] Configure branding in dashboard
 

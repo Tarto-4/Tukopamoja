@@ -16,7 +16,7 @@ export default function PlayerLeaderboard() {
       <div className="w-full max-w-md space-y-6">
         {/* Title */}
         <div className="text-center space-y-2">
-          <h2 className="text-2xl font-display font-black">🏆 Leaderboard</h2>
+          <h2 className="text-2xl font-serif font-black">🏆 Leaderboard</h2>
           {rank && (
             <p className="text-muted-foreground">
               You&apos;re in <span className="font-bold text-primary">#{rank}</span> place
@@ -25,9 +25,9 @@ export default function PlayerLeaderboard() {
         </div>
 
         {/* My score card */}
-        <div className="bg-primary/10 border border-primary/30 rounded-xl p-4 text-center">
+        <div className="glass-card border border-primary/30 rounded-xl p-4 text-center">
           <p className="text-sm text-muted-foreground">Your Score</p>
-          <p className="text-3xl font-display font-black text-primary">
+          <p className="text-3xl font-serif font-black text-primary">
             {totalScore.toLocaleString()}
           </p>
         </div>
@@ -46,7 +46,7 @@ export default function PlayerLeaderboard() {
                   isMe ? "bg-primary/10 border border-primary/30" : "bg-card"
                 }`}
               >
-                <span className="text-lg w-8 text-center font-display font-black">
+                <span className="text-lg w-8 text-center font-serif font-black">
                   {i < 3 ? MEDALS[i] : `#${i + 1}`}
                 </span>
                 <span className="text-xl">{entry.avatar}</span>
@@ -54,7 +54,7 @@ export default function PlayerLeaderboard() {
                   {entry.nickname}
                   {isMe && " (you)"}
                 </span>
-                <span className="font-display font-bold tabular-nums">
+                <span className="font-serif font-bold tabular-nums">
                   {entry.score.toLocaleString()}
                 </span>
                 {entry.streak > 1 && (
