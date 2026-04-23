@@ -95,4 +95,4 @@ jobs:
           fi
 
           git commit -m "Deploy from ${GITHUB_REPOSITORY}@${GITHUB_SHA}"
-          git push origin gh-pages
+          git push --force origin gh-pages

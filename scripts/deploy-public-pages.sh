@@ -58,7 +58,7 @@ fi
 git commit -m "Deploy static site from $(git -C "$REPO_ROOT" rev-parse --short HEAD)"
 
 echo "[7/7] Pushing to ${TARGET_REPO}:${TARGET_BRANCH}..."
-git push origin "$TARGET_BRANCH"
+git push --force origin "$TARGET_BRANCH"
 
 cd "$REPO_ROOT"
 rm -rf "$WORKTREE_DIR"
