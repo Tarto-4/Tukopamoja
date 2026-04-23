@@ -457,7 +457,42 @@ supabase db push
 This project is configured for static export + GitHub Pages using:
 
 - `.github/workflows/deploy-pages.yml`
+- `.github/workflows/deploy-public-pages.yml`
 - `packages/web/next.config.js` with `output: "export"`
+
+### External Access with Enterprise GitHub (Recommended)
+
+If your enterprise GitHub Pages domain requires authentication, external players cannot access the app directly.
+
+Use a **public mirror repo** for static hosting:
+
+1. Keep source code in this private enterprise repo
+2. Create a public GitHub.com repo (for example: `tmongwe/quizarena-public`)
+3. Enable GitHub Pages on the public repo from branch `gh-pages`
+4. Run workflow `.github/workflows/deploy-public-pages.yml` from this repo
+
+Required settings in this enterprise repo (**Settings → Secrets and variables → Actions**):
+
+Secrets:
+
+| Name | Value |
+|------|-------|
+| `NEXT_PUBLIC_SUPABASE_URL` | `https://<your-supabase-project>.supabase.co` |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anon key |
+| `PUBLIC_PAGES_PAT` | GitHub PAT with write access to the public mirror repo |
+
+Variables:
+
+| Name | Value |
+|------|-------|
+| `NEXT_PUBLIC_APP_URL` | Public Pages URL (for example `https://<user>.github.io/<public-repo>`) |
+| `PUBLIC_PAGES_REPO` | Public mirror repo in `owner/repo` format |
+
+Optional local fallback (if runners are unavailable):
+
+```bash
+PUBLIC_PAGES_REPO=owner/repo npm run deploy:public-pages
+```
 
 ### Step 1 — Confirm repository and default branch
 
@@ -730,7 +765,7 @@ npm run test:all
 - [ ] Create a GitHub repo and push code
 - [ ] Add repository secrets in GitHub Settings
 - [ ] Confirm self-hosted runner is online
-- [ ] Deploy web via GitHub Pages workflow
+- [ ] Deploy web via public mirror workflow (`deploy-public-pages.yml`)
 - [ ] Set environment variables in your deploy target
 - [ ] Update `NEXT_PUBLIC_APP_URL` to deployed URL
 - [ ] Configure Supabase Auth redirect URLs

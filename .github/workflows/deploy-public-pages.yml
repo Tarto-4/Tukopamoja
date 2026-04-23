@@ -1,0 +1,98 @@
+name: Deploy Web to Public GitHub Pages Repo
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'packages/web/**'
+      - 'packages/shared/**'
+      - 'scripts/validate-env.mjs'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/deploy-public-pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: public-pages-mirror
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout enterprise repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate production env
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          NEXT_PUBLIC_APP_URL: ${{ vars.NEXT_PUBLIC_APP_URL }}
+          NEXT_PUBLIC_MOBILE_SCHEME: quizarena
+        run: node scripts/validate-env.mjs --production
+
+      - name: Build static export
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          NEXT_PUBLIC_APP_URL: ${{ vars.NEXT_PUBLIC_APP_URL }}
+          NEXT_PUBLIC_MOBILE_SCHEME: quizarena
+        run: npm run build:web
+
+      - name: Publish to public repo gh-pages
+        env:
+          PUBLIC_PAGES_REPO: ${{ vars.PUBLIC_PAGES_REPO }}
+          PUBLIC_PAGES_PAT: ${{ secrets.PUBLIC_PAGES_PAT }}
+        run: |
+          set -euo pipefail
+
+          if [[ -z "${PUBLIC_PAGES_REPO:-}" ]]; then
+            echo "PUBLIC_PAGES_REPO is not set (expected owner/repo)."
+            exit 1
+          fi
+
+          if [[ -z "${PUBLIC_PAGES_PAT:-}" ]]; then
+            echo "PUBLIC_PAGES_PAT is not set."
+            exit 1
+          fi
+
+          WORKDIR="$(mktemp -d)"
+          trap 'rm -rf "$WORKDIR"' EXIT
+
+          git clone "https://x-access-token:${PUBLIC_PAGES_PAT}@github.com/${PUBLIC_PAGES_REPO}.git" "$WORKDIR/public"
+          cd "$WORKDIR/public"
+
+          if git show-ref --verify --quiet refs/heads/gh-pages; then
+            git checkout gh-pages
+          else
+            git checkout --orphan gh-pages
+            git rm -rf . >/dev/null 2>&1 || true
+          fi
+
+          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          rsync -a --exclude='.git' "$GITHUB_WORKSPACE/packages/web/out/" ./
+          touch .nojekyll
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to deploy."
+            exit 0
+          fi
+
+          git commit -m "Deploy from ${GITHUB_REPOSITORY}@${GITHUB_SHA}"
+          git push origin gh-pages

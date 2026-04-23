@@ -14,6 +14,7 @@
     "validate-env:prod": "node scripts/validate-env.mjs --production",
     "build:web": "npm -w packages/web run build",
     "deploy:pages": "bash ./scripts/deploy-pages.sh",
+    "deploy:public-pages": "bash ./scripts/deploy-public-pages.sh",
     "build:shared": "npm -w packages/shared run build",
     "db:migrate": "supabase db push",
     "db:reset": "supabase db reset",
