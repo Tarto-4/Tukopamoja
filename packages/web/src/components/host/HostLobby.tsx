@@ -48,12 +48,9 @@ export default function HostLobby() {
 
           const origin = normalize(window.location.origin);
           const envUrl = normalize(appUrl);
+          const hasConfiguredPublicUrl = !!envUrl && !isLocalhost(envUrl);
 
-          const baseUrl = !isLocalhost(origin)
-            ? origin
-            : envUrl && !isLocalhost(envUrl)
-              ? envUrl
-              : origin;
+          const baseUrl = hasConfiguredPublicUrl ? envUrl : origin;
 
           return `${baseUrl}/join/?pin=${session.pin}`;
         })()
