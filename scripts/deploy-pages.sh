@@ -26,6 +26,12 @@ node scripts/validate-env.mjs --production || {
   exit 1
 }
 
+if [[ -f "$REPO_ROOT/packages/web/.env.production" ]]; then
+  set -a
+  source "$REPO_ROOT/packages/web/.env.production"
+  set +a
+fi
+
 echo "[3/10] Building static web output..."
 npm run build:web
 

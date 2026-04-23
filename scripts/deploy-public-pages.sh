@@ -16,6 +16,12 @@ cd "$REPO_ROOT"
 echo "[1/7] Validating production environment..."
 node scripts/validate-env.mjs --production
 
+if [[ -f "$REPO_ROOT/packages/web/.env.production" ]]; then
+  set -a
+  source "$REPO_ROOT/packages/web/.env.production"
+  set +a
+fi
+
 echo "[2/7] Building static web output..."
 npm run build:web
 
