@@ -52,10 +52,22 @@ export function useRealtimeGame(
         const updated = payload.new as Session;
         setSession(updated);
 
-        // Start timer on question_active
+        // Start timer on question_active (with auto-advance for host)
         if (updated.status === "question_active" && updated.questions_snapshot) {
           const q = updated.questions_snapshot[updated.current_q_index];
-          if (q) startTimer(q.time_limit_sec);
+          if (q) {
+            if (role === "host") {
+              startTimer(q.time_limit_sec, () => {
+                // Auto-show leaderboard when timer expires
+                const store = useGameStore.getState();
+                if (store.session?.status === "question_active") {
+                  store.showLeaderboard().catch(() => {});
+                }
+              });
+            } else {
+              startTimer(q.time_limit_sec);
+            }
+          }
         }
 
         // Stop timer on evaluating/leaderboard
@@ -79,11 +91,23 @@ export function useRealtimeGame(
         filter: `session_id=eq.${sessionId}`,
       },
       (payload) => {
-        addPlayer(payload.new as SessionPlayer);
+        const player = payload.new as SessionPlayer;
+        addPlayer(player);
+
+        // Keep local player_count in sync for host answer counter
+        if (role === "host") {
+          const store = useGameStore.getState();
+          if (store.session) {
+            store.setSession({
+              ...store.session,
+              player_count: store.players.length + 1,
+            });
+          }
+        }
       }
     );
 
-    // 3. Listen for player answers (host tracks count)
+    // 3. Listen for player answers (host tracks count + distribution)
     if (role === "host") {
       channel.on(
         "postgres_changes",
@@ -93,8 +117,9 @@ export function useRealtimeGame(
           table: "player_answers",
           filter: `session_id=eq.${sessionId}`,
         },
-        () => {
-          incrementAnswered();
+        (payload) => {
+          const answer = payload.new as { selected_option?: number };
+          incrementAnswered(answer.selected_option);
         }
       );
     }

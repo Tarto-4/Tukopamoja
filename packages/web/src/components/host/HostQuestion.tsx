@@ -18,6 +18,7 @@ export default function HostQuestion() {
     session,
     currentQuestion,
     answeredCount,
+    answerDistribution,
     timeLeft,
     showLeaderboard,
     nextQuestion,
@@ -113,7 +114,7 @@ export default function HostQuestion() {
         })}
       </div>
 
-      {/* Answer counter */}
+      {/* Answer counter + distribution */}
       <div className="bg-card rounded-xl p-4 text-center mb-4">
         <p className="text-sm text-muted-foreground">Answers</p>
         <p className="text-3xl font-display font-black">
@@ -123,6 +124,31 @@ export default function HostQuestion() {
         </p>
         {allAnswered && (
           <p className="text-xs text-quiz-green mt-1">All players answered!</p>
+        )}
+
+        {/* Answer distribution bars */}
+        {answeredCount > 0 && (
+          <div className="mt-3 flex items-end justify-center gap-2 h-12">
+            {currentQuestion.options.map((_, i) => {
+              const count = answerDistribution[i] ?? 0;
+              const pct = answeredCount > 0 ? (count / answeredCount) * 100 : 0;
+              const color = OPTION_COLORS[i];
+              return (
+                <div key={i} className="flex flex-col items-center gap-0.5 flex-1 max-w-16">
+                  <span className="text-xs font-mono tabular-nums">{count}</span>
+                  <div
+                    className="w-full rounded-t transition-all duration-300"
+                    style={{
+                      backgroundColor: color.bg,
+                      height: `${Math.max(4, pct)}%`,
+                      minHeight: "2px",
+                    }}
+                  />
+                  <span className="text-[10px] opacity-60">{color.shape}</span>
+                </div>
+              );
+            })}
+          </div>
         )}
       </div>
 

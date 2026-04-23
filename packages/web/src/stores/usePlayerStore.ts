@@ -156,6 +156,13 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
       throw new Error(playerErr.message || "Failed to join game.");
     }
 
+    // Increment player_count on the session
+    try {
+      await supabase.rpc("increment_player_count", { p_session_id: session.id });
+    } catch {
+      // Non-critical: host will still see the player via realtime
+    }
+
     // Fetch all players
     const { data: allPlayers } = await supabase
       .from("session_players")
