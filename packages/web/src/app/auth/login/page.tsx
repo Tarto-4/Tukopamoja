@@ -42,6 +42,11 @@ export default function LoginPage() {
 
       <Card className="w-full max-w-md glass-card-elevated relative z-10">
         <CardHeader className="text-center">
+          <img
+            src="/logo.svg"
+            alt="QuizArena"
+            className="h-12 w-auto mx-auto mb-2"
+          />
           <CardTitle className="text-2xl font-serif">
             {isSignUp ? "Create Account" : "Welcome Back"}
           </CardTitle>

@@ -13,6 +13,11 @@ export default function HomePage() {
       <div className="text-center space-y-10 px-4 relative z-10">
         {/* Logo / brand */}
         <div className="space-y-3">
+          <img
+            src="/logo.svg"
+            alt="QuizArena"
+            className="h-16 sm:h-20 w-auto mx-auto opacity-95"
+          />
           <h1 className="text-5xl sm:text-7xl font-serif font-bold tracking-tight">
             <span className="gradient-ens bg-clip-text text-transparent text-glow">
               QuizArena

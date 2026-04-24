@@ -7,6 +7,7 @@
 import { motion } from "framer-motion";
 import { usePlayerStore } from "@/stores/usePlayerStore";
 import { Button } from "@/components/ui/button";
+import WinnerCelebration from "@/components/ui/WinnerCelebration";
 import { MEDALS } from "@quizarena/shared";
 import { Trophy, RotateCcw } from "lucide-react";
 
@@ -16,9 +17,11 @@ export default function PlayerGameOver() {
 
   const top5 = leaderboard.slice(0, 5);
   const isTop3 = rank !== null && rank <= 3;
+  const isWinner = rank === 1;
 
   return (
-    <div className="game-screen items-center justify-center gradient-dark px-4 py-6">
+    <div className="game-screen items-center justify-center gradient-dark px-4 py-6 relative overflow-hidden">
+      <WinnerCelebration active={isWinner} winnerLabel="Champion" />
       <div className="w-full max-w-md space-y-6 text-center">
         {/* Celebration header */}
         <motion.div

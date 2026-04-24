@@ -11,6 +11,11 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: "QuizArena — ENS Africa",
   description: "Premium real-time quiz platform. Create, host, and engage.",
+  icons: {
+    icon: "/favicon.svg",
+    shortcut: "/favicon.svg",
+    apple: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({

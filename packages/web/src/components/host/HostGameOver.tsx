@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { useGameStore } from "@/stores/useGameStore";
 import { useBrandingStore } from "@/stores/useBrandingStore";
 import { Button } from "@/components/ui/button";
+import WinnerCelebration from "@/components/ui/WinnerCelebration";
 import { MEDALS } from "@quizarena/shared";
 
 export default function HostGameOver() {
@@ -17,9 +18,14 @@ export default function HostGameOver() {
   const { branding } = useBrandingStore();
 
   const top3 = leaderboard.slice(0, 3);
+  const winner = top3[0];
 
   return (
-    <div className="game-screen items-center justify-center gradient-dark p-4 sm:p-8">
+    <div className="game-screen items-center justify-center gradient-dark p-4 sm:p-8 relative overflow-hidden">
+      <WinnerCelebration
+        active={!!winner}
+        winnerLabel={winner ? `${winner.nickname} wins!` : "Winner"}
+      />
       <motion.div
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
