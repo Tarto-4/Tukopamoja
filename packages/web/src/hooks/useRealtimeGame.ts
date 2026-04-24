@@ -8,18 +8,11 @@
 import { useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useGameStore } from "@/stores/useGameStore";
-import type {
-  Session,
-  SessionPlayer,
-  BroadcastEvent,
-} from "@quizarena/shared";
+import type { Session, SessionPlayer, BroadcastEvent } from "@quizarena/shared";
 
 type Role = "host" | "player";
 
-export function useRealtimeGame(
-  sessionId: string | undefined,
-  role: Role
-) {
+export function useRealtimeGame(sessionId: string | undefined, role: Role) {
   const channelRef = useRef<ReturnType<ReturnType<typeof createClient>["channel"]> | null>(null);
 
   const {
@@ -28,128 +21,142 @@ export function useRealtimeGame(
     removePlayer,
     incrementAnswered,
     setLeaderboard,
+    setRealtimeStatus,
     startTimer,
     stopTimer,
-    loadSession,
   } = useGameStore();
 
   useEffect(() => {
     if (!sessionId) return;
-    let channel: ReturnType<ReturnType<typeof createClient>["channel"]> | null = null;
 
-    try {
-      const supabase = createClient();
-      channel = supabase.channel(`session:${sessionId}`);
-    } catch (error) {
-      console.error("[Realtime] Failed to initialize Supabase client:", error);
-      return;
-    }
+    let cancelled = false;
+    let retryTimer: ReturnType<typeof setTimeout> | null = null;
 
-    // 1. Listen for session row changes (status, current_q_index)
-    channel.on(
-      "postgres_changes",
-      {
-        event: "UPDATE",
-        schema: "public",
-        table: "sessions",
-        filter: `id=eq.${sessionId}`,
-      },
-      (payload) => {
-        const updated = payload.new as Session;
-        setSession(updated);
+    const subscribe = (attempt: number) => {
+      if (cancelled) return;
 
-        // Start timer on question_active (with auto-advance for host)
-        if (updated.status === "question_active" && updated.questions_snapshot) {
-          const q = updated.questions_snapshot[updated.current_q_index];
-          if (q) {
-            if (role === "host") {
-              startTimer(q.time_limit_sec, () => {
-                // Auto-show leaderboard when timer expires
-                const store = useGameStore.getState();
-                if (store.session?.status === "question_active") {
-                  store.showLeaderboard().catch(() => {});
-                }
-              });
-            } else {
-              startTimer(q.time_limit_sec);
+      setRealtimeStatus(attempt > 0 ? "reconnecting" : "connecting");
+
+      let channel: ReturnType<ReturnType<typeof createClient>["channel"]> | null = null;
+      try {
+        channel = createClient().channel(`session:${sessionId}`);
+      } catch (error) {
+        console.error("[Realtime] Failed to initialize Supabase client:", error);
+        return;
+      }
+
+      channel.on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "sessions",
+          filter: `id=eq.${sessionId}`,
+        },
+        (payload) => {
+          const updated = payload.new as Session;
+          setSession(updated);
+
+          if (updated.status === "question_active" && updated.questions_snapshot) {
+            const q = updated.questions_snapshot[updated.current_q_index];
+            if (q) {
+              const duration = updated.current_question_remaining_sec || updated.current_question_time_limit_sec || q.time_limit_sec;
+              if (role === "host") {
+                startTimer(duration, () => {
+                  const store = useGameStore.getState();
+                  if (store.session?.status === "question_active") {
+                    store.showLeaderboard().catch(() => {});
+                  }
+                });
+              } else {
+                startTimer(duration);
+              }
             }
           }
-        }
 
-        // Stop timer on evaluating/leaderboard
-        if (
-          updated.status === "evaluating" ||
-          updated.status === "leaderboard" ||
-          updated.status === "finished"
-        ) {
-          stopTimer();
-        }
-      }
-    );
-
-    // 2. Listen for new players joining
-    channel.on(
-      "postgres_changes",
-      {
-        event: "INSERT",
-        schema: "public",
-        table: "session_players",
-        filter: `session_id=eq.${sessionId}`,
-      },
-      (payload) => {
-        const player = payload.new as SessionPlayer;
-        addPlayer(player);
-
-        // Keep local player_count in sync for host answer counter
-        if (role === "host") {
-          const store = useGameStore.getState();
-          if (store.session) {
-            store.setSession({
-              ...store.session,
-              player_count: store.players.length + 1,
-            });
+          if (updated.status === "evaluating" || updated.status === "leaderboard" || updated.status === "finished") {
+            stopTimer();
           }
         }
-      }
-    );
+      );
 
-    // 3. Listen for player answers (host tracks count + distribution)
-    if (role === "host") {
       channel.on(
         "postgres_changes",
         {
           event: "INSERT",
           schema: "public",
-          table: "player_answers",
+          table: "session_players",
           filter: `session_id=eq.${sessionId}`,
         },
         (payload) => {
-          const answer = payload.new as { selected_option?: number };
-          incrementAnswered(answer.selected_option);
+          const player = payload.new as SessionPlayer;
+          if (!player.kicked_at) addPlayer(player);
         }
       );
-    }
 
-    // 4. Broadcast channel for custom events (leaderboard, results)
-    channel.on("broadcast", { event: "game_event" }, (payload) => {
-      const event = payload.payload as BroadcastEvent;
+      channel.on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "session_players",
+          filter: `session_id=eq.${sessionId}`,
+        },
+        (payload) => {
+          const updatedPlayer = payload.new as SessionPlayer;
+          if (updatedPlayer.kicked_at) {
+            removePlayer(updatedPlayer.id);
+          }
+        }
+      );
 
-      switch (event.type) {
-        case "LEADERBOARD":
-          setLeaderboard(event.payload.rankings);
-          break;
-        case "GAME_OVER":
-          setLeaderboard(event.payload.final_rankings);
-          break;
+      if (role === "host") {
+        channel.on(
+          "postgres_changes",
+          {
+            event: "INSERT",
+            schema: "public",
+            table: "player_answers",
+            filter: `session_id=eq.${sessionId}`,
+          },
+          (payload) => {
+            const answer = payload.new as { selected_option?: number };
+            incrementAnswered(answer.selected_option);
+          }
+        );
       }
-    });
 
-    channel.subscribe();
-    channelRef.current = channel;
+      channel.on("broadcast", { event: "game_event" }, (payload) => {
+        const event = payload.payload as BroadcastEvent;
+        if (event.type === "LEADERBOARD") setLeaderboard(event.payload.rankings);
+        if (event.type === "GAME_OVER") setLeaderboard(event.payload.final_rankings);
+      });
+
+      channel.subscribe((status) => {
+        if (cancelled) return;
+        if (status === "SUBSCRIBED") {
+          setRealtimeStatus("connected");
+          channelRef.current = channel;
+          return;
+        }
+
+        if (status === "CLOSED" || status === "CHANNEL_ERROR" || status === "TIMED_OUT") {
+          setRealtimeStatus("reconnecting");
+          const delay = Math.min(15000, 1000 * 2 ** Math.min(attempt, 4));
+          if (retryTimer) clearTimeout(retryTimer);
+          retryTimer = setTimeout(() => subscribe(attempt + 1), delay);
+        }
+      });
+    };
+
+    subscribe(0);
 
     return () => {
+      cancelled = true;
       stopTimer();
-      channel?.unsubscribe();
+      setRealtimeStatus("disconnected");
+      if (retryTimer) clearTimeout(retryTimer);
+      channelRef.current?.unsubscribe();
     };
-  }, [sessionId, role, setSession, addPlayer, removePlayer, incrementAnswered, setLeaderboard, startTimer, stopTimer, loadSession]);
+  }, [sessionId, role, setSession, addPlayer, removePlayer, incrementAnswered, setLeaderboard, setRealtimeStatus, startTimer, stopTimer]);
 }

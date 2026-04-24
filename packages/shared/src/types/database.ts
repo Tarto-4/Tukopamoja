@@ -87,6 +87,12 @@ export interface Session {
   ended_at: string | null;
   created_at: string;
   questions_snapshot: QuestionSnapshot[] | null;
+  lobby_locked: boolean;
+  allow_late_join: boolean;
+  is_paused: boolean;
+  current_question_started_at: string | null;
+  current_question_time_limit_sec: number | null;
+  current_question_remaining_sec: number | null;
 }
 
 export interface SessionPlayer {
@@ -99,6 +105,10 @@ export interface SessionPlayer {
   streak: number;
   rank: number | null;
   joined_at: string;
+  is_ready: boolean;
+  ready_at: string | null;
+  is_muted: boolean;
+  kicked_at: string | null;
 }
 
 export interface PlayerAnswer {

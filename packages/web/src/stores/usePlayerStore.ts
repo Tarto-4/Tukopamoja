@@ -84,12 +84,17 @@ interface PlayerState {
   streak: number;
   rank: number | null;
 
+  // Realtime health
+  realtimeStatus: "connected" | "connecting" | "reconnecting" | "disconnected";
+
   // Actions
   joinSession: (pin: string, nickname: string, email: string) => Promise<string>;
   rejoinSession: () => Promise<boolean>;
+  toggleReady: (ready: boolean) => Promise<void>;
   submitAnswer: (optionIndex: number) => Promise<void>;
   setSession: (session: Session) => void;
   setLeaderboard: (rankings: LeaderboardEntry[]) => void;
+  setRealtimeStatus: (status: "connected" | "connecting" | "reconnecting" | "disconnected") => void;
   setTimeLeft: (t: number) => void;
   startTimer: (seconds: number) => void;
   stopTimer: () => void;
@@ -116,13 +121,14 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
   totalScore: 0,
   streak: 0,
   rank: null,
+  realtimeStatus: "connecting",
 
   // ─── Join via PIN ──────────────────────────────────────────
 
   joinSession: async (pin, nickname, email) => {
     const supabase = createClient();
 
-    // Find session by PIN
+    // Find session by PIN first (for hydration); guarded join RPC enforces controls.
     const { data: session, error: sessionErr } = await supabase
       .from("sessions")
       .select("*")
@@ -136,51 +142,47 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
 
     const avatar = get().avatar;
 
-    // Insert as player
-    const { data: player, error: playerErr } = await supabase
-      .from("session_players")
-      .insert({
-        session_id: session.id,
-        nickname,
-        email,
-        avatar,
-        score: 0,
-        streak: 0,
-      })
-      .select()
-      .single();
+    const { data: joinData, error: joinErr } = await supabase.rpc("join_session_guarded", {
+      p_pin: pin,
+      p_nickname: nickname,
+      p_email: email,
+      p_avatar: avatar,
+    });
 
-    if (playerErr) {
-      if (playerErr.code === "23505") {
+    if (joinErr || !joinData || joinData.length === 0) {
+      const msg = joinErr?.message || "Failed to join game.";
+      if (msg.toLowerCase().includes("nickname") || joinErr?.code === "23505") {
         throw new Error("That nickname is already taken — choose another.");
       }
-      throw new Error(playerErr.message || "Failed to join game.");
+      throw new Error(msg);
     }
 
-    // Increment player_count on the session
-    try {
-      await supabase.rpc("increment_player_count", { p_session_id: session.id });
-    } catch {
-      // Non-critical: host will still see the player via realtime
-    }
+    const joinRow = joinData[0] as { session_id: string; player_id: string };
 
-    // Fetch all players
+    // Fetch joined player + current players
+    const { data: player } = await supabase
+      .from("session_players")
+      .select("*")
+      .eq("id", joinRow.player_id)
+      .single();
+
     const { data: allPlayers } = await supabase
       .from("session_players")
       .select("*")
-      .eq("session_id", session.id)
+      .eq("session_id", joinRow.session_id)
+      .is("kicked_at", null)
       .order("score", { ascending: false });
 
     // Save identity for reconnect
     savePlayerIdentity({
-      playerId: player.id,
-      sessionId: session.id,
+      playerId: joinRow.player_id,
+      sessionId: joinRow.session_id,
       nickname,
       avatar,
     });
 
     set({
-      playerId: player.id,
+      playerId: joinRow.player_id,
       nickname,
       avatar,
       session: session as Session,
@@ -194,7 +196,7 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
       answerResult: null,
     });
 
-    return session.id;
+    return joinRow.session_id;
   },
 
   // ─── Rejoin from localStorage ──────────────────────────────
@@ -264,11 +266,35 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
     return true;
   },
 
+  // ─── Ready state in lobby ─────────────────────────────────
+
+  toggleReady: async (ready) => {
+    const { session, playerId } = get();
+    if (!session || !playerId) return;
+
+    const supabase = createClient();
+    await supabase
+      .from("session_players")
+      .update({ is_ready: ready, ready_at: ready ? new Date().toISOString() : null })
+      .eq("id", playerId)
+      .eq("session_id", session.id);
+
+    set((s) => ({
+      players: s.players.map((p) =>
+        p.id === playerId ? { ...p, is_ready: ready, ready_at: ready ? new Date().toISOString() : null } : p
+      ),
+    }));
+  },
+
   // ─── Submit Answer ─────────────────────────────────────────
 
   submitAnswer: async (optionIndex) => {
-    const { session, playerId, questionStartTime, streak } = get();
+    const { session, playerId, questionStartTime, streak, players } = get();
     if (!session || !playerId) return;
+
+    const me = players.find((p) => p.id === playerId);
+    if (me?.kicked_at) throw new Error("You were removed from this session.");
+    if (me?.is_muted) throw new Error("You are muted and cannot answer right now.");
 
     const question = session.questions_snapshot?.[session.current_q_index];
     if (!question) return;
@@ -362,6 +388,8 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
     });
   },
 
+  setRealtimeStatus: (status) => set({ realtimeStatus: status }),
+
   setTimeLeft: (t) => set({ timeLeft: t }),
 
   startTimer: (seconds) => {
@@ -413,6 +441,7 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
       totalScore: 0,
       streak: 0,
       rank: null,
+      realtimeStatus: "disconnected",
     });
   },
 }));

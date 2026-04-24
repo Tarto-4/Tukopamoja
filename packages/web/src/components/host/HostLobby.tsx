@@ -4,18 +4,39 @@
 
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useGameStore } from "@/stores/useGameStore";
 import { useBrandingStore } from "@/stores/useBrandingStore";
 import { Button } from "@/components/ui/button";
 import QRCodeDisplay from "./QRCodeDisplay";
-import { Play, Users } from "lucide-react";
+import { Lock, LockOpen, Play, Users, UserX, VolumeX, Volume2, ChevronLeft, ChevronRight } from "lucide-react";
+
+const PAGE_SIZE = 12;
 
 export default function HostLobby() {
-  const { session, players, startGame } = useGameStore();
+  const {
+    session,
+    players,
+    startGame,
+    setLobbyLocked,
+    setLateJoin,
+    kickPlayer,
+    mutePlayer,
+  } = useGameStore();
   const { branding } = useBrandingStore();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [page, setPage] = useState(1);
+  const totalPages = useMemo(() => Math.max(1, Math.ceil(players.length / PAGE_SIZE)), [players.length]);
+  const currentPage = Math.min(page, totalPages);
+  const currentPlayers = useMemo(() => {
+    const start = (currentPage - 1) * PAGE_SIZE;
+    return players.slice(start, start + PAGE_SIZE);
+  }, [players, currentPage]);
+
+  useEffect(() => {
+    if (page > totalPages) setPage(totalPages);
+  }, [page, totalPages]);
 
   async function handleStart() {
     if (loading) return;
@@ -106,25 +127,73 @@ export default function HostLobby() {
         </div>
 
         {/* Player list */}
-        <div className="text-center w-full max-w-2xl">
-          <div className="flex items-center justify-center gap-2 mb-4">
+        <div className="text-center w-full max-w-3xl">
+          <div className="flex flex-wrap items-center justify-center gap-2 mb-3">
             <Users className="w-5 h-5 text-muted-foreground" />
             <span className="text-muted-foreground">
               {players.length} player{players.length !== 1 ? "s" : ""} joined
             </span>
+            <span className="text-xs rounded-full px-2 py-1 bg-white/10 text-ens-gold-light">
+              {players.filter((p) => p.is_ready).length} ready
+            </span>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-center gap-2 mb-4">
+            <Button
+              size="sm"
+              variant={session.lobby_locked ? "destructive" : "secondary"}
+              onClick={() => setLobbyLocked(!session.lobby_locked)}
+            >
+              {session.lobby_locked ? <Lock className="w-4 h-4 mr-1" /> : <LockOpen className="w-4 h-4 mr-1" />}
+              {session.lobby_locked ? "Lobby Locked" : "Lock Lobby"}
+            </Button>
+            <Button
+              size="sm"
+              variant={session.allow_late_join ? "secondary" : "outline"}
+              onClick={() => setLateJoin(!session.allow_late_join)}
+            >
+              {session.allow_late_join ? "Late Join: ON" : "Late Join: OFF"}
+            </Button>
           </div>
 
           {players.length > 0 && (
-            <div className="flex flex-wrap justify-center gap-2 max-h-40 overflow-y-auto">
-              {players.map((p) => (
-                <span
-                  key={p.id}
-                  className="px-3 py-1.5 rounded-full glass-card text-sm font-medium"
-                >
-                  {p.avatar} {p.nickname}
-                </span>
-              ))}
-            </div>
+            <>
+              <div className="space-y-2 max-h-72 overflow-y-auto pr-1">
+                {currentPlayers.map((p) => (
+                  <div
+                    key={p.id}
+                    className="glass-card rounded-xl px-3 py-2 flex items-center justify-between gap-3"
+                  >
+                    <div className="text-left min-w-0">
+                      <p className="font-medium truncate">{p.avatar} {p.nickname}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {p.is_ready ? "Ready" : "Not ready"}
+                        {p.is_muted ? " • Muted" : ""}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Button size="sm" variant="outline" onClick={() => mutePlayer(p.id, !p.is_muted)}>
+                        {p.is_muted ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+                      </Button>
+                      <Button size="sm" variant="destructive" onClick={() => kickPlayer(p.id)}>
+                        <UserX className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {totalPages > 1 && (
+                <div className="mt-3 flex items-center justify-center gap-2 text-sm text-muted-foreground">
+                  <Button size="sm" variant="outline" disabled={currentPage <= 1} onClick={() => setPage((value) => Math.max(1, value - 1))}>
+                    <ChevronLeft className="w-4 h-4" />
+                  </Button>
+                  <span>Page {currentPage} of {totalPages}</span>
+                  <Button size="sm" variant="outline" disabled={currentPage >= totalPages} onClick={() => setPage((value) => Math.min(totalPages, value + 1))}>
+                    <ChevronRight className="w-4 h-4" />
+                  </Button>
+                </div>
+              )}
+            </>
           )}
         </div>
 

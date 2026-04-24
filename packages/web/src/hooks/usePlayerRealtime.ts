@@ -11,13 +11,15 @@ import { usePlayerStore } from "@/stores/usePlayerStore";
 import type { Session, SessionPlayer, BroadcastEvent } from "@quizarena/shared";
 
 export function usePlayerRealtime(sessionId: string | undefined) {
-  const supabase = createClient();
-  const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null);
+  const channelRef = useRef<ReturnType<ReturnType<typeof createClient>["channel"]> | null>(null);
 
   const {
+    playerId,
     setSession,
     addPlayer,
+    removePlayer,
     setLeaderboard,
+    setRealtimeStatus,
     startTimer,
     stopTimer,
   } = usePlayerStore();
@@ -25,70 +27,105 @@ export function usePlayerRealtime(sessionId: string | undefined) {
   useEffect(() => {
     if (!sessionId) return;
 
-    const channel = supabase.channel(`session:${sessionId}`);
+    let cancelled = false;
+    let retryTimer: ReturnType<typeof setTimeout> | null = null;
 
-    // 1. Session row updates (status, current_q_index)
-    channel.on(
-      "postgres_changes",
-      {
-        event: "UPDATE",
-        schema: "public",
-        table: "sessions",
-        filter: `id=eq.${sessionId}`,
-      },
-      (payload) => {
-        const updated = payload.new as Session;
-        setSession(updated);
+    const subscribe = (attempt: number) => {
+      if (cancelled) return;
+      setRealtimeStatus(attempt > 0 ? "reconnecting" : "connecting");
 
-        if (updated.status === "question_active" && updated.questions_snapshot) {
-          const q = updated.questions_snapshot[updated.current_q_index];
-          if (q) startTimer(q.time_limit_sec);
+      const channel = createClient().channel(`session:${sessionId}`);
+
+      channel.on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "sessions",
+          filter: `id=eq.${sessionId}`,
+        },
+        (payload) => {
+          const updated = payload.new as Session;
+          setSession(updated);
+
+          if (updated.status === "question_active" && updated.questions_snapshot) {
+            const q = updated.questions_snapshot[updated.current_q_index];
+            if (q) {
+              const duration = updated.current_question_remaining_sec || updated.current_question_time_limit_sec || q.time_limit_sec;
+              startTimer(duration);
+            }
+          }
+
+          if (updated.status === "evaluating" || updated.status === "leaderboard" || updated.status === "finished") {
+            stopTimer();
+          }
+        }
+      );
+
+      channel.on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "session_players",
+          filter: `session_id=eq.${sessionId}`,
+        },
+        (payload) => {
+          const player = payload.new as SessionPlayer;
+          if (!player.kicked_at) addPlayer(player);
+        }
+      );
+
+      channel.on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "session_players",
+          filter: `session_id=eq.${sessionId}`,
+        },
+        (payload) => {
+          const updatedPlayer = payload.new as SessionPlayer;
+          if (updatedPlayer.kicked_at) {
+            removePlayer(updatedPlayer.id);
+            if (updatedPlayer.id === playerId) {
+              setRealtimeStatus("disconnected");
+            }
+          }
+        }
+      );
+
+      channel.on("broadcast", { event: "game_event" }, (payload) => {
+        const event = payload.payload as BroadcastEvent;
+        if (event.type === "LEADERBOARD") setLeaderboard(event.payload.rankings);
+        if (event.type === "GAME_OVER") setLeaderboard(event.payload.final_rankings);
+      });
+
+      channel.subscribe((status) => {
+        if (cancelled) return;
+        if (status === "SUBSCRIBED") {
+          setRealtimeStatus("connected");
+          channelRef.current = channel;
+          return;
         }
 
-        if (
-          updated.status === "evaluating" ||
-          updated.status === "leaderboard" ||
-          updated.status === "finished"
-        ) {
-          stopTimer();
+        if (status === "CLOSED" || status === "CHANNEL_ERROR" || status === "TIMED_OUT") {
+          setRealtimeStatus("reconnecting");
+          const delay = Math.min(15000, 1000 * 2 ** Math.min(attempt, 4));
+          if (retryTimer) clearTimeout(retryTimer);
+          retryTimer = setTimeout(() => subscribe(attempt + 1), delay);
         }
-      }
-    );
+      });
+    };
 
-    // 2. New players joining
-    channel.on(
-      "postgres_changes",
-      {
-        event: "INSERT",
-        schema: "public",
-        table: "session_players",
-        filter: `session_id=eq.${sessionId}`,
-      },
-      (payload) => {
-        addPlayer(payload.new as SessionPlayer);
-      }
-    );
-
-    // 3. Broadcast events (leaderboard, game over)
-    channel.on("broadcast", { event: "game_event" }, (payload) => {
-      const event = payload.payload as BroadcastEvent;
-
-      switch (event.type) {
-        case "LEADERBOARD":
-          setLeaderboard(event.payload.rankings);
-          break;
-        case "GAME_OVER":
-          setLeaderboard(event.payload.final_rankings);
-          break;
-      }
-    });
-
-    channel.subscribe();
-    channelRef.current = channel;
+    subscribe(0);
 
     return () => {
+      cancelled = true;
       stopTimer();
-      channel.unsubscribe();
+      setRealtimeStatus("disconnected");
+      if (retryTimer) clearTimeout(retryTimer);
+      channelRef.current?.unsubscribe();
     };
-  }, [sessionId]);
+  }, [sessionId, playerId, setSession, addPlayer, removePlayer, setLeaderboard, setRealtimeStatus, startTimer, stopTimer]);
 }

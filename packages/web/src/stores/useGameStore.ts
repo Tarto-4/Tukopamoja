@@ -13,7 +13,6 @@ import type {
 } from "@quizarena/shared";
 
 interface GameState {
-  // Session
   session: Session | null;
   players: SessionPlayer[];
   currentQuestion: QuestionSnapshot | null;
@@ -21,11 +20,10 @@ interface GameState {
   answeredCount: number;
   answerDistribution: number[];
   timeLeft: number;
+  realtimeStatus: "connected" | "connecting" | "reconnecting" | "disconnected";
 
-  // Timer
   _timerInterval: ReturnType<typeof setInterval> | null;
 
-  // Actions
   loadSession: (sessionId: string) => Promise<void>;
   setSession: (session: Session) => void;
   addPlayer: (player: SessionPlayer) => void;
@@ -33,17 +31,32 @@ interface GameState {
   setPlayers: (players: SessionPlayer[]) => void;
   incrementAnswered: (selectedOption?: number) => void;
   setLeaderboard: (rankings: LeaderboardEntry[]) => void;
+  setRealtimeStatus: (status: "connected" | "connecting" | "reconnecting" | "disconnected") => void;
   setTimeLeft: (t: number) => void;
   startTimer: (seconds: number, onExpiry?: () => void) => void;
   stopTimer: () => void;
-  fetchAndBroadcastLeaderboard: (eventType: "LEADERBOARD" | "GAME_OVER") => Promise<void>;
+  fetchAndBroadcastLeaderboard: (eventType: "LEADERBOARD" | "GAME_OVER", pageSize?: number) => Promise<void>;
 
-  // Host commands (mutate DB → triggers realtime)
   startGame: () => Promise<void>;
   nextQuestion: () => Promise<void>;
   showLeaderboard: () => Promise<void>;
   endGame: () => Promise<void>;
+  pauseGame: () => Promise<void>;
+  resumeGame: () => Promise<void>;
+  setLobbyLocked: (locked: boolean) => Promise<void>;
+  setLateJoin: (enabled: boolean) => Promise<void>;
+  kickPlayer: (playerId: string) => Promise<void>;
+  mutePlayer: (playerId: string, muted: boolean) => Promise<void>;
   reset: () => void;
+}
+
+async function logHostAction(sessionId: string, action: string, metadata: Record<string, unknown> = {}) {
+  const supabase = createClient();
+  await supabase.rpc("log_host_action", {
+    p_session_id: sessionId,
+    p_action: action,
+    p_metadata: metadata,
+  });
 }
 
 export const useGameStore = create<GameState>((set, get) => ({
@@ -54,6 +67,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   answeredCount: 0,
   answerDistribution: [],
   timeLeft: 0,
+  realtimeStatus: "connecting",
   _timerInterval: null,
 
   loadSession: async (sessionId) => {
@@ -71,25 +85,31 @@ export const useGameStore = create<GameState>((set, get) => ({
       .from("session_players")
       .select("*")
       .eq("session_id", sessionId)
+      .is("kicked_at", null)
       .order("score", { ascending: false });
 
     set({
       session: session as Session,
       players: (players as SessionPlayer[]) || [],
-      currentQuestion:
-        session.questions_snapshot?.[session.current_q_index] || null,
+      currentQuestion: session.questions_snapshot?.[session.current_q_index] || null,
     });
   },
 
   setSession: (session) => {
     const snapshot = session.questions_snapshot;
     const q = snapshot?.[session.current_q_index] || null;
-    set({ session, currentQuestion: q, answeredCount: 0 });
+    const questionChanged = get().session?.current_q_index !== session.current_q_index;
+    set({
+      session,
+      currentQuestion: q,
+      answeredCount: questionChanged ? 0 : get().answeredCount,
+      answerDistribution: questionChanged ? [] : get().answerDistribution,
+    });
   },
 
   addPlayer: (player) =>
     set((s) => ({
-      players: [...s.players, player],
+      players: s.players.some((p) => p.id === player.id) ? s.players : [...s.players, player],
     })),
 
   removePlayer: (playerId) =>
@@ -110,7 +130,7 @@ export const useGameStore = create<GameState>((set, get) => ({
     }),
 
   setLeaderboard: (rankings) => set({ leaderboard: rankings }),
-
+  setRealtimeStatus: (status) => set({ realtimeStatus: status }),
   setTimeLeft: (t) => set({ timeLeft: t }),
 
   startTimer: (seconds, onExpiry) => {
@@ -137,44 +157,44 @@ export const useGameStore = create<GameState>((set, get) => ({
     set({ _timerInterval: null });
   },
 
-  // ─── Host Commands ────────────────────────────────────────
-  // These mutate the sessions table. Supabase Realtime broadcasts
-  // the change to all subscribers (host + players).
-
-  fetchAndBroadcastLeaderboard: async (eventType) => {
+  fetchAndBroadcastLeaderboard: async (eventType, pageSize = 500) => {
     const session = get().session;
     if (!session) return;
 
     const supabase = createClient();
+    const { data: leaderboardPage } = await supabase.rpc("get_leaderboard_page", {
+      p_session_id: session.id,
+      p_limit: pageSize,
+      p_offset: 0,
+    });
 
-    // Fetch ranked players
-    const { data: players } = await supabase
-      .from("session_players")
-      .select("*")
-      .eq("session_id", session.id)
-      .order("score", { ascending: false });
-
-    const rankings: LeaderboardEntry[] = (players || []).map((p, i) => ({
-      player_id: p.id,
+    const rankings: LeaderboardEntry[] = (leaderboardPage || []).map((p: any) => ({
+      player_id: p.player_id,
       nickname: p.nickname,
       avatar: p.avatar,
       score: p.score ?? 0,
       streak: p.streak ?? 0,
-      rank: i + 1,
+      rank: Number(p.rank),
     }));
 
-    // Set locally
+    const { data: players } = await supabase
+      .from("session_players")
+      .select("*")
+      .eq("session_id", session.id)
+      .is("kicked_at", null)
+      .order("score", { ascending: false });
+
     set({ leaderboard: rankings, players: (players as SessionPlayer[]) || [] });
 
-    // Broadcast to all connected clients
     const channel = supabase.channel(`session:${session.id}`);
     await channel.subscribe();
     await channel.send({
       type: "broadcast",
       event: "game_event",
-      payload: eventType === "GAME_OVER"
-        ? { type: "GAME_OVER", payload: { final_rankings: rankings } }
-        : { type: "LEADERBOARD", payload: { rankings } },
+      payload:
+        eventType === "GAME_OVER"
+          ? { type: "GAME_OVER", payload: { final_rankings: rankings } }
+          : { type: "LEADERBOARD", payload: { rankings } },
     });
     channel.unsubscribe();
   },
@@ -183,18 +203,32 @@ export const useGameStore = create<GameState>((set, get) => ({
     const session = get().session;
     if (!session) return;
 
+    const notReady = get().players.filter((p) => !p.is_ready);
+    if (get().players.length > 0 && notReady.length > 0) {
+      throw new Error("All players must be ready before starting.");
+    }
+
     const supabase = createClient();
     const startedAt = new Date().toISOString();
+    const q = session.questions_snapshot?.[0];
+    const initialLimit = q?.time_limit_sec ?? 20;
+
     const { error } = await supabase
       .from("sessions")
       .update({
         status: "question_active",
         current_q_index: 0,
         started_at: startedAt,
+        current_question_started_at: startedAt,
+        current_question_time_limit_sec: initialLimit,
+        current_question_remaining_sec: initialLimit,
+        is_paused: false,
       })
       .eq("id", session.id);
 
     if (error) throw error;
+
+    await logHostAction(session.id, "start_game", { question_index: 0 });
 
     set((s) => {
       if (!s.session) return s;
@@ -205,6 +239,10 @@ export const useGameStore = create<GameState>((set, get) => ({
           status: "question_active",
           current_q_index: 0,
           started_at: startedAt,
+          current_question_started_at: startedAt,
+          current_question_time_limit_sec: initialLimit,
+          current_question_remaining_sec: initialLimit,
+          is_paused: false,
         },
         currentQuestion: s.session.questions_snapshot?.[0] || null,
         answeredCount: 0,
@@ -223,17 +261,14 @@ export const useGameStore = create<GameState>((set, get) => ({
     const supabase = createClient();
 
     if (next >= total) {
-      // End game
       const endedAt = new Date().toISOString();
       const { error } = await supabase
         .from("sessions")
-        .update({
-          status: "finished",
-          ended_at: endedAt,
-        })
+        .update({ status: "finished", ended_at: endedAt, is_paused: false })
         .eq("id", session.id);
 
       if (error) throw error;
+      await logHostAction(session.id, "finish_game", {});
 
       set((s) => {
         if (!s.session) return s;
@@ -243,19 +278,29 @@ export const useGameStore = create<GameState>((set, get) => ({
             ...s.session,
             status: "finished",
             ended_at: endedAt,
+            is_paused: false,
           },
         };
       });
     } else {
+      const nextQuestion = session.questions_snapshot?.[next];
+      const now = new Date().toISOString();
+      const nextLimit = nextQuestion?.time_limit_sec ?? 20;
+
       const { error } = await supabase
         .from("sessions")
         .update({
           status: "question_active",
           current_q_index: next,
+          current_question_started_at: now,
+          current_question_time_limit_sec: nextLimit,
+          current_question_remaining_sec: nextLimit,
+          is_paused: false,
         })
         .eq("id", session.id);
 
       if (error) throw error;
+      await logHostAction(session.id, "next_question", { question_index: next });
 
       set((s) => {
         if (!s.session) return s;
@@ -265,6 +310,10 @@ export const useGameStore = create<GameState>((set, get) => ({
             ...s.session,
             status: "question_active",
             current_q_index: next,
+            current_question_started_at: now,
+            current_question_time_limit_sec: nextLimit,
+            current_question_remaining_sec: nextLimit,
+            is_paused: false,
           },
           currentQuestion: s.session.questions_snapshot?.[next] || null,
           answeredCount: 0,
@@ -281,10 +330,14 @@ export const useGameStore = create<GameState>((set, get) => ({
     const supabase = createClient();
     const { error } = await supabase
       .from("sessions")
-      .update({ status: "leaderboard" })
+      .update({ status: "leaderboard", is_paused: false })
       .eq("id", session.id);
 
     if (error) throw error;
+
+    await logHostAction(session.id, "show_leaderboard", {
+      question_index: session.current_q_index,
+    });
 
     set((s) => {
       if (!s.session) return s;
@@ -293,11 +346,11 @@ export const useGameStore = create<GameState>((set, get) => ({
         session: {
           ...s.session,
           status: "leaderboard",
+          is_paused: false,
         },
       };
     });
 
-    // Fetch scores and broadcast to all clients
     await get().fetchAndBroadcastLeaderboard("LEADERBOARD");
   },
 
@@ -309,13 +362,11 @@ export const useGameStore = create<GameState>((set, get) => ({
     const endedAt = new Date().toISOString();
     const { error } = await supabase
       .from("sessions")
-      .update({
-        status: "finished",
-        ended_at: endedAt,
-      })
+      .update({ status: "finished", ended_at: endedAt, is_paused: false })
       .eq("id", session.id);
 
     if (error) throw error;
+    await logHostAction(session.id, "end_game_early", {});
 
     set((s) => {
       if (!s.session) return s;
@@ -325,12 +376,108 @@ export const useGameStore = create<GameState>((set, get) => ({
           ...s.session,
           status: "finished",
           ended_at: endedAt,
+          is_paused: false,
         },
       };
     });
 
-    // Fetch final scores and broadcast to all clients
     await get().fetchAndBroadcastLeaderboard("GAME_OVER");
+  },
+
+  pauseGame: async () => {
+    const session = get().session;
+    if (!session || session.status !== "question_active") return;
+
+    const supabase = createClient();
+    const remaining = Math.max(0, get().timeLeft);
+    const { error } = await supabase
+      .from("sessions")
+      .update({ is_paused: true, status: "evaluating", current_question_remaining_sec: remaining })
+      .eq("id", session.id);
+
+    if (error) throw error;
+    await logHostAction(session.id, "pause_game", { remaining_seconds: remaining });
+    get().stopTimer();
+  },
+
+  resumeGame: async () => {
+    const session = get().session;
+    if (!session) return;
+
+    const supabase = createClient();
+    const now = new Date().toISOString();
+    const remaining = session.current_question_remaining_sec || session.current_question_time_limit_sec || 20;
+
+    const { error } = await supabase
+      .from("sessions")
+      .update({
+        status: "question_active",
+        is_paused: false,
+        current_question_started_at: now,
+        current_question_time_limit_sec: remaining,
+        current_question_remaining_sec: remaining,
+      })
+      .eq("id", session.id);
+
+    if (error) throw error;
+    await logHostAction(session.id, "resume_game", { remaining_seconds: remaining });
+  },
+
+  setLobbyLocked: async (locked) => {
+    const session = get().session;
+    if (!session) return;
+    const supabase = createClient();
+    const { error } = await supabase.from("sessions").update({ lobby_locked: locked }).eq("id", session.id);
+    if (error) throw error;
+    await logHostAction(session.id, locked ? "lock_lobby" : "unlock_lobby", {});
+    set((s) => (s.session ? { session: { ...s.session, lobby_locked: locked } } : s));
+  },
+
+  setLateJoin: async (enabled) => {
+    const session = get().session;
+    if (!session) return;
+    const supabase = createClient();
+    const { error } = await supabase.from("sessions").update({ allow_late_join: enabled }).eq("id", session.id);
+    if (error) throw error;
+    await logHostAction(session.id, enabled ? "late_join_enabled" : "late_join_disabled", {});
+    set((s) => (s.session ? { session: { ...s.session, allow_late_join: enabled } } : s));
+  },
+
+  kickPlayer: async (playerId) => {
+    const session = get().session;
+    if (!session) return;
+    const supabase = createClient();
+    const kickedAt = new Date().toISOString();
+    const { error } = await supabase
+      .from("session_players")
+      .update({ kicked_at: kickedAt })
+      .eq("id", playerId)
+      .eq("session_id", session.id);
+
+    if (error) throw error;
+    await logHostAction(session.id, "kick_player", { player_id: playerId });
+
+    set((s) => ({
+      players: s.players.filter((p) => p.id !== playerId),
+    }));
+  },
+
+  mutePlayer: async (playerId, muted) => {
+    const session = get().session;
+    if (!session) return;
+    const supabase = createClient();
+    const { error } = await supabase
+      .from("session_players")
+      .update({ is_muted: muted })
+      .eq("id", playerId)
+      .eq("session_id", session.id);
+
+    if (error) throw error;
+    await logHostAction(session.id, muted ? "mute_player" : "unmute_player", { player_id: playerId });
+
+    set((s) => ({
+      players: s.players.map((p) => (p.id === playerId ? { ...p, is_muted: muted } : p)),
+    }));
   },
 
   reset: () =>
@@ -342,5 +489,6 @@ export const useGameStore = create<GameState>((set, get) => ({
       answeredCount: 0,
       answerDistribution: [],
       timeLeft: 0,
+      realtimeStatus: "disconnected",
     }),
 }));
