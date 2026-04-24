@@ -12,7 +12,7 @@ create extension if not exists "pgcrypto";
 --    Single-row table for company branding (single-tenant).
 -- ─────────────────────────────────────────────────────────────
 create table public.organization (
-  id            uuid primary key default uuid_generate_v4(),
+  id            uuid primary key default gen_random_uuid(),
   name          text not null default 'QuizArena',
   tagline       text default 'Real-time Quiz Platform',
   logo_url      text,                          -- Supabase Storage URL
@@ -64,7 +64,7 @@ create trigger on_auth_user_created
 --    Reusable quiz blueprints. Never mutated during live play.
 -- ─────────────────────────────────────────────────────────────
 create table public.templates (
-  id            uuid primary key default uuid_generate_v4(),
+  id            uuid primary key default gen_random_uuid(),
   created_by    uuid not null references public.profiles(id) on delete cascade,
   title         text not null,
   description   text default '',
@@ -84,7 +84,7 @@ create index idx_templates_created_by on public.templates(created_by);
 create type public.question_type as enum ('multiple_choice', 'true_false');
 
 create table public.questions (
-  id              uuid primary key default uuid_generate_v4(),
+  id              uuid primary key default gen_random_uuid(),
   template_id     uuid not null references public.templates(id) on delete cascade,
   question_text   text not null,
   question_type   public.question_type not null default 'multiple_choice',
@@ -111,7 +111,7 @@ create type public.session_status as enum (
 );
 
 create table public.sessions (
-  id              uuid primary key default uuid_generate_v4(),
+  id              uuid primary key default gen_random_uuid(),
   template_id     uuid not null references public.templates(id),
   host_id         uuid not null references public.profiles(id),
   pin             text not null unique,         -- 6-digit game PIN
@@ -133,7 +133,7 @@ create index idx_sessions_host on public.sessions(host_id);
 -- 6. SESSION PLAYERS
 -- ─────────────────────────────────────────────────────────────
 create table public.session_players (
-  id          uuid primary key default uuid_generate_v4(),
+  id          uuid primary key default gen_random_uuid(),
   session_id  uuid not null references public.sessions(id) on delete cascade,
   nickname    text not null,
   avatar      text default '🎮',
@@ -151,7 +151,7 @@ create index idx_session_players_session on public.session_players(session_id);
 -- 7. PLAYER ANSWERS (per-question response tracking)
 -- ─────────────────────────────────────────────────────────────
 create table public.player_answers (
-  id              uuid primary key default uuid_generate_v4(),
+  id              uuid primary key default gen_random_uuid(),
   session_id      uuid not null references public.sessions(id) on delete cascade,
   player_id       uuid not null references public.session_players(id) on delete cascade,
   question_index  int not null,

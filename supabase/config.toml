@@ -2,7 +2,7 @@ project_id = "quizarena"
 
 [api]
 port = 54321
-schemas = ["public", "storage"]
+schemas = ["public", "graphql_public", "storage"]
 extra_search_path = ["public", "extensions"]
 
 [db]
@@ -13,8 +13,23 @@ major_version = 15
 port = 54323
 
 [auth]
-site_url = "http://localhost:3000"
-additional_redirect_urls = ["http://localhost:3000/auth/callback", "quizarena://auth/callback"]
+site_url = "https://tarto-4.github.io/quizarena-public"
+additional_redirect_urls = [
+	"https://tarto-4.github.io/quizarena-public",
+	"https://tarto-4.github.io/quizarena-public/**",
+	"http://localhost:3000",
+	"http://localhost:3000/auth/callback",
+	"quizarena://auth/callback"
+]
+
+[auth.email]
+enable_confirmations = true
+max_frequency = "1m0s"
+otp_length = 8
+
+[auth.mfa.totp]
+enroll_enabled = true
+verify_enabled = true
 
 [auth.external.google]
 enabled = false
