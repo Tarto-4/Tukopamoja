@@ -12,7 +12,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     const supabase = createClient();
     supabase.auth.getUser().then(({ data: { user } }) => {
       if (!user) {
-        router.replace("/auth/login");
+        router.replace("/auth/login-v2");
       } else {
         setReady(true);
       }

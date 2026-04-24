@@ -129,11 +129,13 @@ export default function LoginPage() {
 
       <Card className="w-full max-w-md glass relative z-20 border-[#EEDC00]/20">
         <CardHeader className="text-center">
-          <img
-            src={withBasePath("/logo.svg")}
-            alt="QuizArena"
-            className="h-12 w-auto mx-auto mb-2"
-          />
+          <Link href="/" className="inline-flex justify-center">
+            <img
+              src={withBasePath("/logo.svg")}
+              alt="QuizArena"
+              className="h-12 w-auto mx-auto mb-2"
+            />
+          </Link>
           <CardTitle className="text-2xl font-serif">
             {isSignUp ? "Create Account" : "Welcome Back"}
           </CardTitle>
@@ -230,6 +232,12 @@ export default function LoginPage() {
               >
                 {isSignUp ? "Sign in" : "Sign up"}
               </button>
+            </p>
+
+            <p className="text-center text-xs text-white/60">
+              <Link href="/" className="hover:text-white underline-offset-4 hover:underline">
+                Back to home
+              </Link>
             </p>
           </form>
         </CardContent>
