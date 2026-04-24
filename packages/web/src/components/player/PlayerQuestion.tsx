@@ -77,7 +77,7 @@ export default function PlayerQuestion() {
           </div>
 
           <p className="text-muted-foreground text-sm animate-pulse">
-            Waiting for next question...
+            Waiting for presenter...
           </p>
         </motion.div>
       </div>
@@ -98,7 +98,7 @@ export default function PlayerQuestion() {
           <h2 className="text-3xl font-serif font-black">Time&apos;s Up!</h2>
           <p className="text-muted-foreground">You didn&apos;t answer in time</p>
           <p className="text-muted-foreground text-sm animate-pulse">
-            Waiting for next question...
+            Waiting for presenter...
           </p>
         </motion.div>
       </div>

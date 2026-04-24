@@ -21,7 +21,7 @@ export default function HomePage() {
             className="h-16 sm:h-20 w-auto mx-auto opacity-95"
           />
           <h1 className="text-5xl sm:text-7xl font-serif font-bold tracking-tight">
-            <span className="gradient-ens bg-clip-text text-transparent text-glow">
+            <span className="text-black dark:gradient-ens dark:bg-clip-text dark:text-transparent text-glow">
               QuizArena
             </span>
           </h1>

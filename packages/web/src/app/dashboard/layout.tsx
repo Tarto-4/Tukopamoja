@@ -43,7 +43,7 @@ export default function DashboardLayout({
           <div className="page-container flex items-center justify-between py-3">
             <Link
               href="/dashboard/templates"
-              className="text-xl font-serif font-black gradient-ens bg-clip-text text-transparent"
+              className="text-xl font-serif font-black text-black dark:gradient-ens dark:bg-clip-text dark:text-transparent"
             >
               QuizArena
             </Link>

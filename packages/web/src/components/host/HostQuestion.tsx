@@ -166,6 +166,11 @@ export default function HostQuestion() {
         <p className="text-xl font-serif font-black mt-1">
           {isEvaluating ? "Question Closed" : "Receiving Answers"}
         </p>
+        {timerDone && !isEvaluating && (
+          <p className="text-xs text-[#EEDC00] mt-1 animate-pulse">
+            Waiting for presenter...
+          </p>
+        )}
         {allAnswered && (
           <p className="text-xs text-quiz-green mt-1">All players answered!</p>
         )}
