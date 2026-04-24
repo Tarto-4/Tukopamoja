@@ -5,6 +5,7 @@ import { withBasePath } from "@/lib/base-path";
 export default function HomePage() {
   return (
     <div className="game-screen items-center justify-center gradient-dark relative overflow-hidden">
+      <div className="absolute top-0 left-0 right-0 accent-bar z-20" />
       {/* Ambient glow background */}
       <div className="absolute inset-0 pointer-events-none">
         <img
@@ -17,7 +18,7 @@ export default function HomePage() {
         <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] rounded-full bg-ens-gold/3 blur-[100px]" />
       </div>
 
-      <div className="text-center space-y-10 px-4 relative z-10">
+      <div className="text-center space-y-10 px-4 relative z-10 rounded-2xl glass p-8 sm:p-10 border border-[#EEDC00]/20">
         {/* Logo / brand */}
         <div className="space-y-3">
           <img
@@ -30,17 +31,17 @@ export default function HomePage() {
               QuizArena
             </span>
           </h1>
-          <p className="text-lg text-ens-slate-light tracking-wide">
+          <p className="text-lg text-white/70 tracking-wide">
             Premium real-time quiz platform
           </p>
         </div>
 
         {/* Actions */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link href="/auth/login">
+          <Link href="/auth/login-v2">
             <Button
               size="xl"
-              className="w-full sm:w-auto gradient-primary border-0 btn-3d text-white font-semibold tracking-wide"
+              className="w-full sm:w-auto gradient-primary border-0 btn-3d text-black font-semibold tracking-wide hover:opacity-90"
             >
               Host a Game
             </Button>
@@ -49,7 +50,7 @@ export default function HomePage() {
             <Button
               size="xl"
               variant="outline"
-              className="w-full sm:w-auto border-ens-slate hover:border-ens-crimson/50 hover:bg-ens-crimson/5 transition-all duration-300"
+              className="w-full sm:w-auto border-[#EEDC00]/30 text-white hover:border-[#EEDC00]/50 hover:bg-[#EEDC00]/10 transition-all duration-300"
             >
               Join as Player
             </Button>

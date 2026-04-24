@@ -80,6 +80,7 @@ export default function HostLobby() {
 
   return (
     <div className="game-screen gradient-dark relative overflow-hidden">
+      <div className="absolute top-0 left-0 right-0 accent-bar z-20" />
       <img
         src={withBasePath("/designs/backgrounds/brand-mark-overlay.svg")}
         alt=""
@@ -87,7 +88,7 @@ export default function HostLobby() {
         className="absolute inset-0 m-auto w-[560px] h-[560px] object-contain opacity-[0.16] pointer-events-none"
       />
       {/* Header */}
-      <div className="flex items-center justify-between p-4 sm:p-6">
+      <div className="flex items-center justify-between p-4 sm:p-6 relative z-10">
         <div className="flex items-center gap-3">
           {branding?.logo_url && (
             <img
@@ -96,31 +97,31 @@ export default function HostLobby() {
               className="w-10 h-10 rounded object-contain"
             />
           )}
-          <span className="font-serif font-bold text-lg">
+          <span className="font-serif font-bold text-lg text-white">
             {branding?.name || "QuizArena"}
           </span>
         </div>
       </div>
 
       {/* Center content */}
-      <div className="flex-1 flex flex-col items-center justify-center px-4 gap-8">
+      <div className="flex-1 flex flex-col items-center justify-center px-4 gap-8 relative z-10">
         {/* Join methods */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-2xl w-full">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-3xl w-full">
           {/* QR Code */}
-          <div className="flex flex-col items-center gap-4">
-            <h2 className="text-lg font-serif text-ens-slate-light">
+          <div className="flex flex-col items-center gap-4 rounded-2xl glass p-6 border border-white/15">
+            <h2 className="text-lg font-serif text-white/70">
               Scan to Join
             </h2>
             <QRCodeDisplay value={joinUrl} />
           </div>
 
           {/* PIN display */}
-          <div className="flex flex-col items-center justify-center gap-4">
-            <h2 className="text-lg font-serif text-ens-slate-light">
+          <div className="flex flex-col items-center justify-center gap-4 rounded-2xl glass p-6 border border-white/15">
+            <h2 className="text-lg font-serif text-white/70">
               Game PIN
             </h2>
             <div
-              className="text-6xl sm:text-7xl font-serif font-black tracking-[0.2em] py-4 px-8 rounded-2xl glow-crimson gradient-primary"
+              className="text-6xl sm:text-7xl font-serif font-black tracking-[0.2em] py-4 px-8 rounded-2xl glow-crimson gradient-primary text-black"
             >
               {session.pin}
             </div>
@@ -131,13 +132,13 @@ export default function HostLobby() {
         </div>
 
         {/* Player list */}
-        <div className="text-center w-full max-w-3xl">
+        <div className="text-center w-full max-w-3xl rounded-2xl glass p-6 border border-white/15">
           <div className="flex flex-wrap items-center justify-center gap-2 mb-3">
             <Users className="w-5 h-5 text-muted-foreground" />
             <span className="text-muted-foreground">
               {players.length} player{players.length !== 1 ? "s" : ""} joined
             </span>
-            <span className="text-xs rounded-full px-2 py-1 bg-white/10 text-ens-gold-light">
+            <span className="text-xs rounded-full px-2 py-1 bg-[#EEDC00]/15 border border-[#EEDC00]/30 text-[#EEDC00]">
               {players.filter((p) => p.is_ready).length} ready
             </span>
           </div>
@@ -166,7 +167,7 @@ export default function HostLobby() {
                 {currentPlayers.map((p) => (
                   <div
                     key={p.id}
-                    className="glass-card rounded-xl px-3 py-2 flex items-center justify-between gap-3"
+                      className="rounded-xl px-3 py-2 flex items-center justify-between gap-3 bg-white/5 border border-white/10"
                   >
                     <div className="text-left min-w-0">
                       <p className="font-medium truncate">{p.avatar} {p.nickname}</p>
@@ -206,7 +207,7 @@ export default function HostLobby() {
           size="xl"
           onClick={handleStart}
           disabled={loading}
-          className="gradient-primary border-0 text-xl btn-3d text-white font-semibold"
+          className="gradient-primary border-0 text-xl btn-3d text-black font-semibold"
         >
           <Play className="w-5 h-5 mr-2" />
           {loading

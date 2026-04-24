@@ -1,7 +1,7 @@
 // @ts-nocheck
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Vector3 as a,
   MeshPhysicalMaterial as c,
@@ -696,18 +696,20 @@ class Z extends d {
 }
 
 function createBallpit(e, t = {}) {
+  const { rendererOptions, maxPixelRatio, ...ballpitConfig } = t;
   const i = new x({
     canvas: e,
     size: "parent",
-    rendererOptions: { antialias: true, alpha: true },
+    rendererOptions: { antialias: true, alpha: true, ...(rendererOptions ?? {}) },
   });
   let s;
+  i.maxPixelRatio = maxPixelRatio ?? (window.innerWidth < 640 ? 1.25 : 1.5);
   i.renderer.toneMapping = v;
   i.camera.position.set(0, 0, 20);
   i.camera.lookAt(0, 0, 0);
   i.cameraMaxAspect = 1.5;
   i.resize();
-  initialize(t);
+  initialize(ballpitConfig);
   const n = new y();
   const o = new w(new a(0, 0, 1), 0);
   const r = new a();
@@ -767,24 +769,123 @@ function createBallpit(e, t = {}) {
   };
 }
 
-const Ballpit = ({ className = "", followCursor = false, ...props }) => {
+function supportsWebGL() {
+  try {
+    const canvas = document.createElement("canvas");
+    return !!(canvas.getContext("webgl2") || canvas.getContext("webgl"));
+  } catch {
+    return false;
+  }
+}
+
+const FALLBACK_ORB_CLASSES = [
+  "qa-ballpit-orb qa-ballpit-orb-1",
+  "qa-ballpit-orb qa-ballpit-orb-2",
+  "qa-ballpit-orb qa-ballpit-orb-3",
+  "qa-ballpit-orb qa-ballpit-orb-4",
+  "qa-ballpit-orb qa-ballpit-orb-5",
+  "qa-ballpit-orb qa-ballpit-orb-6",
+  "qa-ballpit-orb qa-ballpit-orb-7",
+  "qa-ballpit-orb qa-ballpit-orb-8",
+];
+
+const Ballpit = ({ className = "", followCursor = false, forceFallback = false, ...props }) => {
   const canvasRef = useRef(null);
   const spheresInstanceRef = useRef(null);
+  const [fallback, setFallback] = useState(false);
+  const showFallbackOnly = forceFallback || fallback;
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    spheresInstanceRef.current = createBallpit(canvas, { followCursor, ...props });
+    if (forceFallback) {
+      setFallback(true);
+      return;
+    }
 
-    return () => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setFallback(true);
+      return;
+    }
+
+    if (!supportsWebGL()) {
+      setFallback(true);
+      return;
+    }
+
+    let disposed = false;
+
+    const onContextLost = (event) => {
+      event.preventDefault();
       if (spheresInstanceRef.current) {
         spheresInstanceRef.current.dispose();
+        spheresInstanceRef.current = null;
+      }
+      if (!disposed) {
+        setFallback(true);
       }
     };
-  }, []);
 
-  return <canvas className={className} ref={canvasRef} style={{ width: "100%", height: "100%" }} />;
+    canvas.addEventListener("webglcontextlost", onContextLost, { passive: false });
+
+    try {
+      const requestedCount = typeof props.count === "number" ? props.count : undefined;
+      const screenWidth = window.innerWidth;
+      const tunedCount =
+        requestedCount == null
+          ? undefined
+          : screenWidth < 640
+          ? Math.min(requestedCount, 70)
+          : screenWidth < 1024
+          ? Math.min(requestedCount, 85)
+          : requestedCount;
+
+      spheresInstanceRef.current = createBallpit(canvas, {
+        followCursor,
+        ...props,
+        ...(tunedCount != null ? { count: tunedCount } : {}),
+      });
+      setFallback(false);
+    } catch {
+      try {
+        const requestedCount = typeof props.count === "number" ? props.count : 70;
+        spheresInstanceRef.current = createBallpit(canvas, {
+          followCursor,
+          ...props,
+          count: Math.min(requestedCount, 55),
+          lightIntensity: 140,
+          ambientIntensity: 0.9,
+          rendererOptions: { antialias: false, powerPreference: "low-power" },
+          maxPixelRatio: 1,
+        });
+        setFallback(false);
+      } catch {
+        setFallback(true);
+      }
+    }
+
+    return () => {
+      disposed = true;
+      canvas.removeEventListener("webglcontextlost", onContextLost);
+      if (spheresInstanceRef.current) {
+        spheresInstanceRef.current.dispose();
+        spheresInstanceRef.current = null;
+      }
+    };
+  }, [forceFallback]);
+
+  return (
+    <div className={`${className} relative overflow-hidden`} aria-hidden="true">
+      <div className={`qa-ballpit-fallback ${showFallbackOnly ? "qa-ballpit-fallback--active" : ""}`}>
+        <div className="qa-ballpit-wash" />
+        {FALLBACK_ORB_CLASSES.map((orbClass) => (
+          <span key={orbClass} className={orbClass} />
+        ))}
+      </div>
+      {!showFallbackOnly && <canvas className="qa-ballpit-canvas absolute inset-0" ref={canvasRef} />}
+    </div>
+  );
 };
 
 export default Ballpit;

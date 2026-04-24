@@ -14,6 +14,214 @@ Maximize quality, reasoning depth, and real-world usefulness. Favor decisions th
 ---
 
 ## 1. Design & Product Philosophy — The "ENS-Future" Look
+## 1. Brand & Primary Colors
+
+| Token | Value | Usage |
+|-------|--------|--------|
+| **Primary (brand yellow)** | `#EEDC00` | Accent, CTAs, links, icons, sidebar, active states |
+| **Primary hover (lighter)** | `#f5e500` | Button hover gradient end |
+| **Primary dark (gradient)** | `#d4c500` | Button gradient start, darker accent |
+
+**Primary opacity variants (on dark/glass):**
+- `#EEDC00` — solid (text, icons)
+- `#EEDC00/50` — 50% (gradient mid, focus ring)
+- `#EEDC00/30` — 30% (borders, icon container border)
+- `#EEDC00/25` — 25% (button hover background)
+- `#EEDC00/20` — 20% (icon containers, secondary buttons, file input)
+- `#EEDC00/15` — 15% (export/secondary button bg)
+- `#EEDC00/10` — 10% (link/button hover)
+- `#EEDC00/5` — 5% (page gradient accent corner)
+
+**RGB for inline styles:** `rgb(238, 220, 0)` / `rgba(238, 220, 0, 0.9)` etc.
+
+---
+
+## 2. Neutral & UI Colors
+
+| Context | Value | Usage |
+|---------|--------|--------|
+| **Text primary (on dark)** | `white` | Headings, primary content |
+| **Text secondary** | `text-white/90` | Body, notes |
+| **Text muted** | `text-white/70`, `text-white/60` | Labels, captions |
+| **Text subtle** | `text-white/50`, `text-white/40` | Placeholders, table headers |
+| **Borders (on glass)** | `border-white/20`, `border-white/15`, `border-white/10` | Cards, inputs, dividers |
+| **Backgrounds (on dark)** | `bg-white/5`, `bg-white/10` | Inputs, panels, secondary surfaces |
+| **Overlay** | `bg-black/50` | Full-screen overlay over hero image |
+| **Light mode borders** | `border-zinc-200/80` (light), `border-zinc-800/80` (dark) | Sidebar |
+| **Light mode surfaces** | `bg-zinc-50`, `bg-white`, `bg-zinc-950` (dark) | Error/empty states |
+
+---
+
+## 3. Semantic Colors
+
+| Purpose | Colors | Usage |
+|---------|--------|--------|
+| **Success / Complete** | `emerald-500/30`, `emerald-200`, `emerald-600`, `emerald-400` (dark) | Status “Complete”, success icons |
+| **Error / Danger** | `rose-500`, `rose-400`, `rose-900/40`, `rose-200` | Errors, remove buttons, danger states |
+| **Warning / In progress** | `amber-500/30`, `amber-900/40`, `amber-200` | Warnings, banners |
+| **Info / In progress** | `blue-500/30`, `blue-200` | Status “In Progress” |
+| **Neutral / N/A** | `zinc-100`, `zinc-800`, `zinc-500`, `zinc-400` (dark) | N/A status, disabled |
+
+**Status badges (trip status):**
+- **Not Started:** `bg-white/20 text-white border border-white/20`
+- **In Progress:** `bg-blue-500/30 text-blue-200 border border-blue-500/30`
+- **Complete:** `bg-emerald-500/30 text-emerald-200 border border-emerald-500/30`
+
+**Traveler status icons (dashboard):**
+- Tick (done): `bg-emerald-100 dark:bg-emerald-900/40`, icon `text-emerald-600 dark:text-emerald-400`
+- Cross (not done): `bg-rose-100 dark:bg-rose-900/40`, icon `text-rose-600 dark:text-rose-400`
+- N/A: `bg-amber-100 dark:bg-amber-900/30`, text `text-amber-600 dark:text-amber-400`
+- Dash: `bg-zinc-100 dark:bg-zinc-800`, icon `text-zinc-500 dark:text-zinc-400`
+
+---
+
+## 4. Glass / Frosted Surfaces
+
+**Glass card (main content panels):**
+```css
+background: linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.7) 100%);
+backdrop-filter: blur(40px) saturate(180%);
+-webkit-backdrop-filter: blur(40px) saturate(180%);
+border: 1px solid rgba(255, 255, 255, 0.15);
+box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05) inset, 0 1px 0 rgba(255, 255, 255, 0.1) inset;
+```
+
+**Glass table header:**
+```css
+background: linear-gradient(135deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.5) 100%);
+backdrop-filter: blur(20px);
+-webkit-backdrop-filter: blur(20px);
+```
+
+**Lighter glass (filters, small panels):**
+```css
+background: linear-gradient(135deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.5) 100%);
+backdrop-filter: blur(40px) saturate(180%);
+-webkit-backdrop-filter: blur(40px) saturate(180%);
+border: 1px solid rgba(255, 255, 255, 0.1);
+```
+
+---
+
+## 5. Background & Hero
+
+- **Hero image:** `/man-back-walking-at-the-airport-2024-10-15-02-35-25-utc.jpg`  
+  - Applied as: `bg-cover bg-center bg-no-repeat`, full viewport, fixed.
+- **Overlays (stacked, full viewport):**
+  - `bg-black/50`
+  - `bg-gradient-to-b from-black/30 via-transparent to-black/40`
+  - `bg-gradient-to-br from-transparent via-transparent to-[#EEDC00]/5`
+
+---
+
+## 6. Accent & Decoration
+
+- **Top accent bar (cards/modals):**  
+  `h-1` bar, gradient: `from-[#EEDC00] via-[#EEDC00]/50 to-transparent`.
+- **Primary CTA gradient (e.g. Export by traveler):**  
+  `linear-gradient(135deg, rgba(238, 220, 0, 0.9) 0%, rgba(238, 220, 0, 0.8) 100%)`  
+  Text: `text-black`, hover: `hover:scale-[1.02]`.
+
+---
+
+## 7. Typography
+
+| Element | Classes | Notes |
+|---------|--------|--------|
+| Page title | `text-2xl font-bold text-white drop-shadow-md` | Reports, section titles |
+| Card/section title | `text-sm font-semibold text-[#EEDC00]` | Metric values, highlights |
+| Body | `text-sm text-white/80` or `text-white/90` | Default content |
+| Small / labels | `text-xs font-medium text-white/50 uppercase tracking-wide` or `tracking-wider` | Labels, table headers |
+| Table header | `text-xs font-medium uppercase tracking-wider text-white/70` | Table `<th>` |
+| Links (primary) | `text-[#EEDC00] underline-offset-4 hover:underline` | e.g. traveler name link |
+| Button (primary) | `text-sm font-medium` or `font-semibold` | Buttons |
+| Modal section label | `text-xs font-semibold uppercase tracking-wider text-[#EEDC00]` | e.g. “Trip Information” |
+
+**Sidebar (on yellow):**
+- Nav: `text-[15px] font-medium`
+- Active: `bg-black text-white` (light sidebar), `bg-zinc-100 text-zinc-900` (dark)
+- Inactive: `text-black hover:bg-black/10`
+
+---
+
+## 8. Spacing & Layout
+
+- **Page container:** `max-w-7xl mx-auto px-4` (dashboard, reports); `max-w-6xl` (admin).
+- **Section spacing:** `mb-6` between major blocks; `py-4` page vertical padding.
+- **Card padding:** `p-6` (main cards), `p-4` (filters, compact panels).
+- **Table cell:** `px-6 py-4` (trip detail), `px-4 py-4` (reports); compact tables use `px-2 py-1` / `py-1.5`.
+- **Gap:** `gap-2`, `gap-3`, `gap-4` for flex/grid.
+
+---
+
+## 9. Border Radius
+
+| Token | Value | Usage |
+|-------|--------|--------|
+| **Small** | `rounded-lg` (8px) | Buttons, inputs, badges, small cards |
+| **Medium** | `rounded-xl` (12px) | Cards, modals, icon boxes, filters |
+| **Large** | `rounded-2xl` (16px) | Main content cards, panels |
+
+---
+
+## 10. Form Controls
+
+- **Inputs (dark/glass):**
+  - Default: `rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-white/40`
+  - Focus: `focus:border-[#EEDC00]/50 focus:ring-2 focus:ring-[#EEDC00]/20`
+  - Optional: `backdrop-blur-sm`
+- **File input:** Same as above; file button: `file:bg-[#EEDC00]/20 file:text-[#EEDC00] hover:file:bg-[#EEDC00]/30` (or solid `file:bg-[#EEDC00] file:text-black` in some modals).
+- **Primary button (outline):** `border border-[#EEDC00]/40 bg-[#EEDC00]/15 text-[#EEDC00] hover:bg-[#EEDC00]/25`.
+- **Segmented control (e.g. By trip / By traveler):** Container `rounded-xl border border-white/20 bg-white/5 p-0.5`; active segment `bg-[#EEDC00]/20 text-[#EEDC00] border border-[#EEDC00]/30`.
+
+---
+
+## 11. Icons & Icon Containers
+
+- **Icon container (modal/card):**  
+  `flex h-10 w-10 items-center justify-center rounded-xl bg-[#EEDC00]/20 border border-[#EEDC00]/30`  
+  Icon: `h-5 w-5 text-[#EEDC00]` (or `h-6 w-6` for larger).
+- **Status icons (dashboard):** `h-6 w-6` in circles; stroke width `2` or `3` for check/cross.
+
+---
+
+## 12. Sidebar
+
+- **Background:** `bg-[#EEDC00]` (same in light/dark).
+- **Width:** Expanded `w-72`, collapsed `w-20`.
+- **Border:** `border-r border-zinc-200/80` (light), `border-zinc-800/80` (dark).
+- **Logo:** `/ens-logo.png`, max width 120px.
+- **Nav item:** `rounded-xl px-4 py-3`; active pill: `h-6 w-1 rounded-r-full bg-black` (or `bg-zinc-100` in dark).
+
+---
+
+## 13. Assets
+
+| Asset | Path | Usage |
+|-------|------|--------|
+| Hero background | `/man-back-walking-at-the-airport-2024-10-15-02-35-25-utc.jpg` | Full-screen bg on dashboard, reports, admin, login, feedback, itinerary |
+| ENS logo | `/ens-logo.png` | Sidebar, login, PDF generation |
+
+---
+
+## 14. Z-Index & Overlay
+
+- Background layer: `-z-10`.
+- Content: default stacking.
+- Modals/overlays: `z-[60]`, `z-[70]` (or equivalent) so they sit above page content.
+
+---
+
+## 15. Motion
+
+- **Transitions:** `transition-colors`, `transition-all duration-300`, `duration-200 ease-out`.
+- **Hover:** Buttons `hover:scale-[1.02]`, `hover:bg-[#EEDC00]/25`; links `hover:underline`.
+- **Admin theme button:** `transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1)`, hover `translateY(-1px)`.
+
+---
+
+This spec reflects the current implementation in the Trips frontend. Use these values for new components or when aligning with the existing UI.
+
 
 **Goal:** Deliver high-polish UI that feels tactile, deep, and authoritative — merging ENS Africa's market-leader identity with a futuristic 3-D aesthetic.
 

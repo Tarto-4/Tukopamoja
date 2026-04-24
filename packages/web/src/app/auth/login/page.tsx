@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { withBasePath } from "@/lib/base-path";
 import Ballpit from "@/components/ui/Ballpit";
+import ThemeToggle from "@/components/theme/ThemeToggle";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -21,10 +22,13 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [showResetSuccess, setShowResetSuccess] = useState(false);
+  const [showConfirmSuccess, setShowConfirmSuccess] = useState(false);
+  const [pendingConfirmationEmail, setPendingConfirmationEmail] = useState<string | null>(null);
 
   useEffect(() => {
     const query = new URLSearchParams(window.location.search);
     setShowResetSuccess(query.get("reset") === "success");
+    setShowConfirmSuccess(query.get("confirmed") === "1");
   }, []);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -34,7 +38,12 @@ export default function LoginPage() {
     setMessage(null);
 
     if (isSignUp) {
-      const { data, error: authError } = await supabase.auth.signUp({ email, password });
+      const confirmationUrl = new URL(withBasePath("/auth/login-v2/?confirmed=1"), window.location.origin).toString();
+      const { data, error: authError } = await supabase.auth.signUp({
+        email,
+        password,
+        options: { emailRedirectTo: confirmationUrl },
+      });
       if (authError) {
         setError(authError.message);
         setLoading(false);
@@ -42,9 +51,23 @@ export default function LoginPage() {
       }
 
       if (data.session) {
-        router.push("/dashboard");
+        await supabase.auth.signOut();
+        setMessage("Account created, but email confirmation is disabled for this project. Enable 'Confirm email' in Supabase Auth settings to require verification.");
+        setPendingConfirmationEmail(email.trim());
       } else {
-        setMessage("Account created. Check your email to confirm, then sign in.");
+        const normalizedEmail = email.trim();
+        const { error: resendError } = await supabase.auth.resend({
+          type: "signup",
+          email: normalizedEmail,
+          options: { emailRedirectTo: confirmationUrl },
+        });
+
+        if (resendError && !/rate limit/i.test(resendError.message)) {
+          setMessage("Account created. Verification email may be delayed. Use resend below if needed.");
+        } else {
+          setMessage("Account created. Check your email to confirm, then sign in.");
+        }
+        setPendingConfirmationEmail(normalizedEmail);
       }
       setLoading(false);
       return;
@@ -61,20 +84,46 @@ export default function LoginPage() {
     setLoading(false);
   }
 
+  async function handleResendConfirmation() {
+    if (!pendingConfirmationEmail) return;
+    setLoading(true);
+    setError(null);
+    const confirmationUrl = new URL(withBasePath("/auth/login-v2/?confirmed=1"), window.location.origin).toString();
+
+    const { error: resendError } = await supabase.auth.resend({
+      type: "signup",
+      email: pendingConfirmationEmail,
+      options: { emailRedirectTo: confirmationUrl },
+    });
+
+    if (resendError) {
+      setError(resendError.message);
+    } else {
+      setMessage("Confirmation email sent. Check your inbox and spam folder.");
+    }
+    setLoading(false);
+  }
+
   return (
     <div className="game-screen items-center justify-center gradient-dark px-4 relative overflow-hidden">
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div className="relative overflow-hidden min-h-[500px] max-h-[500px] w-full max-w-6xl">
-          <Ballpit
-            className="absolute inset-0"
-            count={100}
-            gravity={0.01}
-            friction={0.9975}
-            wallBounce={0.95}
-            followCursor={false}
-            colors={["#C9A84C", "#E0C071", "#F9D66B"]}
-          />
-        </div>
+      <div className="absolute top-0 left-0 right-0 accent-bar z-20" />
+      <div className="absolute top-4 right-4 z-30">
+        <ThemeToggle className="h-9 px-3 glass border-[#EEDC00]/30 text-white hover:bg-black/60" />
+      </div>
+
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+        <Ballpit
+          className="absolute inset-0 opacity-[0.9]"
+          forceFallback
+          count={100}
+          gravity={0.01}
+          friction={0.9975}
+          wallBounce={0.95}
+          followCursor={false}
+          colors={["#C9A84C", "#E0C071", "#F9D66B"]}
+        />
+        <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black/25 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/35 to-transparent" />
       </div>
 
       {/* Ambient glow */}
@@ -82,11 +131,11 @@ export default function LoginPage() {
         src={withBasePath("/designs/backgrounds/brand-mark-overlay.svg")}
         alt=""
         aria-hidden="true"
-        className="absolute inset-0 m-auto w-[420px] h-[420px] object-contain opacity-[0.2] pointer-events-none"
+        className="absolute inset-0 m-auto w-[420px] h-[420px] object-contain opacity-[0.2] pointer-events-none z-10"
       />
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full bg-ens-crimson/5 blur-[120px] pointer-events-none" />
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full bg-ens-crimson/5 blur-[120px] pointer-events-none z-10" />
 
-      <Card className="w-full max-w-md glass-card-elevated relative z-20">
+      <Card className="w-full max-w-md glass relative z-20 border-[#EEDC00]/20">
         <CardHeader className="text-center">
           <img
             src={withBasePath("/logo.svg")}
@@ -104,6 +153,11 @@ export default function LoginPage() {
           {showResetSuccess && (
             <p className="text-sm text-quiz-green">
               Password updated. Sign in with your new password.
+            </p>
+          )}
+          {showConfirmSuccess && (
+            <p className="text-sm text-quiz-green">
+              Email confirmed successfully. You can sign in now.
             </p>
           )}
         </CardHeader>
@@ -138,12 +192,25 @@ export default function LoginPage() {
             )}
 
             {message && (
-              <p className="text-sm text-quiz-green">{message}</p>
+              <div className="space-y-2">
+                <p className="text-sm text-quiz-green">{message}</p>
+                {pendingConfirmationEmail && isSignUp && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full border-[#EEDC00]/30"
+                    onClick={handleResendConfirmation}
+                    disabled={loading}
+                  >
+                    {loading ? "Resending..." : "Resend confirmation email"}
+                  </Button>
+                )}
+              </div>
             )}
 
             <Button
               type="submit"
-              className="w-full gradient-primary border-0 btn-3d text-white font-semibold"
+              className="w-full gradient-primary border-0 btn-3d text-black font-semibold"
               size="lg"
               disabled={loading}
             >

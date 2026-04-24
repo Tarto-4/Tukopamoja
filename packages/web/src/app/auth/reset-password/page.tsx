@@ -65,8 +65,7 @@ export default function ResetPasswordPage() {
     setError(null);
     setMessage(null);
 
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") || window.location.origin;
-    const redirectTo = `${appUrl}/auth/reset-password/`;
+    const redirectTo = new URL(withBasePath("/auth/reset-password/"), window.location.origin).toString();
 
     const { error: resetError } = await supabase.auth.resetPasswordForEmail(email.trim(), {
       redirectTo,
@@ -108,7 +107,7 @@ export default function ResetPasswordPage() {
     }
 
     await supabase.auth.signOut();
-    router.replace("/auth/login/?reset=success");
+    router.replace("/auth/login-v2/?reset=success");
   }
 
   return (

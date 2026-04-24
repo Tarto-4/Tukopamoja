@@ -5,13 +5,16 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 import { usePlayerStore } from "@/stores/usePlayerStore";
 import { Button } from "@/components/ui/button";
 import WinnerCelebration from "@/components/ui/WinnerCelebration";
 import { MEDALS } from "@quizarena/shared";
 import { Trophy, RotateCcw } from "lucide-react";
+import { withBasePath } from "@/lib/base-path";
 
 export default function PlayerGameOver() {
+  const router = useRouter();
   const { leaderboard, playerId, totalScore, rank, nickname, avatar, reset } =
     usePlayerStore();
 
@@ -21,6 +24,7 @@ export default function PlayerGameOver() {
 
   return (
     <div className="game-screen items-center justify-center gradient-dark px-4 py-6 relative overflow-hidden">
+      <div className="absolute top-0 left-0 right-0 accent-bar z-20" />
       <WinnerCelebration active={isWinner} winnerLabel="Champion" />
       <div className="w-full max-w-md space-y-6 text-center">
         {/* Celebration header */}
@@ -43,7 +47,7 @@ export default function PlayerGameOver() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="glass-card-elevated rounded-2xl p-6 space-y-3"
+          className="glass rounded-2xl p-6 space-y-3 border border-white/15"
         >
           <div className="text-4xl">{avatar}</div>
           <p className="font-serif font-bold text-lg">{nickname}</p>
@@ -69,7 +73,7 @@ export default function PlayerGameOver() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
-            className="space-y-2"
+            className="space-y-2 rounded-2xl glass p-4 border border-white/15"
           >
             <h3 className="text-sm font-serif text-ens-slate-light">
               Final Standings
@@ -81,8 +85,8 @@ export default function PlayerGameOver() {
                   key={entry.player_id}
                   className={`flex items-center gap-3 p-3 rounded-xl ${
                     isMe
-                      ? "bg-primary/10 border border-primary/30"
-                      : "bg-card/50"
+                      ? "bg-[#EEDC00]/10 border border-[#EEDC00]/30"
+                      : "bg-white/5 border border-white/10"
                   }`}
                 >
                   <span className="text-lg w-8 text-center">
@@ -110,9 +114,9 @@ export default function PlayerGameOver() {
           size="lg"
           onClick={() => {
             reset();
-            window.location.href = "/join/";
+            router.push(withBasePath("/join/"));
           }}
-          className="w-full"
+          className="w-full border-[#EEDC00]/30 bg-[#EEDC00]/10 text-[#EEDC00] hover:bg-[#EEDC00]/20"
         >
           <RotateCcw className="w-4 h-4 mr-2" />
           Play Again

@@ -6,7 +6,7 @@
 import { useState, useRef } from "react";
 import { View, Text, Pressable, StyleSheet, Dimensions } from "react-native";
 import { usePlayerStore } from "../stores/usePlayerStore";
-import { useBrandingStore, buildTheme } from "../stores/useBrandingStore";
+import { useBrandingStore, buildTheme, withAlpha } from "../stores/useBrandingStore";
 import { OPTION_COLORS } from "@quizarena/shared";
 
 const { width: SCREEN_W } = Dimensions.get("window");
@@ -44,7 +44,8 @@ export default function PlayerQuestion() {
   if (hasAnswered && lastResult) {
     return (
       <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-        <View style={styles.feedbackContainer}>
+        <View style={[styles.feedbackCard, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }, theme.shadows.card]}>
+          <View style={[styles.topAccent, { backgroundColor: lastResult.isCorrect ? theme.colors.success : theme.colors.error }]} />
           <Text style={styles.feedbackEmoji}>
             {lastResult.isCorrect ? "✅" : "❌"}
           </Text>
@@ -80,7 +81,8 @@ export default function PlayerQuestion() {
   if (hasAnswered) {
     return (
       <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-        <View style={styles.feedbackContainer}>
+        <View style={[styles.feedbackCard, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }, theme.shadows.card]}>
+          <View style={[styles.topAccent, { backgroundColor: theme.colors.primary }]} />
           <Text style={styles.feedbackEmoji}>🤞</Text>
           <Text style={[styles.feedbackTitle, { color: theme.colors.textMuted }]}>
             Answer locked in...
@@ -93,8 +95,8 @@ export default function PlayerQuestion() {
   // ─── Answer buttons ──────────────────────────────────────
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      {/* Timer */}
-      <View style={styles.timerRow}>
+      <View style={[styles.timerRow, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }, theme.shadows.card]}>
+        <View style={[styles.topAccent, { backgroundColor: theme.colors.primary }]} />
         <Text
           style={[
             styles.timer,
@@ -121,7 +123,8 @@ export default function PlayerQuestion() {
               styles.optionButton,
               {
                 backgroundColor: OPTION_COLORS[i]?.bg || "#666",
-                opacity: pressed ? 0.75 : 1,
+                borderColor: pressed ? withAlpha(theme.colors.primary, 0.5) : "transparent",
+                opacity: pressed ? 0.88 : 1,
               },
             ]}
           >
@@ -146,7 +149,18 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     marginBottom: 12,
-    paddingHorizontal: 4,
+    paddingHorizontal: 16,
+    paddingVertical: 18,
+    borderWidth: 1,
+    borderRadius: 20,
+    overflow: "hidden",
+  },
+  topAccent: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 4,
   },
   timer: {
     fontSize: 48,
@@ -167,6 +181,7 @@ const styles = StyleSheet.create({
     flex: 1,
     minHeight: 120,
     borderRadius: 16,
+    borderWidth: 2,
     justifyContent: "center",
     alignItems: "center",
     padding: 16,
@@ -183,11 +198,16 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     textAlign: "center",
   },
-  feedbackContainer: {
+  feedbackCard: {
     flex: 1,
+    width: "100%",
     justifyContent: "center",
     alignItems: "center",
     gap: 12,
+    borderWidth: 1,
+    borderRadius: 24,
+    overflow: "hidden",
+    padding: 24,
   },
   feedbackEmoji: {
     fontSize: 72,

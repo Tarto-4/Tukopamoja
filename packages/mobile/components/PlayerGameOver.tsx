@@ -5,7 +5,7 @@
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import { usePlayerStore } from "../stores/usePlayerStore";
-import { useBrandingStore, buildTheme } from "../stores/useBrandingStore";
+import { useBrandingStore, buildTheme, withAlpha } from "../stores/useBrandingStore";
 import { MEDALS } from "@quizarena/shared";
 
 export default function PlayerGameOver() {
@@ -18,14 +18,14 @@ export default function PlayerGameOver() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      {/* Header */}
-      <Text style={styles.emoji}>🎉</Text>
-      <Text style={[styles.title, { color: theme.colors.text }]}>
-        Game Over!
-      </Text>
+      <View style={[styles.panel, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }, theme.shadows.card]}>
+        <View style={[styles.topAccent, { backgroundColor: theme.colors.primary }]} />
+        <Text style={styles.emoji}>🎉</Text>
+        <Text style={[styles.title, { color: theme.colors.text }]}> 
+          Game Over!
+        </Text>
 
-      {/* Your rank */}
-      <View style={styles.myResult}>
+        <View style={styles.myResult}>
         <Text style={[styles.rankLabel, { color: theme.colors.textMuted }]}>
           YOUR FINAL RANK
         </Text>
@@ -35,47 +35,54 @@ export default function PlayerGameOver() {
         <Text style={[styles.scoreText, { color: theme.colors.text }]}>
           {myScore.toLocaleString()} points
         </Text>
-      </View>
+        </View>
 
-      {/* Top 3 podium */}
-      <View style={styles.podium}>
-        {top3.map((entry) => (
-          <View key={entry.player_id} style={styles.podiumEntry}>
-            <Text style={styles.medal}>
-              {entry.rank <= 3 ? MEDALS[entry.rank - 1] : `#${entry.rank}`}
-            </Text>
-            <Text
-              style={[styles.podiumName, { color: theme.colors.text }]}
-              numberOfLines={1}
+        <View style={styles.podium}>
+          {top3.map((entry) => (
+            <View
+              key={entry.player_id}
+              style={[
+                styles.podiumEntry,
+                {
+                  backgroundColor: withAlpha(theme.colors.primary, 0.12),
+                  borderColor: withAlpha(theme.colors.primary, 0.22),
+                },
+              ]}
             >
-              {entry.nickname}
-            </Text>
-            <Text style={[styles.podiumScore, { color: theme.colors.textMuted }]}>
-              {entry.score.toLocaleString()}
-            </Text>
-          </View>
-        ))}
-      </View>
+              <Text style={styles.medal}>
+                {entry.rank <= 3 ? MEDALS[entry.rank - 1] : `#${entry.rank}`}
+              </Text>
+              <Text
+                style={[styles.podiumName, { color: theme.colors.text }]}
+                numberOfLines={1}
+              >
+                {entry.nickname}
+              </Text>
+              <Text style={[styles.podiumScore, { color: theme.colors.textMuted }]}> 
+                {entry.score.toLocaleString()}
+              </Text>
+            </View>
+          ))}
+        </View>
 
-      {/* Play again */}
-      <Pressable
-        style={({ pressed }) => [
-          styles.playAgain,
-          {
-            backgroundColor: theme.colors.surface,
-            borderColor: theme.colors.primary + "40",
-            opacity: pressed ? 0.8 : 1,
-          },
-        ]}
-        onPress={() => {
-          reset();
-          router.replace("/");
-        }}
-      >
-        <Text style={[styles.playAgainText, { color: theme.colors.primary }]}>
-          🔄 Play Again
-        </Text>
-      </Pressable>
+        <Pressable
+          style={({ pressed }) => [
+            styles.playAgain,
+            {
+              backgroundColor: pressed ? theme.colors.primaryDark : theme.colors.primary,
+              opacity: pressed ? 0.92 : 1,
+            },
+          ]}
+          onPress={() => {
+            reset();
+            router.replace("/");
+          }}
+        >
+          <Text style={[styles.playAgainText, { color: theme.colors.background }]}> 
+            🔄 Play Again
+          </Text>
+        </Pressable>
+      </View>
     </View>
   );
 }
@@ -86,7 +93,21 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 24,
-    gap: 16,
+  },
+  panel: {
+    width: "100%",
+    borderRadius: 24,
+    borderWidth: 1,
+    padding: 24,
+    alignItems: "center",
+    overflow: "hidden",
+  },
+  topAccent: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 4,
   },
   emoji: {
     fontSize: 64,
@@ -117,11 +138,16 @@ const styles = StyleSheet.create({
     gap: 12,
     width: "100%",
     justifyContent: "center",
+    marginTop: 8,
   },
   podiumEntry: {
     alignItems: "center",
     flex: 1,
     maxWidth: 100,
+    borderRadius: 16,
+    borderWidth: 1,
+    paddingVertical: 12,
+    paddingHorizontal: 8,
   },
   medal: {
     fontSize: 28,
@@ -141,7 +167,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 14,
     borderRadius: 16,
-    borderWidth: 1,
+    minWidth: 180,
+    alignItems: "center",
   },
   playAgainText: {
     fontSize: 18,

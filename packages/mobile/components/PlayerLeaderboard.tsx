@@ -4,7 +4,7 @@
 
 import { View, Text, FlatList, StyleSheet } from "react-native";
 import { usePlayerStore } from "../stores/usePlayerStore";
-import { useBrandingStore, buildTheme } from "../stores/useBrandingStore";
+import { useBrandingStore, buildTheme, withAlpha } from "../stores/useBrandingStore";
 import { MEDALS } from "@quizarena/shared";
 
 export default function PlayerLeaderboard() {
@@ -14,8 +14,8 @@ export default function PlayerLeaderboard() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      {/* My rank */}
-      <View style={styles.myRankSection}>
+      <View style={[styles.myRankSection, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }, theme.shadows.card]}>
+        <View style={[styles.topAccent, { backgroundColor: theme.colors.primary }]} />
         <Text style={[styles.rankLabel, { color: theme.colors.textMuted }]}>
           YOUR POSITION
         </Text>
@@ -28,7 +28,7 @@ export default function PlayerLeaderboard() {
       </View>
 
       {/* Top players */}
-      <Text style={[styles.sectionTitle, { color: theme.colors.textMuted }]}>
+      <Text style={[styles.sectionTitle, { color: theme.colors.primary }]}> 
         TOP PLAYERS
       </Text>
 
@@ -43,9 +43,9 @@ export default function PlayerLeaderboard() {
                 styles.row,
                 {
                   backgroundColor: isMe
-                    ? theme.colors.primary + "20"
-                    : theme.colors.surface,
-                  borderColor: isMe ? theme.colors.primary : "transparent",
+                    ? withAlpha(theme.colors.primary, 0.16)
+                    : theme.colors.surfaceSoft,
+                  borderColor: isMe ? withAlpha(theme.colors.primary, 0.35) : theme.colors.borderSoft,
                 },
               ]}
             >
@@ -104,7 +104,18 @@ const styles = StyleSheet.create({
   myRankSection: {
     alignItems: "center",
     marginBottom: 24,
-    paddingVertical: 16,
+    paddingVertical: 20,
+    paddingHorizontal: 20,
+    borderRadius: 24,
+    borderWidth: 1,
+    overflow: "hidden",
+  },
+  topAccent: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 4,
   },
   rankLabel: {
     fontSize: 12,
@@ -122,7 +133,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 12,
-    fontWeight: "600",
+    fontWeight: "700",
     letterSpacing: 2,
     marginBottom: 12,
     textAlign: "center",
@@ -133,8 +144,8 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 12,
-    borderRadius: 12,
+    padding: 14,
+    borderRadius: 16,
     borderWidth: 1,
   },
   rankCol: {

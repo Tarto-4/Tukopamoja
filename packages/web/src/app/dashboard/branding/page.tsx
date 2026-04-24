@@ -28,18 +28,18 @@ const FONT_OPTIONS = [
 ];
 
 const COLOR_PRESETS = [
-  { primary: "#8E191E", secondary: "#C9A84C", name: "Executive Crimson" },
-  { primary: "#6B1216", secondary: "#D5B35B", name: "Heritage Gold" },
-  { primary: "#1F2A44", secondary: "#C9A84C", name: "Midnight Gold" },
+  { primary: "#EEDC00", secondary: "#f5e500", name: "ENS Future Gold" },
+  { primary: "#d4c500", secondary: "#EEDC00", name: "Executive Gold" },
+  { primary: "#1F2A44", secondary: "#EEDC00", name: "Midnight Gold" },
   { primary: "#184E45", secondary: "#D8C27A", name: "Emerald Brass" },
   { primary: "#4C2A3D", secondary: "#D4A85F", name: "Aubergine Copper" },
   { primary: "#2A2A2E", secondary: "#8F9399", name: "Carbon Slate" },
 ];
 
 const COLOR_CLASS_MAP: Record<string, string> = {
-  "#8E191E": "bg-ens-crimson",
-  "#C9A84C": "bg-ens-gold",
-  "#6B1216": "bg-ens-crimson-dark",
+  "#EEDC00": "bg-[#EEDC00]",
+  "#f5e500": "bg-[#f5e500]",
+  "#d4c500": "bg-[#d4c500]",
   "#D5B35B": "bg-[#D5B35B]",
   "#1F2A44": "bg-[#1F2A44]",
   "#184E45": "bg-[#184E45]",
@@ -117,8 +117,9 @@ export default function BrandingPage() {
 
   return (
     <div className="page-container max-w-2xl">
-      <div className="mb-8">
-        <h1 className="text-3xl font-serif font-black">Company Branding</h1>
+      <div className="mb-8 rounded-2xl glass p-6 border border-[#EEDC00]/20 relative overflow-hidden">
+        <div className="absolute top-0 left-0 right-0 accent-bar" />
+        <h1 className="text-3xl font-serif font-black text-white">Company Branding</h1>
         <p className="text-muted-foreground mt-1">
           Customize how your brand appears to players
         </p>
@@ -126,7 +127,7 @@ export default function BrandingPage() {
 
       <div className="space-y-6">
         {/* Identity */}
-        <Card>
+        <Card className="glass border-white/15">
           <CardHeader>
             <CardTitle>Brand Identity</CardTitle>
             <CardDescription>
@@ -164,7 +165,7 @@ export default function BrandingPage() {
                 <div>
                   <Label
                     htmlFor="logo-upload"
-                    className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 border rounded-md hover:bg-accent transition-colors"
+                    className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 border border-[#EEDC00]/30 rounded-md bg-[#EEDC00]/10 text-[#EEDC00] hover:bg-[#EEDC00]/20 transition-colors"
                   >
                     <Upload className="w-4 h-4" />
                     Upload Logo
@@ -185,7 +186,7 @@ export default function BrandingPage() {
         </Card>
 
         {/* Colors */}
-        <Card>
+        <Card className="glass border-white/15">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Palette className="w-5 h-5" />
@@ -208,7 +209,7 @@ export default function BrandingPage() {
                       secondary_color: preset.secondary,
                     })
                   }
-                  className="flex flex-col items-center p-2 rounded-lg border hover:border-primary/50 transition-colors"
+                  className="flex flex-col items-center p-2 rounded-lg border border-white/10 bg-white/5 hover:border-[#EEDC00]/40 hover:bg-[#EEDC00]/10 transition-colors"
                   title={preset.name}
                 >
                   <div className="flex gap-1">
@@ -271,7 +272,12 @@ export default function BrandingPage() {
             </div>
 
             {/* Live preview */}
-            <div className="rounded-lg p-6 text-center text-white font-serif font-bold text-xl gradient-primary">
+            <div
+              className="rounded-2xl p-6 text-center text-white font-serif font-bold text-xl border border-white/10 shadow-2xl"
+              style={{
+                background: `linear-gradient(135deg, ${org.primary_color || "#EEDC00"} 0%, ${org.secondary_color || "#f5e500"} 100%)`,
+              }}
+            >
               {org.name} — Live Preview
               <p className="text-xs mt-2 text-white/80 font-sans font-medium">
                 {org.primary_color} / {org.secondary_color}
@@ -281,7 +287,7 @@ export default function BrandingPage() {
         </Card>
 
         {/* Font */}
-        <Card>
+        <Card className="glass border-white/15">
           <CardHeader>
             <CardTitle>Typography</CardTitle>
           </CardHeader>
@@ -314,7 +320,7 @@ export default function BrandingPage() {
           <Button
             onClick={handleSave}
             disabled={saving}
-            className="gradient-primary border-0 btn-3d text-white font-semibold"
+            className="gradient-primary border-0 btn-3d text-black font-semibold"
             size="lg"
           >
             <Save className="w-4 h-4 mr-2" />

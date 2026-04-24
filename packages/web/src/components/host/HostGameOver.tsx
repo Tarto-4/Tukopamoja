@@ -20,6 +20,7 @@ export default function HostGameOver() {
 
   return (
     <div className="game-screen items-center justify-center gradient-dark p-4 sm:p-8 relative overflow-hidden">
+      <div className="absolute top-0 left-0 right-0 accent-bar z-20" />
       <WinnerCelebration
         active={!!winner}
         winnerLabel={winner ? `${winner.nickname} wins!` : "Winner"}
@@ -28,7 +29,7 @@ export default function HostGameOver() {
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
         transition={{ type: "spring", damping: 10 }}
-        className="text-center mb-8"
+        className="text-center mb-8 relative z-10"
       >
         <motion.span
           className="text-6xl block mb-4"
@@ -43,7 +44,7 @@ export default function HostGameOver() {
       </motion.div>
 
       {/* Podium */}
-      <div className="flex items-end justify-center gap-4 mb-8 max-w-lg w-full">
+      <div className="flex items-end justify-center gap-4 mb-8 max-w-lg w-full relative z-10 rounded-2xl glass p-6 border border-white/15">
         {[1, 0, 2].map((podiumIndex) => {
           const entry = top3[podiumIndex];
           if (!entry) return <div key={podiumIndex} className="flex-1" />;
@@ -70,7 +71,7 @@ export default function HostGameOver() {
         })}
       </div>
 
-      <div className="flex gap-4">
+      <div className="flex gap-4 relative z-10">
         <Button
           variant="outline"
           size="lg"
@@ -78,6 +79,7 @@ export default function HostGameOver() {
             reset();
             router.push("/dashboard");
           }}
+          className="border-[#EEDC00]/30 bg-[#EEDC00]/10 text-[#EEDC00] hover:bg-[#EEDC00]/20"
         >
           Back to Dashboard
         </Button>

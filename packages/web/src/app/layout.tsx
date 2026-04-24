@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "@/styles/globals.css";
 import { withBasePath } from "@/lib/base-path";
+import ThemeProvider from "@/components/theme/ThemeProvider";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -25,9 +26,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark" suppressHydrationWarning>
-      <body className="min-h-[100dvh] font-sans antialiased bg-[#111111]">
-        {children}
+    <html lang="en" suppressHydrationWarning>
+      <body className="min-h-[100dvh] font-sans antialiased bg-background text-foreground">
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );

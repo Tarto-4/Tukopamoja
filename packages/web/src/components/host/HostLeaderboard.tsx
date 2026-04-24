@@ -21,27 +21,28 @@ export default function HostLeaderboard() {
   const isLastQuestion = session.current_q_index >= totalQuestions - 1;
 
   return (
-    <div className="game-screen items-center justify-center gradient-dark p-4 sm:p-8">
+    <div className="game-screen items-center justify-center gradient-dark p-4 sm:p-8 relative overflow-hidden">
+      <div className="absolute top-0 left-0 right-0 accent-bar z-20" />
       <motion.h1
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-3xl sm:text-5xl font-serif font-black mb-2"
+        className="text-3xl sm:text-5xl font-serif font-black mb-2 relative z-10"
       >
         🏆 Leaderboard
       </motion.h1>
-      <p className="text-muted-foreground mb-6 sm:mb-8">
+      <p className="text-muted-foreground mb-6 sm:mb-8 relative z-10">
         After question {session.current_q_index + 1} of {totalQuestions}
       </p>
 
       {/* Rankings */}
-      <div className="w-full max-w-lg space-y-2 sm:space-y-3 mb-6 sm:mb-8 max-h-[50vh] overflow-y-auto">
+      <div className="w-full max-w-lg space-y-2 sm:space-y-3 mb-6 sm:mb-8 max-h-[50vh] overflow-y-auto relative z-10 rounded-2xl glass p-4 border border-white/15">
         {leaderboard.map((entry, index) => (
           <motion.div
             key={entry.player_id}
             initial={{ opacity: 0, x: -40 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: index * 0.08 }}
-            className="flex items-center gap-3 sm:gap-4 glass-card rounded-xl p-3 sm:p-4"
+            className="flex items-center gap-3 sm:gap-4 rounded-xl p-3 sm:p-4 bg-white/5 border border-white/10"
           >
             <div className="w-10 text-center">
               {entry.rank <= 3 ? (
@@ -84,7 +85,7 @@ export default function HostLeaderboard() {
             setLoading(false);
           }
         }}
-        className="gradient-primary border-0 btn-3d text-white font-semibold"
+        className="gradient-primary border-0 btn-3d text-black font-semibold relative z-10"
       >
         {loading
           ? "Loading..."

@@ -12,10 +12,11 @@ export default function PlayerLeaderboard() {
   const { leaderboard, playerId, totalScore, rank } = usePlayerStore();
 
   return (
-    <div className="game-screen items-center gradient-dark px-4 py-6">
+    <div className="game-screen items-center gradient-dark px-4 py-6 relative overflow-hidden">
+      <div className="absolute top-0 left-0 right-0 accent-bar z-20" />
       <div className="w-full max-w-md space-y-6">
         {/* Title */}
-        <div className="text-center space-y-2">
+        <div className="text-center space-y-2 relative z-10">
           <h2 className="text-2xl font-serif font-black">🏆 Leaderboard</h2>
           {rank && (
             <p className="text-muted-foreground">
@@ -25,7 +26,7 @@ export default function PlayerLeaderboard() {
         </div>
 
         {/* My score card */}
-        <div className="glass-card border border-primary/30 rounded-xl p-4 text-center">
+        <div className="glass border border-[#EEDC00]/30 rounded-xl p-4 text-center relative z-10">
           <p className="text-sm text-muted-foreground">Your Score</p>
           <p className="text-3xl font-serif font-black text-primary">
             {totalScore.toLocaleString()}
@@ -33,7 +34,7 @@ export default function PlayerLeaderboard() {
         </div>
 
         {/* Rankings */}
-        <div className="space-y-2">
+        <div className="space-y-2 relative z-10 rounded-2xl glass p-4 border border-white/15">
           {leaderboard.map((entry, i) => {
             const isMe = entry.player_id === playerId;
             return (
@@ -43,7 +44,7 @@ export default function PlayerLeaderboard() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: i * 0.05 }}
                 className={`flex items-center gap-3 p-3 rounded-xl ${
-                  isMe ? "bg-primary/10 border border-primary/30" : "bg-card"
+                  isMe ? "bg-[#EEDC00]/10 border border-[#EEDC00]/30" : "bg-white/5 border border-white/10"
                 }`}
               >
                 <span className="text-lg w-8 text-center font-serif font-black">

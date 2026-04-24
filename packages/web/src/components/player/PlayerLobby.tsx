@@ -20,22 +20,23 @@ export default function PlayerLobby() {
 
   return (
     <div className="game-screen items-center justify-center gradient-dark px-4 relative overflow-hidden">
+      <div className="absolute top-0 left-0 right-0 accent-bar z-20" />
       <img
         src={withBasePath("/designs/backgrounds/brand-mark-overlay.svg")}
         alt=""
         aria-hidden="true"
         className="absolute inset-0 m-auto w-[420px] h-[420px] object-contain opacity-[0.18] pointer-events-none"
       />
-      <div className="text-center space-y-8 max-w-md w-full">
+      <div className="text-center space-y-8 max-w-md w-full relative z-10">
         {/* Player identity */}
-        <div className="space-y-2">
+        <div className="space-y-2 rounded-2xl glass p-6 border border-white/15">
           <div className="text-6xl">{avatar}</div>
           <h2 className="text-2xl font-serif font-bold">{nickname}</h2>
           <p className="text-muted-foreground text-sm">You&apos;re in!</p>
         </div>
 
         {/* Waiting indicator */}
-        <div className="glass-card rounded-2xl p-6 space-y-4">
+        <div className="glass rounded-2xl p-6 space-y-4 border border-white/15">
           <HamsterLoader label="Waiting for host to start" className="scale-75" />
           <p className="text-lg font-serif">
             {isReady ? "Waiting for host to start..." : "Tap ready so the host can start"}
@@ -47,7 +48,7 @@ export default function PlayerLobby() {
             <Button
               size="lg"
               onClick={() => toggleReady(!isReady)}
-              className={isReady ? "gradient-primary border-0 btn-3d text-white font-semibold" : "w-full sm:w-auto"}
+              className={isReady ? "gradient-primary border-0 btn-3d text-black font-semibold" : "w-full sm:w-auto border-[#EEDC00]/30 bg-[#EEDC00]/10 text-[#EEDC00] hover:bg-[#EEDC00]/20"}
               variant={isReady ? "default" : "outline"}
             >
               {isReady ? (
@@ -77,9 +78,9 @@ export default function PlayerLobby() {
                 <span
                   key={p.id}
                   className={`px-3 py-1.5 rounded-full text-sm font-medium ${
-                    p.id === usePlayerStore.getState().playerId
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-card border"
+                    p.id === playerId
+                      ? "bg-[#EEDC00] text-black"
+                      : "bg-white/5 border border-white/10"
                   }`}
                 >
                   {p.avatar} {p.nickname}{p.is_ready ? " ✓" : ""}

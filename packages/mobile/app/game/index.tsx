@@ -26,6 +26,7 @@ export default function GameScreen() {
       <SafeAreaView
         style={[styles.container, { backgroundColor: theme.colors.background }]}
       >
+        <View style={[styles.glowTop, { backgroundColor: theme.colors.warningSoft }]} />
         <Text style={{ color: theme.colors.textMuted, textAlign: "center" }}>
           No active session
         </Text>
@@ -54,6 +55,9 @@ export default function GameScreen() {
     <SafeAreaView
       style={[styles.container, { backgroundColor: theme.colors.background }]}
     >
+      <View style={[styles.accentBar, { backgroundColor: theme.colors.primary }]} />
+      <View style={[styles.glowTop, { backgroundColor: theme.colors.warningSoft }]} />
+      <View style={[styles.glowBottom, { backgroundColor: theme.colors.infoSoft }]} />
       {renderScreen()}
     </SafeAreaView>
   );
@@ -62,5 +66,32 @@ export default function GameScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  accentBar: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 4,
+    zIndex: 2,
+  },
+  glowTop: {
+    position: "absolute",
+    top: 40,
+    left: "50%",
+    marginLeft: -140,
+    width: 280,
+    height: 280,
+    borderRadius: 140,
+    opacity: 0.4,
+  },
+  glowBottom: {
+    position: "absolute",
+    bottom: 20,
+    right: -40,
+    width: 220,
+    height: 220,
+    borderRadius: 110,
+    opacity: 0.18,
   },
 });

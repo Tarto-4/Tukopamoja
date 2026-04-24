@@ -29,11 +29,12 @@ export default function PlayerQuestion() {
   // Already answered — show result
   if (hasAnswered && answerResult) {
     return (
-      <div className="game-screen items-center justify-center gradient-dark px-4">
+      <div className="game-screen items-center justify-center gradient-dark px-4 relative overflow-hidden">
+        <div className="absolute top-0 left-0 right-0 accent-bar z-20" />
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          className="text-center space-y-6 max-w-md w-full"
+          className="text-center space-y-6 max-w-md w-full relative z-10"
         >
           {answerResult.isCorrect ? (
             <>
@@ -51,8 +52,8 @@ export default function PlayerQuestion() {
             </>
           )}
 
-          <div className="glass-card rounded-2xl p-6 space-y-3">
-            <p className="text-sm text-ens-slate-light">Points earned</p>
+          <div className="glass rounded-2xl p-6 space-y-3 border border-white/15">
+            <p className="text-sm text-white/70">Points earned</p>
             <p className="text-4xl font-serif font-black">
               +{answerResult.pointsAwarded}
             </p>
@@ -77,7 +78,8 @@ export default function PlayerQuestion() {
   // Time's up and haven't answered
   if (timeLeft <= 0 && !hasAnswered) {
     return (
-      <div className="game-screen items-center justify-center gradient-dark px-4">
+      <div className="game-screen items-center justify-center gradient-dark px-4 relative overflow-hidden">
+        <div className="absolute top-0 left-0 right-0 accent-bar z-20" />
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -96,10 +98,11 @@ export default function PlayerQuestion() {
 
   // Show question + options
   return (
-    <div className="game-screen p-4 gradient-dark">
+    <div className="game-screen p-4 gradient-dark relative overflow-hidden">
+      <div className="absolute top-0 left-0 right-0 accent-bar z-20" />
       {/* Top bar */}
-      <div className="flex items-center justify-between mb-3">
-        <span className="text-xs font-serif text-ens-slate-light">
+      <div className="flex items-center justify-between mb-3 relative z-10 rounded-2xl glass px-4 py-3 border border-white/15">
+        <span className="text-xs font-serif text-white/70">
           {qIndex + 1} / {totalQuestions}
         </span>
         <div
@@ -116,7 +119,7 @@ export default function PlayerQuestion() {
         key={qIndex}
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="glass-card rounded-xl p-4 text-center mb-4"
+        className="glass rounded-xl p-4 text-center mb-4 border border-white/15 relative z-10"
       >
         <h2 className="text-lg sm:text-xl font-serif font-bold leading-tight">
           {currentQuestion.question_text}
@@ -131,7 +134,7 @@ export default function PlayerQuestion() {
       </motion.div>
 
       {/* Options — full screen tappable buttons */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 flex-1">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 flex-1 relative z-10">
         {currentQuestion.options.map((opt, i) => {
           const color = OPTION_COLORS[i];
           return (
@@ -143,7 +146,7 @@ export default function PlayerQuestion() {
               onClick={() => submitAnswer(i)}
               disabled={hasAnswered}
               className="rounded-xl p-5 flex items-center justify-center text-white
-                        font-sans font-bold text-lg shadow-ens-lg active:scale-95
+                        font-sans font-bold text-lg shadow-ens-lg active:scale-95 border border-white/10
                         transition-transform disabled:opacity-50"
               style={{ backgroundColor: color.bg }}
             >
