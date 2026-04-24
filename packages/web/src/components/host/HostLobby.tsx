@@ -10,6 +10,7 @@ import { useBrandingStore } from "@/stores/useBrandingStore";
 import { Button } from "@/components/ui/button";
 import QRCodeDisplay from "./QRCodeDisplay";
 import { Lock, LockOpen, Play, Users, UserX, VolumeX, Volume2, ChevronLeft, ChevronRight } from "lucide-react";
+import { withBasePath } from "@/lib/base-path";
 
 const PAGE_SIZE = 12;
 
@@ -78,7 +79,13 @@ export default function HostLobby() {
       : "";
 
   return (
-    <div className="game-screen gradient-dark">
+    <div className="game-screen gradient-dark relative overflow-hidden">
+      <img
+        src={withBasePath("/designs/backgrounds/brand-watermark.svg")}
+        alt=""
+        aria-hidden="true"
+        className="absolute inset-0 m-auto w-[420px] h-[420px] object-contain opacity-[0.06] pointer-events-none"
+      />
       {/* Header */}
       <div className="flex items-center justify-between p-4 sm:p-6">
         <div className="flex items-center gap-3">

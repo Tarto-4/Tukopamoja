@@ -8,6 +8,7 @@ import { usePlayerStore } from "@/stores/usePlayerStore";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2, Circle, Users } from "lucide-react";
 import HamsterLoader from "@/components/ui/HamsterLoader";
+import { withBasePath } from "@/lib/base-path";
 
 export default function PlayerLobby() {
   const { session, players, nickname, avatar, playerId, toggleReady } = usePlayerStore();
@@ -18,7 +19,13 @@ export default function PlayerLobby() {
   const isReady = !!me?.is_ready;
 
   return (
-    <div className="game-screen items-center justify-center gradient-dark px-4">
+    <div className="game-screen items-center justify-center gradient-dark px-4 relative overflow-hidden">
+      <img
+        src={withBasePath("/designs/backgrounds/brand-watermark.svg")}
+        alt=""
+        aria-hidden="true"
+        className="absolute inset-0 m-auto w-[340px] h-[340px] object-contain opacity-[0.06] pointer-events-none"
+      />
       <div className="text-center space-y-8 max-w-md w-full">
         {/* Player identity */}
         <div className="space-y-2">

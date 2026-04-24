@@ -63,6 +63,12 @@ export default function LoginPage() {
   return (
     <div className="game-screen items-center justify-center gradient-dark px-4 relative overflow-hidden">
       {/* Ambient glow */}
+      <img
+        src={withBasePath("/designs/backgrounds/brand-watermark.svg")}
+        alt=""
+        aria-hidden="true"
+        className="absolute inset-0 m-auto w-[360px] h-[360px] object-contain opacity-[0.08] pointer-events-none"
+      />
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full bg-ens-crimson/5 blur-[120px] pointer-events-none" />
 
       <Card className="w-full max-w-md glass-card-elevated relative z-10">
