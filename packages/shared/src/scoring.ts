@@ -25,7 +25,7 @@ export interface ScoreResult {
 /**
  * Rank-based score for a single answer.
  * Fastest correct answer receives max points. Later answers receive
- * fractional shares down to `MIN_RANK_SHARE` for the slowest valid answer.
+ * explicit ladder shares, then floor at `MIN_RANK_SHARE`.
  */
 export function calculateScore(input: ScoreInput): ScoreResult {
   const {
@@ -51,10 +51,8 @@ export function calculateScore(input: ScoreInput): ScoreResult {
   const rank = Math.max(1, answerRank);
   const playerCount = Math.max(1, activePlayers);
   const boundedRank = Math.min(rank, playerCount);
-  const rankShare = Math.max(
-    SCORING.MIN_RANK_SHARE,
-    1 / (1 + SCORING.RANK_DECAY_FACTOR * (boundedRank - 1))
-  );
+  const explicitShare = SCORING.RANK_SHARES[boundedRank - 1];
+  const rankShare = explicitShare ?? SCORING.MIN_RANK_SHARE;
 
   const newStreak = currentStreak + 1;
   const points = Math.floor(maxPoints * rankShare);

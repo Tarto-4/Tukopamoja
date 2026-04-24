@@ -1,8 +1,152 @@
 # QuizArena
 
-**Production-ready, white-label Kahoot clone** — real-time quiz platform with a Next.js Host Dashboard, React Native Player App, and Supabase backend.
+**Production-ready multiplayer game platform** centered on live quiz experiences today, with the architecture already prepared for additional modes such as puzzle, chess, and word-based multiplayer.
 
-Built for single-tenant (company) deployment with deep branding customization.
+QuizArena is built as a branded monorepo product with a web presenter experience, a mobile player experience, shared game logic, and a Supabase backend that keeps sessions, scoring, and real-time state synchronized.
+
+## Executive Summary
+
+QuizArena currently runs as a presenter-led multiplayer quiz platform.
+
+- Hosts sign in on the web app, create templates, launch sessions, and control progression.
+- Players join with a PIN or QR path and participate in real time.
+- Shared code keeps scoring, types, and game rules consistent across web, mobile, and backend layers.
+- Supabase provides authentication, PostgreSQL storage, row-level security, and realtime updates.
+- The public landing experience already supports broader product positioning, where quiz is active and other game modes can be exposed as coming soon.
+
+## Current Capabilities
+
+### Host capabilities
+
+- host authentication
+- template creation and editing
+- session creation from reusable templates
+- presenter-controlled flow through lobby, questions, leaderboard, and finish states
+- session and template refresh tools
+- branding-aware dashboard experience
+
+### Player capabilities
+
+- join by PIN
+- QR-assisted join flow
+- synchronized live questions
+- smooth timer experience
+- explicit ranked scoring by answer order
+- end-of-game summary with standings and auto-return
+
+### Platform capabilities
+
+- shared logic in a single monorepo
+- database-backed scoring and session authority
+- static web deployment for public access
+- Supabase migrations for systematic backend evolution
+- white-label styling and branded surfaces
+
+## How the Project Works
+
+At runtime, the system follows a predictable session lifecycle:
+
+1. A host signs in on the web app.
+2. The host selects or creates a quiz template.
+3. Starting a game creates a session and snapshots the questions into the database.
+4. Players join the session with a PIN.
+5. The host starts each round.
+6. Players answer in real time.
+7. Scores are calculated from shared rank-based rules and persisted.
+8. The host reveals the leaderboard, advances, or ends the game.
+9. Players see final results and return to the join flow.
+
+This keeps the presenter in control while the backend remains the source of truth for state and scoring.
+
+## How It Is Systematically Built
+
+The project is organized as a monorepo so every layer can evolve together.
+
+### Product surfaces
+
+- `packages/web` — Next.js presenter dashboard and public web routes
+- `packages/mobile` — Expo/React Native player app
+- `packages/shared` — shared types, constants, realtime contracts, and scoring
+
+### Backend platform
+
+- `supabase` — migrations, policies, SQL functions, and backend data rules
+
+### Delivery model
+
+- npm workspaces coordinate builds and scripts
+- Supabase CLI manages schema rollout
+- GitHub workflows handle deployment automation
+
+This separation gives the project a clean structure:
+
+- UI is platform-specific
+- rules are centralized
+- data is authoritative in PostgreSQL
+- realtime events keep all clients aligned
+
+## Workflow and System Connections
+
+### Development workflow
+
+1. Define rules and contracts in shared code.
+2. Implement host features in web.
+3. Implement player features in mobile.
+4. Add database changes as versioned Supabase migrations.
+5. Validate with builds and scripted checks.
+6. Deploy web and push backend migrations.
+
+### Runtime workflow
+
+1. Host logs in.
+2. Host opens templates.
+3. Host starts a session.
+4. Players join.
+5. Host launches question.
+6. Players submit answers.
+7. Scores and rankings update.
+8. Host shows leaderboard.
+9. Host advances or finishes.
+
+### How everything is connected
+
+- **Web app** controls hosting, dashboard management, and public access routes.
+- **Mobile app** handles the player-side live game experience.
+- **Shared package** prevents rule drift by keeping score logic and types in one place.
+- **Supabase** stores templates, sessions, players, and answers while broadcasting state changes.
+
+## Required Improvements
+
+The project is already solid, but the next important improvements are:
+
+1. keep documentation aligned with current implementation
+2. reduce generated export warnings and metadata noise
+3. deepen CI coverage for migrations, builds, and deployment checks
+4. improve observability and production diagnostics
+5. expand authoring tools with better media and bulk operations
+6. strengthen moderation, admin controls, and analytics
+
+## Future Implementations
+
+The architecture supports broader multiplayer growth.
+
+### Near-term roadmap
+
+- puzzle mode
+- chess mode
+- word-based multiplayer mode
+- richer host analytics
+- stronger branding controls
+- richer player history and profiles
+
+### Longer-term opportunities
+
+- team play
+- tournaments and brackets
+- spectator mode
+- classroom or training mode
+- notifications and announcements
+- adaptive difficulty and richer ranking models
 
 ---
 
@@ -102,7 +246,7 @@ Built for single-tenant (company) deployment with deep branding customization.
 
 1. **Template → Session separation**: Templates are reusable blueprints. When "Start Game" is clicked, `create_session()` snapshots the questions into `sessions.questions_snapshot` (JSONB). This ensures template edits never affect an in-progress game.
 
-2. **Scoring in PostgreSQL**: `calculate_score()` is a database function that mirrors the TypeScript implementation in `packages/shared/src/scoring.ts`. Score = `floor(max_points × max(0, 1 − timeTaken / (2 × timeLimit)))` with streak multiplier (capped at 1.5×).
+2. **Scoring in PostgreSQL**: the scoring model is mirrored between `packages/shared/src/scoring.ts` and Supabase migration functions that rescore answers. The current implementation is explicit rank-based scoring: 1st = 100%, 2nd = 90%, 3rd = 80%, tapering down to a 20% floor for later valid answers.
 
 3. **Single-row organization table**: Since this is single-tenant (one company), branding lives in a simple table with one row.
 
@@ -367,18 +511,33 @@ From host screen:
 
 ## Scoring Algorithm
 
+QuizArena currently uses explicit **rank-based multiplayer scoring** for correct answers.
+
 ```
-Base = floor(MaxPts × max(0, 1 − timeTaken / (2 × timeLimit)))
-Multiplier = min(1.5, 1 + (streak − 1) × 0.1)
-Score = floor(Base × Multiplier)
+1st correct answer  = 100%
+2nd correct answer  = 90%
+3rd correct answer  = 80%
+4th correct answer  = 70%
+5th correct answer  = 60%
+6th correct answer  = 50%
+7th correct answer  = 40%
+8th correct answer  = 30%
+9th+ correct answer = 20%
+Wrong or late       = 0%
 ```
 
-| Speed | Points (1000 max) | With 3-streak |
-|-------|-------------------|---------------|
-| Instant | 1000 | 1200 |
-| Half time | 750 | 900 |
-| Full time | 500 | 600 |
-| Wrong | 0 | streak resets |
+Example with `1000` max points:
+
+| Rank | Share | Points |
+|------|-------|--------|
+| 1 | 100% | 1000 |
+| 2 | 90% | 900 |
+| 3 | 80% | 800 |
+| 4 | 70% | 700 |
+| 5 | 60% | 600 |
+| 9+ | 20% | 200 |
+
+This makes the scoring transparent, competitive, and easy for players to understand.
 
 ---
 
@@ -780,3 +939,7 @@ npm run test:all
 ## License
 
 Private — Internal use only.
+
+## Author
+
+- Tmongwe

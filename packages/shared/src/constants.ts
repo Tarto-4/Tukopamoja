@@ -15,10 +15,10 @@ export const SESSION_FLOW = [
 export const SCORING = {
   /** Maximum points for a perfect answer */
   MAX_POINTS: 1000,
-  /** Lowest rank-based share awarded to the slowest valid correct answer */
+  /** Explicit rank-based shares awarded by correct answer order */
+  RANK_SHARES: [1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2],
+  /** Lowest rank-based share awarded once the explicit ladder is exhausted */
   MIN_RANK_SHARE: 0.2,
-  /** Controls how quickly points decay by answer rank (lower = more forgiving) */
-  RANK_DECAY_FACTOR: 0.28,
 } as const;
 
 /** Default question settings */
