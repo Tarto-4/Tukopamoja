@@ -85,7 +85,7 @@ interface PlayerState {
   rank: number | null;
 
   // Actions
-  joinSession: (pin: string, nickname: string) => Promise<string>;
+  joinSession: (pin: string, nickname: string, email: string) => Promise<string>;
   rejoinSession: () => Promise<boolean>;
   submitAnswer: (optionIndex: number) => Promise<void>;
   setSession: (session: Session) => void;
@@ -119,7 +119,7 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
 
   // ─── Join via PIN ──────────────────────────────────────────
 
-  joinSession: async (pin, nickname) => {
+  joinSession: async (pin, nickname, email) => {
     const supabase = createClient();
 
     // Find session by PIN
@@ -142,6 +142,7 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
       .insert({
         session_id: session.id,
         nickname,
+        email,
         avatar,
         score: 0,
         streak: 0,

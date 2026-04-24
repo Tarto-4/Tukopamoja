@@ -13,6 +13,7 @@ function JoinPageContent() {
 
   const [pin, setPin] = useState(initialPin);
   const [nickname, setNickname] = useState("");
+  const [email, setEmail] = useState("");
   const [avatar, setAvatar] = useState(randomAvatar());
   const [error, setError] = useState("");
   const [joining, setJoining] = useState(false);
@@ -32,6 +33,7 @@ function JoinPageContent() {
 
     const cleanPin = pin.trim();
     const cleanName = nickname.trim();
+    const cleanEmail = email.trim().toLowerCase();
 
     if (!cleanPin || !/^\d{4,8}$/.test(cleanPin)) {
       setError("Enter a valid game PIN (4–8 digits).");
@@ -41,13 +43,17 @@ function JoinPageContent() {
       setError("Pick a nickname (1–20 characters).");
       return;
     }
+    if (!cleanEmail || !/^\S+@\S+\.\S+$/.test(cleanEmail)) {
+      setError("Enter a valid email address.");
+      return;
+    }
 
     setJoining(true);
 
     try {
       // Set avatar before joining
       usePlayerStore.setState({ avatar });
-      const sessionId = await joinSession(cleanPin, cleanName);
+      const sessionId = await joinSession(cleanPin, cleanName, cleanEmail);
       router.push(`/play/?sessionId=${sessionId}`);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Failed to join game.");
@@ -123,6 +129,24 @@ function JoinPageContent() {
               className="w-full h-12 rounded-xl border bg-card px-4 text-lg font-medium
                          focus:outline-none focus:ring-2 focus:ring-primary"
               autoFocus={!!initialPin}
+            />
+          </div>
+
+          {/* Email input */}
+          <div className="space-y-1.5">
+            <label htmlFor="email" className="text-sm font-medium text-muted-foreground">
+              Email
+            </label>
+            <input
+              id="email"
+              type="email"
+              maxLength={120}
+              placeholder="you@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full h-12 rounded-xl border bg-card px-4 text-base font-medium
+                         focus:outline-none focus:ring-2 focus:ring-primary"
+              autoComplete="email"
             />
           </div>
 

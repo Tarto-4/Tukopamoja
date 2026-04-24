@@ -93,6 +93,7 @@ export interface SessionPlayer {
   id: string;
   session_id: string;
   nickname: string;
+  email: string | null;
   avatar: string;
   score: number;
   streak: number;
