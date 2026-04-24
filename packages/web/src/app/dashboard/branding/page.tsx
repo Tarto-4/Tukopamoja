@@ -36,6 +36,20 @@ const COLOR_PRESETS = [
   { primary: "#2A2A2E", secondary: "#8F9399", name: "Carbon Slate" },
 ];
 
+const COLOR_CLASS_MAP: Record<string, string> = {
+  "#8E191E": "bg-ens-crimson",
+  "#C9A84C": "bg-ens-gold",
+  "#6B1216": "bg-ens-crimson-dark",
+  "#D5B35B": "bg-[#D5B35B]",
+  "#1F2A44": "bg-[#1F2A44]",
+  "#184E45": "bg-[#184E45]",
+  "#D8C27A": "bg-[#D8C27A]",
+  "#4C2A3D": "bg-[#4C2A3D]",
+  "#D4A85F": "bg-[#D4A85F]",
+  "#2A2A2E": "bg-[#2A2A2E]",
+  "#8F9399": "bg-[#8F9399]",
+};
+
 export default function BrandingPage() {
   const supabase = createClient();
   const [org, setOrg] = useState<Organization | null>(null);
@@ -160,6 +174,8 @@ export default function BrandingPage() {
                     type="file"
                     accept="image/*"
                     onChange={handleLogoUpload}
+                    title="Upload company logo"
+                    aria-label="Upload company logo"
                     className="hidden"
                   />
                 </div>
@@ -196,14 +212,8 @@ export default function BrandingPage() {
                   title={preset.name}
                 >
                   <div className="flex gap-1">
-                    <div
-                      className="w-6 h-6 rounded-full"
-                      style={{ backgroundColor: preset.primary }}
-                    />
-                    <div
-                      className="w-6 h-6 rounded-full"
-                      style={{ backgroundColor: preset.secondary }}
-                    />
+                    <div className={`w-6 h-6 rounded-full ${COLOR_CLASS_MAP[preset.primary] || "bg-muted"}`} />
+                    <div className={`w-6 h-6 rounded-full ${COLOR_CLASS_MAP[preset.secondary] || "bg-muted"}`} />
                   </div>
                   <span className="text-[10px] text-muted-foreground mt-1">
                     {preset.name}
@@ -215,14 +225,16 @@ export default function BrandingPage() {
             {/* Custom color pickers */}
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>Primary Color</Label>
+                <Label htmlFor="primary-color-picker">Primary Color</Label>
                 <div className="flex items-center gap-2">
                   <input
+                    id="primary-color-picker"
                     type="color"
                     value={org.primary_color}
                     onChange={(e) =>
                       setOrg({ ...org, primary_color: e.target.value })
                     }
+                    title="Pick primary color"
                     className="w-10 h-10 rounded border-0 cursor-pointer"
                   />
                   <Input
@@ -235,14 +247,16 @@ export default function BrandingPage() {
                 </div>
               </div>
               <div className="space-y-2">
-                <Label>Secondary Color</Label>
+                <Label htmlFor="secondary-color-picker">Secondary Color</Label>
                 <div className="flex items-center gap-2">
                   <input
+                    id="secondary-color-picker"
                     type="color"
                     value={org.secondary_color}
                     onChange={(e) =>
                       setOrg({ ...org, secondary_color: e.target.value })
                     }
+                    title="Pick secondary color"
                     className="w-10 h-10 rounded border-0 cursor-pointer"
                   />
                   <Input
@@ -257,13 +271,11 @@ export default function BrandingPage() {
             </div>
 
             {/* Live preview */}
-            <div
-              className="rounded-lg p-6 text-center text-white font-serif font-bold text-xl"
-              style={{
-                background: `linear-gradient(135deg, ${org.primary_color}, ${org.secondary_color})`,
-              }}
-            >
+            <div className="rounded-lg p-6 text-center text-white font-serif font-bold text-xl gradient-primary">
               {org.name} — Live Preview
+              <p className="text-xs mt-2 text-white/80 font-sans font-medium">
+                {org.primary_color} / {org.secondary_color}
+              </p>
             </div>
           </CardContent>
         </Card>
@@ -288,7 +300,7 @@ export default function BrandingPage() {
                 <SelectContent>
                   {FONT_OPTIONS.map((font) => (
                     <SelectItem key={font} value={font}>
-                      <span style={{ fontFamily: font }}>{font}</span>
+                      <span>{font}</span>
                     </SelectItem>
                   ))}
                 </SelectContent>

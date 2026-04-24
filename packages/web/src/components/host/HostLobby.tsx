@@ -113,10 +113,7 @@ export default function HostLobby() {
               Game PIN
             </h2>
             <div
-              className="text-6xl sm:text-7xl font-serif font-black tracking-[0.2em] py-4 px-8 rounded-2xl glow-crimson"
-              style={{
-                background: `linear-gradient(135deg, ${branding?.primary_color || "#8E191E"}, ${branding?.secondary_color || "#C9A84C"})`,
-              }}
+              className="text-6xl sm:text-7xl font-serif font-black tracking-[0.2em] py-4 px-8 rounded-2xl glow-crimson gradient-primary"
             >
               {session.pin}
             </div>

@@ -13,6 +13,7 @@ import PlayerLobby from "@/components/player/PlayerLobby";
 import PlayerQuestion from "@/components/player/PlayerQuestion";
 import PlayerLeaderboard from "@/components/player/PlayerLeaderboard";
 import PlayerGameOver from "@/components/player/PlayerGameOver";
+import HamsterLoader from "@/components/ui/HamsterLoader";
 
 function PlayPageContent() {
   const router = useRouter();
@@ -46,7 +47,8 @@ function PlayPageContent() {
 
   if (loading || !session) {
     return (
-      <div className="game-screen items-center justify-center gradient-dark">
+      <div className="game-screen items-center justify-center gradient-dark gap-4">
+        <HamsterLoader label="Joining game" />
         <p className="text-muted-foreground animate-pulse">Joining game...</p>
       </div>
     );
@@ -71,7 +73,8 @@ export default function PlayPage() {
   return (
     <Suspense
       fallback={
-        <div className="game-screen items-center justify-center gradient-dark">
+        <div className="game-screen items-center justify-center gradient-dark gap-4">
+          <HamsterLoader label="Loading game" />
           <p className="text-muted-foreground animate-pulse">Loading...</p>
         </div>
       }

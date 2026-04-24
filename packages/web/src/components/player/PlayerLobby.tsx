@@ -5,7 +5,8 @@
 "use client";
 
 import { usePlayerStore } from "@/stores/usePlayerStore";
-import { Users, Loader2 } from "lucide-react";
+import { Users } from "lucide-react";
+import HamsterLoader from "@/components/ui/HamsterLoader";
 
 export default function PlayerLobby() {
   const { session, players, nickname, avatar } = usePlayerStore();
@@ -24,7 +25,7 @@ export default function PlayerLobby() {
 
         {/* Waiting indicator */}
         <div className="glass-card rounded-2xl p-6 space-y-4">
-          <Loader2 className="w-8 h-8 mx-auto text-primary animate-spin" />
+          <HamsterLoader label="Waiting for host to start" className="scale-75" />
           <p className="text-lg font-serif">Waiting for host to start...</p>
           <p className="text-muted-foreground text-sm">
             Game PIN: <span className="font-mono font-bold tracking-wider">{session.pin}</span>

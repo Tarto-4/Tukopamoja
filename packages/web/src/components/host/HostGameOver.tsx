@@ -7,7 +7,6 @@
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useGameStore } from "@/stores/useGameStore";
-import { useBrandingStore } from "@/stores/useBrandingStore";
 import { Button } from "@/components/ui/button";
 import WinnerCelebration from "@/components/ui/WinnerCelebration";
 import { MEDALS } from "@quizarena/shared";
@@ -15,7 +14,6 @@ import { MEDALS } from "@quizarena/shared";
 export default function HostGameOver() {
   const router = useRouter();
   const { leaderboard, reset } = useGameStore();
-  const { branding } = useBrandingStore();
 
   const top3 = leaderboard.slice(0, 3);
   const winner = top3[0];
@@ -66,12 +64,7 @@ export default function HostGameOver() {
               <p className="text-xs text-muted-foreground mb-2">
                 {entry.score.toLocaleString()} pts
               </p>
-              <div
-                className={`w-full ${heights[podiumIndex]} rounded-t-xl`}
-                style={{
-                  background: `linear-gradient(180deg, ${branding?.primary_color || "#8E191E"}, ${branding?.secondary_color || "#C9A84C"})`,
-                }}
-              />
+              <div className={`w-full ${heights[podiumIndex]} rounded-t-xl gradient-primary`} />
             </motion.div>
           );
         })}

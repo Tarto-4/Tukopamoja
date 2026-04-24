@@ -13,6 +13,15 @@ import { Button } from "@/components/ui/button";
 import { OPTION_COLORS } from "@quizarena/shared";
 import { SkipForward, BarChart3, StopCircle } from "lucide-react";
 
+const OPTION_BG_CLASSES = ["bg-quiz-red", "bg-quiz-blue", "bg-quiz-yellow", "bg-quiz-green"];
+const BAR_HEIGHT_CLASSES = ["h-[4%]", "h-[12%]", "h-[24%]", "h-[36%]", "h-[48%]", "h-[60%]", "h-[72%]", "h-[84%]", "h-[96%]"];
+
+function bucketBarHeight(percent: number) {
+  if (percent <= 0) return BAR_HEIGHT_CLASSES[0];
+  const bucket = Math.min(BAR_HEIGHT_CLASSES.length - 1, Math.floor(percent / 12.5));
+  return BAR_HEIGHT_CLASSES[bucket];
+}
+
 export default function HostQuestion() {
   const {
     session,
@@ -92,6 +101,7 @@ export default function HostQuestion() {
       <div className="grid grid-cols-2 gap-3 sm:gap-4 flex-1 mb-4 sm:mb-6">
         {currentQuestion.options.map((opt, i) => {
           const color = OPTION_COLORS[i];
+          const bgClass = OPTION_BG_CLASSES[i] ?? "bg-primary";
           const showCorrect = isEvaluating && opt.is_correct;
           const showWrong = isEvaluating && !opt.is_correct;
 
@@ -103,8 +113,7 @@ export default function HostQuestion() {
               transition={{ delay: i * 0.1 }}
               className={`rounded-xl p-4 sm:p-6 flex items-center justify-center text-white
                          font-sans font-bold text-base sm:text-xl md:text-2xl shadow-ens-lg
-                         transition-opacity ${showWrong ? "opacity-40" : ""}`}
-              style={{ backgroundColor: color.bg }}
+                         transition-opacity ${showWrong ? "opacity-40" : ""} ${bgClass}`}
             >
               <span className="mr-2 sm:mr-3 opacity-80">{color.shape}</span>
               <span className="line-clamp-2">{opt.text}</span>
@@ -133,17 +142,12 @@ export default function HostQuestion() {
               const count = answerDistribution[i] ?? 0;
               const pct = answeredCount > 0 ? (count / answeredCount) * 100 : 0;
               const color = OPTION_COLORS[i];
+              const barHeightClass = bucketBarHeight(Math.max(4, pct));
+              const barColorClass = OPTION_BG_CLASSES[i] ?? "bg-primary";
               return (
                 <div key={i} className="flex flex-col items-center gap-0.5 flex-1 max-w-16">
                   <span className="text-xs font-mono tabular-nums">{count}</span>
-                  <div
-                    className="w-full rounded-t transition-all duration-300"
-                    style={{
-                      backgroundColor: color.bg,
-                      height: `${Math.max(4, pct)}%`,
-                      minHeight: "2px",
-                    }}
-                  />
+                  <div className={`w-full rounded-t transition-all duration-300 min-h-[2px] ${barColorClass} ${barHeightClass}`} />
                   <span className="text-[10px] opacity-60">{color.shape}</span>
                 </div>
               );
