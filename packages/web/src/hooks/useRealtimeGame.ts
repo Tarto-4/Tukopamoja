@@ -19,6 +19,7 @@ export function useRealtimeGame(sessionId: string | undefined, role: Role) {
     setSession,
     addPlayer,
     removePlayer,
+    setPlayers,
     incrementAnswered,
     setLeaderboard,
     setRealtimeStatus,
@@ -106,7 +107,21 @@ export function useRealtimeGame(sessionId: string | undefined, role: Role) {
           const updatedPlayer = payload.new as SessionPlayer;
           if (updatedPlayer.kicked_at) {
             removePlayer(updatedPlayer.id);
+            return;
           }
+
+          const currentPlayers = useGameStore.getState().players;
+          const exists = currentPlayers.some((player) => player.id === updatedPlayer.id);
+          if (!exists) {
+            addPlayer(updatedPlayer);
+            return;
+          }
+
+          setPlayers(
+            currentPlayers.map((player) =>
+              player.id === updatedPlayer.id ? updatedPlayer : player
+            )
+          );
         }
       );
 
@@ -158,5 +173,5 @@ export function useRealtimeGame(sessionId: string | undefined, role: Role) {
       if (retryTimer) clearTimeout(retryTimer);
       channelRef.current?.unsubscribe();
     };
-  }, [sessionId, role, setSession, addPlayer, removePlayer, incrementAnswered, setLeaderboard, setRealtimeStatus, startTimer, stopTimer]);
+  }, [sessionId, role, setSession, addPlayer, removePlayer, setPlayers, incrementAnswered, setLeaderboard, setRealtimeStatus, startTimer, stopTimer]);
 }

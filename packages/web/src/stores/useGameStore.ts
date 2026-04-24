@@ -203,12 +203,24 @@ export const useGameStore = create<GameState>((set, get) => ({
     const session = get().session;
     if (!session) return;
 
-    const notReady = get().players.filter((p) => !p.is_ready);
-    if (get().players.length > 0 && notReady.length > 0) {
+    const supabase = createClient();
+    const { data: latestPlayers, error: playersError } = await supabase
+      .from("session_players")
+      .select("*")
+      .eq("session_id", session.id)
+      .is("kicked_at", null)
+      .order("score", { ascending: false });
+
+    if (playersError) throw playersError;
+
+    const players = (latestPlayers as SessionPlayer[]) || [];
+    set({ players });
+
+    const notReady = players.filter((p) => !p.is_ready);
+    if (players.length > 0 && notReady.length > 0) {
       throw new Error("All players must be ready before starting.");
     }
 
-    const supabase = createClient();
     const startedAt = new Date().toISOString();
     const q = session.questions_snapshot?.[0];
     const initialLimit = q?.time_limit_sec ?? 20;
