@@ -24,6 +24,7 @@ export default function PlayerQuestion() {
     session,
     currentQuestion,
     timeLeft,
+    timeLeftMs,
     hasAnswered,
     selectedOption,
     answerResult,
@@ -35,6 +36,9 @@ export default function PlayerQuestion() {
   const totalQuestions = session.questions_snapshot?.length || 0;
   const qIndex = session.current_q_index;
   const progress = totalQuestions > 0 ? ((qIndex + 1) / totalQuestions) * 100 : 0;
+  const smoothTimerLabel = timeLeftMs > 0 && timeLeftMs < 10000
+    ? `${(timeLeftMs / 1000).toFixed(1)}s`
+    : `${timeLeft}s`;
 
   // Already answered — show result
   if (hasAnswered && answerResult) {
@@ -117,7 +121,7 @@ export default function PlayerQuestion() {
         <div className="flex items-center justify-between">
           <span className="text-xs uppercase tracking-wider text-white/60">Question {qIndex + 1} of {totalQuestions}</span>
           <div className={`text-2xl sm:text-3xl font-serif font-black ${timeLeft <= 5 ? "text-quiz-red animate-pulse" : "text-white"}`}>
-            {timeLeft}s
+            {smoothTimerLabel}
           </div>
         </div>
         <div className="mt-3 h-2 rounded-full bg-white/10 overflow-hidden">

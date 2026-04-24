@@ -38,6 +38,7 @@ interface PlayerGameState {
 
   // Timer
   _timerRef: ReturnType<typeof setInterval> | null;
+  timeLeftMs: number;
 
   // Actions
   joinSession: (pin: string, nickname: string) => Promise<boolean>;
@@ -64,6 +65,7 @@ export const usePlayerStore = create<PlayerGameState>((set, get) => ({
   myRank: 0,
   myScore: 0,
   _timerRef: null,
+  timeLeftMs: 0,
 
   joinSession: async (pin, nickname) => {
     // 1. Look up session by PIN
@@ -133,12 +135,23 @@ export const usePlayerStore = create<PlayerGameState>((set, get) => ({
     const currentStreak = playerData?.streak || 0;
     const currentScore = playerData?.score || 0;
 
+    const { count: existingAnswersCount } = await supabase
+      .from("player_answers")
+      .select("id", { count: "exact", head: true })
+      .eq("session_id", session.id)
+      .eq("question_index", questionIndex);
+
+    const answerRank = (existingAnswersCount ?? 0) + 1;
+    const activePlayers = Math.max(1, session.player_count || 1);
+
     // Calculate score
     const result = calculateScore({
       maxPoints: currentQuestion.points,
       timeTakenMs,
       timeLimitSec: currentQuestion.time_limit_sec,
       isCorrect,
+      answerRank,
+      activePlayers,
       currentStreak,
     });
 
@@ -188,15 +201,30 @@ export const usePlayerStore = create<PlayerGameState>((set, get) => ({
 
   startTimer: (seconds) => {
     get().stopTimer();
-    set({ timeLeft: seconds });
+    const endsAt = Date.now() + Math.max(0, seconds * 1000);
+
+    const updateTimer = () => {
+      const remainingMs = Math.max(0, endsAt - Date.now());
+      set({
+        timeLeftMs: remainingMs,
+        timeLeft: Math.ceil(remainingMs / 1000),
+      });
+    };
+
+    updateTimer();
+
     const interval = setInterval(() => {
-      const current = get().timeLeft;
-      if (current <= 0) {
+      const remainingMs = Math.max(0, endsAt - Date.now());
+      if (remainingMs <= 0) {
         clearInterval(interval);
+        set({ timeLeft: 0, timeLeftMs: 0, _timerRef: null });
         return;
       }
-      set({ timeLeft: current - 1 });
-    }, 1000);
+      set({
+        timeLeftMs: remainingMs,
+        timeLeft: Math.ceil(remainingMs / 1000),
+      });
+    }, 100);
     set({ _timerRef: interval });
   },
 
@@ -215,6 +243,7 @@ export const usePlayerStore = create<PlayerGameState>((set, get) => ({
       currentQuestion: null,
       questionIndex: -1,
       timeLeft: 0,
+      timeLeftMs: 0,
       hasAnswered: false,
       lastResult: null,
       leaderboard: [],

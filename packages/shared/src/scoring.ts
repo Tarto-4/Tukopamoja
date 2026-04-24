@@ -11,42 +11,53 @@ export interface ScoreInput {
   timeTakenMs: number;
   timeLimitSec: number;
   isCorrect: boolean;
+  answerRank: number; // 1 = fastest
+  activePlayers: number;
   currentStreak: number; // streak BEFORE this answer
 }
 
 export interface ScoreResult {
   points: number;
   newStreak: number;
-  multiplier: number;
+  multiplier: number; // rank share applied (0..1)
 }
 
 /**
- * Calculate points for a single answer.
- *
- * Formula: S = floor(maxPoints × max(0, 1 − timeTaken / (2 × timeLimit)))
- * Streak:  ×(1 + (streak − 1) × 0.1), capped at 1.5×
+ * Rank-based score for a single answer.
+ * Fastest correct answer receives max points. Later answers receive
+ * fractional shares down to `MIN_RANK_SHARE` for the slowest valid answer.
  */
 export function calculateScore(input: ScoreInput): ScoreResult {
-  const { maxPoints, timeTakenMs, timeLimitSec, isCorrect, currentStreak } =
+  const {
+    maxPoints,
+    timeTakenMs,
+    timeLimitSec,
+    isCorrect,
+    answerRank,
+    activePlayers,
+    currentStreak,
+  } =
     input;
 
   if (!isCorrect) {
     return { points: 0, newStreak: 0, multiplier: 1 };
   }
 
-  const timeLimitMs = timeLimitSec * 1000;
-  const timeFraction = timeTakenMs / (SCORING.SPEED_FACTOR * timeLimitMs);
-  const baseScore = Math.floor(maxPoints * Math.max(0, 1 - timeFraction));
+  const timeLimitMs = Math.max(1, timeLimitSec * 1000);
+  if (timeTakenMs >= timeLimitMs) {
+    return { points: 0, newStreak: 0, multiplier: 1 };
+  }
+
+  const rank = Math.max(1, answerRank);
+  const playerCount = Math.max(1, activePlayers);
+  const rankSpan = Math.max(1, playerCount - 1);
+  const rankProgress = Math.min(1, (rank - 1) / rankSpan);
+  const rankShare = Math.max(SCORING.MIN_RANK_SHARE, 1 - rankProgress);
 
   const newStreak = currentStreak + 1;
-  const multiplier = Math.min(
-    SCORING.STREAK_BONUS_CAP,
-    1 + Math.max(0, newStreak - 1) * SCORING.STREAK_BONUS_PER
-  );
+  const points = Math.floor(maxPoints * rankShare);
 
-  const points = Math.floor(baseScore * multiplier);
-
-  return { points, newStreak, multiplier };
+  return { points, newStreak, multiplier: rankShare };
 }
 
 /**

@@ -17,6 +17,7 @@ export default function PlayerQuestion() {
     currentQuestion,
     questionIndex,
     timeLeft,
+    timeLeftMs,
     hasAnswered,
     lastResult,
     submitAnswer,
@@ -93,6 +94,11 @@ export default function PlayerQuestion() {
   }
 
   // ─── Answer buttons ──────────────────────────────────────
+  const smoothTimerLabel =
+    timeLeftMs > 0 && timeLeftMs < 10000
+      ? (timeLeftMs / 1000).toFixed(1)
+      : `${timeLeft}`;
+
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <View style={[styles.timerRow, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }, theme.shadows.card]}>
@@ -106,7 +112,7 @@ export default function PlayerQuestion() {
             },
           ]}
         >
-          {timeLeft}
+            {smoothTimerLabel}
         </Text>
         <Text style={[styles.questionNum, { color: theme.colors.textMuted }]}>
           Q{questionIndex + 1}

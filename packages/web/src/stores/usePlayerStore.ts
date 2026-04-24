@@ -77,7 +77,9 @@ interface PlayerState {
 
   // Timer
   timeLeft: number;
+  timeLeftMs: number;
   _timerInterval: ReturnType<typeof setInterval> | null;
+  _timerEndsAt: number | null;
 
   // Player score tracking
   totalScore: number;
@@ -117,7 +119,9 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
   questionStartTime: null,
   hasAnswered: false,
   timeLeft: 0,
+  timeLeftMs: 0,
   _timerInterval: null,
+  _timerEndsAt: null,
   totalScore: 0,
   streak: 0,
   rank: null,
@@ -306,12 +310,25 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
     const isCorrect = question.options[optionIndex]?.is_correct ?? false;
     const correctIndex = question.options.findIndex((o) => o.is_correct);
 
+    const supabase = createClient();
+
+    const { count: existingAnswersCount } = await supabase
+      .from("player_answers")
+      .select("id", { count: "exact", head: true })
+      .eq("session_id", session.id)
+      .eq("question_index", session.current_q_index);
+
+    const answerRank = (existingAnswersCount ?? 0) + 1;
+    const activePlayers = Math.max(1, session.player_count || players.length || 1);
+
     // Calculate score
     const result = calculateScore({
       maxPoints: question.points,
       timeTakenMs,
       timeLimitSec: question.time_limit_sec,
       isCorrect,
+      answerRank,
+      activePlayers,
       currentStreak: streak,
     });
 
@@ -330,7 +347,6 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
     });
 
     // Persist to DB
-    const supabase = createClient();
 
     await supabase.from("player_answers").insert({
       session_id: session.id,
@@ -390,27 +406,39 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
 
   setRealtimeStatus: (status) => set({ realtimeStatus: status }),
 
-  setTimeLeft: (t) => set({ timeLeft: t }),
+  setTimeLeft: (t) => set({ timeLeft: t, timeLeftMs: Math.max(0, t * 1000) }),
 
   startTimer: (seconds) => {
     const { stopTimer } = get();
     stopTimer();
-    set({ timeLeft: seconds });
+
+    const now = Date.now();
+    const endsAt = now + Math.max(0, seconds * 1000);
+
+    const updateTimer = () => {
+      const remainingMs = Math.max(0, endsAt - Date.now());
+      const remainingSec = Math.ceil(remainingMs / 1000);
+      set({ timeLeftMs: remainingMs, timeLeft: remainingSec });
+    };
+
+    updateTimer();
+
     const interval = setInterval(() => {
-      const current = get().timeLeft;
-      if (current <= 0) {
+      const remainingMs = Math.max(0, endsAt - Date.now());
+      if (remainingMs <= 0) {
         clearInterval(interval);
+        set({ timeLeft: 0, timeLeftMs: 0, _timerInterval: null, _timerEndsAt: null });
         return;
       }
-      set({ timeLeft: current - 1 });
-    }, 1000);
-    set({ _timerInterval: interval });
+      set({ timeLeftMs: remainingMs, timeLeft: Math.ceil(remainingMs / 1000) });
+    }, 100);
+    set({ _timerInterval: interval, _timerEndsAt: endsAt });
   },
 
   stopTimer: () => {
     const interval = get()._timerInterval;
     if (interval) clearInterval(interval);
-    set({ _timerInterval: null });
+    set({ _timerInterval: null, _timerEndsAt: null });
   },
 
   addPlayer: (player) =>
@@ -438,10 +466,12 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
       questionStartTime: null,
       hasAnswered: false,
       timeLeft: 0,
+      timeLeftMs: 0,
       totalScore: 0,
       streak: 0,
       rank: null,
       realtimeStatus: "disconnected",
+      _timerEndsAt: null,
     });
   },
 }));

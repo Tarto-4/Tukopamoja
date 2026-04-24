@@ -15,13 +15,8 @@ export const SESSION_FLOW = [
 export const SCORING = {
   /** Maximum points for a perfect answer */
   MAX_POINTS: 1000,
-  /** Time weight: score = max * (1 - timeTaken / (SPEED_FACTOR * timeLimit)) */
-  SPEED_FACTOR: 2,
-  /** Streak bonus: +10% per streak above 1, capped at 50% */
-  STREAK_BONUS_PER: 0.1,
-  STREAK_BONUS_CAP: 1.5,
-  /** Minimum streak to activate bonus */
-  STREAK_MIN: 2,
+  /** Lowest rank-based share awarded to the slowest valid correct answer */
+  MIN_RANK_SHARE: 0.1,
 } as const;
 
 /** Default question settings */
