@@ -13,6 +13,16 @@ export default function DashboardLayout({
 }) {
   const pathname = usePathname();
 
+  const backgroundByRoute: Record<string, string> = {
+    "/dashboard/templates": "/designs/backgrounds/Template.avif",
+    "/dashboard/sessions": "/designs/backgrounds/Sessions.avif",
+    "/dashboard/branding": "/designs/backgrounds/Branding.webp",
+  };
+
+  const backgroundImagePath =
+    Object.entries(backgroundByRoute).find(([route]) => pathname?.startsWith(route))?.[1] ||
+    "/designs/backgrounds/Public_One.avif";
+
   const navItems = [
     { href: "/dashboard/templates", label: "Templates" },
     { href: "/dashboard/sessions", label: "Sessions" },
@@ -22,7 +32,11 @@ export default function DashboardLayout({
   return (
     <AuthGuard>
       <div className="min-h-[100dvh] flex flex-col gradient-dark relative overflow-hidden">
-        <BrandedBackground overlayClassName="bg-black/55 dark:bg-black/55" className="z-0" />
+        <BrandedBackground
+          imagePath={backgroundImagePath}
+          overlayClassName="bg-black/55 dark:bg-black/55"
+          className="z-0"
+        />
 
         <header className="border-b glass-header sticky top-0 z-40 relative">
           <div className="absolute top-0 left-0 right-0 accent-bar" />

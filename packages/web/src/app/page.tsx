@@ -7,7 +7,10 @@ export default function HomePage() {
   return (
     <div className="game-screen items-center justify-center gradient-dark relative overflow-hidden">
       <div className="absolute top-0 left-0 right-0 accent-bar z-20" />
-      <BrandedBackground brandMarkClassName="absolute inset-0 m-auto h-[520px] w-[520px] object-contain opacity-[0.18]" />
+      <BrandedBackground
+        imagePath="/designs/backgrounds/Public_One.avif"
+        brandMarkClassName="absolute inset-0 m-auto h-[520px] w-[520px] object-contain opacity-[0.18]"
+      />
 
       <div className="text-center space-y-10 px-4 relative z-10 rounded-2xl glass p-8 sm:p-10 border border-[#EEDC00]/20">
         {/* Logo / brand */}
