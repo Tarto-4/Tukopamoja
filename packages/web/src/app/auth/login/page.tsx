@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { withBasePath } from "@/lib/base-path";
+import Ballpit from "@/components/ui/Ballpit";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -62,6 +63,20 @@ export default function LoginPage() {
 
   return (
     <div className="game-screen items-center justify-center gradient-dark px-4 relative overflow-hidden">
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div className="relative overflow-hidden min-h-[500px] max-h-[500px] w-full max-w-6xl">
+          <Ballpit
+            className="absolute inset-0"
+            count={100}
+            gravity={0.01}
+            friction={0.9975}
+            wallBounce={0.95}
+            followCursor={false}
+            colors={["#C9A84C", "#E0C071", "#F9D66B"]}
+          />
+        </div>
+      </div>
+
       {/* Ambient glow */}
       <img
         src={withBasePath("/designs/backgrounds/brand-mark-overlay.svg")}
@@ -71,7 +86,7 @@ export default function LoginPage() {
       />
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full bg-ens-crimson/5 blur-[120px] pointer-events-none" />
 
-      <Card className="w-full max-w-md glass-card-elevated relative z-10">
+      <Card className="w-full max-w-md glass-card-elevated relative z-20">
         <CardHeader className="text-center">
           <img
             src={withBasePath("/logo.svg")}
