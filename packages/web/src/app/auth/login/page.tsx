@@ -1,9 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,7 +12,6 @@ import { withBasePath } from "@/lib/base-path";
 
 export default function LoginPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const supabase = createClient();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,6 +19,12 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const [showResetSuccess, setShowResetSuccess] = useState(false);
+
+  useEffect(() => {
+    const query = new URLSearchParams(window.location.search);
+    setShowResetSuccess(query.get("reset") === "success");
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -76,7 +80,7 @@ export default function LoginPage() {
               ? "Sign up to start creating quizzes"
               : "Sign in to your host dashboard"}
           </CardDescription>
-          {searchParams.get("reset") === "success" && (
+          {showResetSuccess && (
             <p className="text-sm text-quiz-green">
               Password updated. Sign in with your new password.
             </p>
