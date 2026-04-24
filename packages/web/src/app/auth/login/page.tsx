@@ -17,16 +17,32 @@ export default function LoginPage() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    setMessage(null);
 
-    const { error: authError } = isSignUp
-      ? await supabase.auth.signUp({ email, password })
-      : await supabase.auth.signInWithPassword({ email, password });
+    if (isSignUp) {
+      const { data, error: authError } = await supabase.auth.signUp({ email, password });
+      if (authError) {
+        setError(authError.message);
+        setLoading(false);
+        return;
+      }
 
+      if (data.session) {
+        router.push("/dashboard");
+      } else {
+        setMessage("Account created. Check your email to confirm, then sign in.");
+      }
+      setLoading(false);
+      return;
+    }
+
+    const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
     if (authError) {
       setError(authError.message);
       setLoading(false);
@@ -34,6 +50,7 @@ export default function LoginPage() {
     }
 
     router.push("/dashboard");
+    setLoading(false);
   }
 
   return (
@@ -85,6 +102,10 @@ export default function LoginPage() {
 
             {error && (
               <p className="text-sm text-destructive">{error}</p>
+            )}
+
+            {message && (
+              <p className="text-sm text-quiz-green">{message}</p>
             )}
 
             <Button
