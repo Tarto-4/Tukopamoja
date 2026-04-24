@@ -12,7 +12,6 @@ import { Button } from "@/components/ui/button";
 import WinnerCelebration from "@/components/ui/WinnerCelebration";
 import { MEDALS } from "@quizarena/shared";
 import { Trophy, RotateCcw, House, Sparkles, Users, TimerReset } from "lucide-react";
-import { withBasePath } from "@/lib/base-path";
 import BrandedBackground from "@/components/ui/BrandedBackground";
 
 export default function PlayerGameOver() {
@@ -31,7 +30,7 @@ export default function PlayerGameOver() {
     if (hasRedirected.current) return;
     hasRedirected.current = true;
     reset();
-    router.push(withBasePath("/join/"));
+    router.push("/join");
   }
 
   useEffect(() => {
