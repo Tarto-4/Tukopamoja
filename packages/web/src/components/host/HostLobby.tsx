@@ -81,10 +81,10 @@ export default function HostLobby() {
   return (
     <div className="game-screen gradient-dark relative overflow-hidden">
       <img
-        src={withBasePath("/designs/backgrounds/brand-watermark.svg")}
+        src={withBasePath("/designs/backgrounds/brand-mark-overlay.svg")}
         alt=""
         aria-hidden="true"
-        className="absolute inset-0 m-auto w-[420px] h-[420px] object-contain opacity-[0.06] pointer-events-none"
+        className="absolute inset-0 m-auto w-[560px] h-[560px] object-contain opacity-[0.16] pointer-events-none"
       />
       {/* Header */}
       <div className="flex items-center justify-between p-4 sm:p-6">

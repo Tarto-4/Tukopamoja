@@ -21,10 +21,10 @@ export default function PlayerLobby() {
   return (
     <div className="game-screen items-center justify-center gradient-dark px-4 relative overflow-hidden">
       <img
-        src={withBasePath("/designs/backgrounds/brand-watermark.svg")}
+        src={withBasePath("/designs/backgrounds/brand-mark-overlay.svg")}
         alt=""
         aria-hidden="true"
-        className="absolute inset-0 m-auto w-[340px] h-[340px] object-contain opacity-[0.06] pointer-events-none"
+        className="absolute inset-0 m-auto w-[420px] h-[420px] object-contain opacity-[0.18] pointer-events-none"
       />
       <div className="text-center space-y-8 max-w-md w-full">
         {/* Player identity */}

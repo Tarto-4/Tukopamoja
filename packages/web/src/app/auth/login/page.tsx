@@ -64,10 +64,10 @@ export default function LoginPage() {
     <div className="game-screen items-center justify-center gradient-dark px-4 relative overflow-hidden">
       {/* Ambient glow */}
       <img
-        src={withBasePath("/designs/backgrounds/brand-watermark.svg")}
+        src={withBasePath("/designs/backgrounds/brand-mark-overlay.svg")}
         alt=""
         aria-hidden="true"
-        className="absolute inset-0 m-auto w-[360px] h-[360px] object-contain opacity-[0.08] pointer-events-none"
+        className="absolute inset-0 m-auto w-[420px] h-[420px] object-contain opacity-[0.2] pointer-events-none"
       />
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full bg-ens-crimson/5 blur-[120px] pointer-events-none" />
 

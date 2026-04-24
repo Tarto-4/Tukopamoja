@@ -8,10 +8,10 @@ export default function HomePage() {
       {/* Ambient glow background */}
       <div className="absolute inset-0 pointer-events-none">
         <img
-          src={withBasePath("/designs/backgrounds/brand-watermark.svg")}
+          src={withBasePath("/designs/backgrounds/brand-mark-overlay.svg")}
           alt=""
           aria-hidden="true"
-          className="absolute inset-0 m-auto w-[420px] h-[420px] object-contain opacity-[0.08]"
+          className="absolute inset-0 m-auto w-[520px] h-[520px] object-contain opacity-[0.22]"
         />
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-ens-crimson/5 blur-[120px]" />
         <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] rounded-full bg-ens-gold/3 blur-[100px]" />
