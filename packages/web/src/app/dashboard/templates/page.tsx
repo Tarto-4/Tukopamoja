@@ -26,15 +26,16 @@ export default function TemplatesPage() {
 
   if (loading) {
     return (
-      <div className="page-container">
+      <div className="page-container relative z-10">
         <p className="text-muted-foreground animate-pulse">Loading templates...</p>
       </div>
     );
   }
 
   return (
-    <div className="page-container">
-      <div className="flex items-center justify-between mb-8">
+    <div className="page-container relative z-10">
+      <div className="flex items-center justify-between mb-8 rounded-2xl glass p-6 border border-border/60 relative overflow-hidden">
+        <div className="absolute top-0 left-0 right-0 accent-bar" />
         <div>
           <h1 className="text-3xl font-serif font-black">Templates</h1>
           <p className="text-muted-foreground mt-1">
@@ -50,7 +51,7 @@ export default function TemplatesPage() {
       </div>
 
       {!templates.length ? (
-        <Card className="text-center py-16">
+        <Card className="text-center py-16 glass border-border/60 bg-transparent">
           <CardContent>
             <FileText className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
             <h3 className="text-lg font-semibold mb-2">No templates yet</h3>
@@ -72,7 +73,7 @@ export default function TemplatesPage() {
               key={template.id}
               href={`/dashboard/templates/edit?id=${template.id}`}
             >
-              <Card className="hover:border-primary/50 transition-colors cursor-pointer h-full">
+              <Card className="glass border-border/60 bg-transparent hover:border-primary/50 transition-colors cursor-pointer h-full">
                 <CardHeader>
                   <div className="flex items-start justify-between">
                     <div className="space-y-1">

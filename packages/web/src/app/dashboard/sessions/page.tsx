@@ -23,15 +23,16 @@ export default function SessionsPage() {
 
   if (loading) {
     return (
-      <div className="page-container">
+      <div className="page-container relative z-10">
         <p className="text-muted-foreground animate-pulse">Loading sessions...</p>
       </div>
     );
   }
 
   return (
-    <div className="page-container">
-      <div className="mb-8">
+    <div className="page-container relative z-10">
+      <div className="mb-8 rounded-2xl glass p-6 border border-border/60 relative overflow-hidden">
+        <div className="absolute top-0 left-0 right-0 accent-bar" />
         <h1 className="text-3xl font-serif font-black">Game Sessions</h1>
         <p className="text-muted-foreground mt-1">
           History of all hosted game sessions
@@ -39,7 +40,7 @@ export default function SessionsPage() {
       </div>
 
       {!sessions.length ? (
-        <Card className="text-center py-12">
+        <Card className="text-center py-12 glass border-border/60 bg-transparent">
           <CardContent>
             <p className="text-muted-foreground">
               No sessions yet. Start a game from a template!
@@ -49,7 +50,7 @@ export default function SessionsPage() {
       ) : (
         <div className="space-y-3">
           {sessions.map((session) => (
-            <Card key={session.id}>
+            <Card key={session.id} className="glass border-border/60 bg-transparent">
               <CardContent className="flex items-center justify-between py-4">
                 <div>
                   <p className="font-semibold">

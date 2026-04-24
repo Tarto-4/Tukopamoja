@@ -49,25 +49,25 @@
   }
 
   .light {
-    --background: 0 0% 98%;
-    --foreground: 0 0% 8%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 8%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 8%;
-    --primary: 46 90% 65%;
-    --primary-foreground: 0 0% 8%;
-    --secondary: 0 0% 94%;
-    --secondary-foreground: 0 0% 18%;
-    --muted: 0 0% 94%;
-    --muted-foreground: 0 0% 42%;
-    --accent: 0 0% 92%;
-    --accent-foreground: 0 0% 18%;
+    --background: 42 43% 96%;
+    --foreground: 22 30% 13%;
+    --card: 40 45% 98%;
+    --card-foreground: 22 30% 13%;
+    --popover: 40 45% 98%;
+    --popover-foreground: 22 30% 13%;
+    --primary: 44 86% 42%;
+    --primary-foreground: 40 45% 98%;
+    --secondary: 42 28% 91%;
+    --secondary-foreground: 22 24% 20%;
+    --muted: 42 24% 90%;
+    --muted-foreground: 24 16% 34%;
+    --accent: 42 34% 88%;
+    --accent-foreground: 22 24% 20%;
     --destructive: 0 86% 52%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 85%;
-    --input: 0 0% 90%;
-    --ring: 46 90% 65%;
+    --border: 36 24% 78%;
+    --input: 40 28% 92%;
+    --ring: 44 86% 42%;
   }
 
   .dark {
@@ -102,6 +102,12 @@
     font-feature-settings: "rlig" 1, "calt" 1;
     min-height: 100dvh;
   }
+
+  .light body {
+    background:
+      radial-gradient(circle at top, rgba(238, 220, 0, 0.16), transparent 34%),
+      linear-gradient(180deg, rgba(255, 251, 238, 1) 0%, rgba(245, 239, 221, 1) 100%);
+  }
 }
 
 @layer components {
@@ -122,6 +128,10 @@
     background: linear-gradient(160deg, #0a0a0a 0%, #151515 50%, #1a1012 100%);
   }
 
+  .light .gradient-dark {
+    background: linear-gradient(160deg, rgba(255, 251, 238, 0.98) 0%, rgba(247, 241, 225, 0.98) 55%, rgba(241, 232, 207, 0.98) 100%);
+  }
+
   .gradient-ens {
     background: linear-gradient(135deg, #f6d653, var(--ens-gold));
   }
@@ -132,6 +142,12 @@
     background: linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.75) 100%);
     border: 1px solid rgba(255, 255, 255, 0.15);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  }
+
+  .light .glass {
+    background: linear-gradient(135deg, rgba(255, 252, 244, 0.84) 0%, rgba(248, 241, 223, 0.78) 100%);
+    border: 1px solid rgba(115, 92, 32, 0.16);
+    box-shadow: 0 14px 42px rgba(92, 73, 18, 0.12), inset 0 0 0 1px rgba(255, 255, 255, 0.4);
   }
 
   .glass-light {
@@ -145,6 +161,11 @@
     -webkit-backdrop-filter: blur(20px);
     backdrop-filter: blur(20px);
     background: linear-gradient(135deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.65) 100%);
+  }
+
+  .light .glass-header {
+    background: linear-gradient(135deg, rgba(255, 250, 239, 0.84) 0%, rgba(245, 237, 215, 0.78) 100%);
+    border-color: rgba(115, 92, 32, 0.14);
   }
 
   .accent-bar {
@@ -162,12 +183,24 @@
     box-shadow: var(--shadow-lg);
   }
 
+  .light .glass-card {
+    background: rgba(255, 253, 247, 0.78);
+    border: 1px solid rgba(115, 92, 32, 0.12);
+    box-shadow: 0 12px 30px rgba(92, 73, 18, 0.1);
+  }
+
   .glass-card-elevated {
     background: rgba(255, 255, 255, 0.05);
     -webkit-backdrop-filter: blur(16px);
     backdrop-filter: blur(16px);
     border: 1px solid rgba(255, 255, 255, 0.08);
     box-shadow: var(--shadow-xl);
+  }
+
+  .light .glass-card-elevated {
+    background: rgba(255, 252, 244, 0.86);
+    border: 1px solid rgba(115, 92, 32, 0.14);
+    box-shadow: 0 18px 42px rgba(92, 73, 18, 0.12);
   }
 
   /* ─── Beveled Buttons ───────────────────────────────────── */
@@ -206,6 +239,10 @@
 
   .text-glow {
     text-shadow: 0 0 20px rgba(142, 25, 30, 0.5), 0 0 40px rgba(142, 25, 30, 0.2);
+  }
+
+  .light .text-glow {
+    text-shadow: 0 0 18px rgba(238, 220, 0, 0.22);
   }
 
   @media (prefers-reduced-motion: reduce) {

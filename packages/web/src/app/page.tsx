@@ -1,22 +1,13 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { withBasePath } from "@/lib/base-path";
+import BrandedBackground from "@/components/ui/BrandedBackground";
 
 export default function HomePage() {
   return (
     <div className="game-screen items-center justify-center gradient-dark relative overflow-hidden">
       <div className="absolute top-0 left-0 right-0 accent-bar z-20" />
-      {/* Ambient glow background */}
-      <div className="absolute inset-0 pointer-events-none">
-        <img
-          src={withBasePath("/designs/backgrounds/brand-mark-overlay.svg")}
-          alt=""
-          aria-hidden="true"
-          className="absolute inset-0 m-auto w-[520px] h-[520px] object-contain opacity-[0.22]"
-        />
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-ens-crimson/5 blur-[120px]" />
-        <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] rounded-full bg-ens-gold/3 blur-[100px]" />
-      </div>
+      <BrandedBackground brandMarkClassName="absolute inset-0 m-auto h-[520px] w-[520px] object-contain opacity-[0.18]" />
 
       <div className="text-center space-y-10 px-4 relative z-10 rounded-2xl glass p-8 sm:p-10 border border-[#EEDC00]/20">
         {/* Logo / brand */}
@@ -31,7 +22,7 @@ export default function HomePage() {
               QuizArena
             </span>
           </h1>
-          <p className="text-lg text-white/70 tracking-wide">
+          <p className="text-lg text-foreground/80 dark:text-white/70 tracking-wide">
             Premium real-time quiz platform
           </p>
         </div>
@@ -50,7 +41,7 @@ export default function HomePage() {
             <Button
               size="xl"
               variant="outline"
-              className="w-full sm:w-auto border-[#EEDC00]/30 text-white hover:border-[#EEDC00]/50 hover:bg-[#EEDC00]/10 transition-all duration-300"
+              className="w-full sm:w-auto border-[#EEDC00]/30 text-foreground dark:text-white hover:border-[#EEDC00]/50 hover:bg-black/5 dark:hover:bg-[#EEDC00]/10 transition-all duration-300"
             >
               Join as Player
             </Button>
@@ -59,7 +50,7 @@ export default function HomePage() {
 
         {/* Powered by */}
         <div className="pt-8 space-y-2">
-          <p className="text-xs text-ens-slate-light/60 uppercase tracking-[0.2em]">
+          <p className="text-xs text-foreground/55 dark:text-ens-slate-light/60 uppercase tracking-[0.2em]">
             Powered by ENS Africa
           </p>
           <div className="w-12 h-[1px] mx-auto bg-gradient-to-r from-transparent via-ens-crimson/40 to-transparent" />

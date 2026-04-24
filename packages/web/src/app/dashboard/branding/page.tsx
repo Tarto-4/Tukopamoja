@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { createClient } from "@/lib/supabase/client";
 import type { Organization } from "@quizarena/shared";
 import { Button } from "@/components/ui/button";
@@ -56,6 +56,31 @@ export default function BrandingPage() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
+  const livePreviewSvg = useMemo(() => {
+    if (!org) return "";
+
+    const svg = `
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 220" role="img" aria-label="Brand preview">
+        <defs>
+          <linearGradient id="brandGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="${org.primary_color || "#EEDC00"}" />
+            <stop offset="100%" stop-color="${org.secondary_color || "#f5e500"}" />
+          </linearGradient>
+        </defs>
+        <rect width="720" height="220" rx="28" fill="url(#brandGradient)" />
+        <rect x="18" y="18" width="684" height="184" rx="22" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.18)" />
+        <text x="360" y="102" text-anchor="middle" fill="#111111" font-size="30" font-family="Inter, Arial, sans-serif" font-weight="700">
+          ${org.name || "QuizArena"} — Live Preview
+        </text>
+        <text x="360" y="142" text-anchor="middle" fill="rgba(17,17,17,0.72)" font-size="16" font-family="Inter, Arial, sans-serif">
+          ${(org.primary_color || "#EEDC00")} / ${(org.secondary_color || "#f5e500")}
+        </text>
+      </svg>
+    `;
+
+    return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+  }, [org]);
+
   useEffect(() => {
     async function load() {
       const { data } = await supabase
@@ -67,7 +92,7 @@ export default function BrandingPage() {
     load();
   }, []);
 
-  if (!org) return <div className="page-container">Loading...</div>;
+  if (!org) return <div className="page-container relative z-10">Loading...</div>;
 
   async function handleSave() {
     if (!org) return;
@@ -116,10 +141,10 @@ export default function BrandingPage() {
   }
 
   return (
-    <div className="page-container max-w-2xl">
+    <div className="page-container max-w-2xl relative z-10">
       <div className="mb-8 rounded-2xl glass p-6 border border-[#EEDC00]/20 relative overflow-hidden">
         <div className="absolute top-0 left-0 right-0 accent-bar" />
-        <h1 className="text-3xl font-serif font-black text-white">Company Branding</h1>
+        <h1 className="text-3xl font-serif font-black text-foreground dark:text-white">Company Branding</h1>
         <p className="text-muted-foreground mt-1">
           Customize how your brand appears to players
         </p>
@@ -272,16 +297,12 @@ export default function BrandingPage() {
             </div>
 
             {/* Live preview */}
-            <div
-              className="rounded-2xl p-6 text-center text-white font-serif font-bold text-xl border border-white/10 shadow-2xl"
-              style={{
-                background: `linear-gradient(135deg, ${org.primary_color || "#EEDC00"} 0%, ${org.secondary_color || "#f5e500"} 100%)`,
-              }}
-            >
-              {org.name} — Live Preview
-              <p className="text-xs mt-2 text-white/80 font-sans font-medium">
-                {org.primary_color} / {org.secondary_color}
-              </p>
+            <div className="rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-white/5">
+              <img
+                src={livePreviewSvg}
+                alt="Brand preview"
+                className="block w-full h-auto"
+              />
             </div>
           </CardContent>
         </Card>
