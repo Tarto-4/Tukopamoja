@@ -110,23 +110,22 @@ export default function LoginPage() {
         <ThemeToggle className="h-9 px-3 glass border-[#EEDC00]/30 text-white hover:bg-black/60" />
       </div>
 
-      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
-        <div className="absolute -top-8 left-[7%] h-28 w-28 rounded-full bg-[#EEDC00]/20 blur-md" />
-        <div className="absolute top-20 left-[30%] h-20 w-20 rounded-full bg-[#F5E500]/18 blur-md" />
-        <div className="absolute top-[45%] right-[12%] h-24 w-24 rounded-full bg-[#D4C500]/18 blur-md" />
-        <div className="absolute bottom-[12%] left-[24%] h-16 w-16 rounded-full bg-[#EEDC00]/16 blur-md" />
-        <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black/25 to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/35 to-transparent" />
-      </div>
+      <img
+        src={withBasePath("/designs/backgrounds/login_background.webp")}
+        alt=""
+        aria-hidden="true"
+        className="absolute inset-0 h-full w-full object-cover pointer-events-none z-0"
+      />
+      <div className="absolute inset-0 bg-black/45 pointer-events-none z-10" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(238,220,0,0.18),_transparent_42%),linear-gradient(180deg,rgba(10,10,10,0.2),rgba(10,10,10,0.6))] pointer-events-none z-10" />
 
-      {/* Ambient glow */}
       <img
         src={withBasePath("/designs/backgrounds/brand-mark-overlay.svg")}
         alt=""
         aria-hidden="true"
-        className="absolute inset-0 m-auto w-[420px] h-[420px] object-contain opacity-[0.2] pointer-events-none z-10"
+        className="absolute inset-0 m-auto w-[420px] h-[420px] object-contain opacity-[0.16] pointer-events-none z-10"
       />
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full bg-ens-crimson/5 blur-[120px] pointer-events-none z-10" />
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full bg-ens-crimson/8 blur-[120px] pointer-events-none z-10" />
 
       <Card className="w-full max-w-md glass relative z-20 border-[#EEDC00]/20">
         <CardHeader className="text-center">
