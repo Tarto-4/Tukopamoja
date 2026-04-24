@@ -62,16 +62,7 @@ export function useRealtimeGame(sessionId: string | undefined, role: Role) {
             const q = updated.questions_snapshot[updated.current_q_index];
             if (q) {
               const duration = updated.current_question_remaining_sec || updated.current_question_time_limit_sec || q.time_limit_sec;
-              if (role === "host") {
-                startTimer(duration, () => {
-                  const store = useGameStore.getState();
-                  if (store.session?.status === "question_active") {
-                    store.showLeaderboard().catch(() => {});
-                  }
-                });
-              } else {
-                startTimer(duration);
-              }
+              startTimer(duration);
             }
           }
 
