@@ -13,7 +13,7 @@ export default function TemplatesPage() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  async function loadTemplates() {
+  async function fetchTemplatesWithComputedPlays() {
     const supabase = createClient();
 
     const [{ data: templateData }, { data: sessionsData }] = await Promise.all([
@@ -34,9 +34,14 @@ export default function TemplatesPage() {
 
     const normalized = (templateData as Template[] | null)?.map((template) => ({
       ...template,
-      play_count: playCounts[template.id] ?? template.play_count ?? 0,
+      play_count: playCounts[template.id] ?? 0,
     })) || [];
 
+    return normalized;
+  }
+
+  async function loadTemplates() {
+    const normalized = await fetchTemplatesWithComputedPlays();
     setTemplates(normalized);
   }
 
@@ -47,7 +52,28 @@ export default function TemplatesPage() {
   async function handleRefreshStats() {
     if (refreshing) return;
     setRefreshing(true);
-    await loadTemplates();
+    const supabase = createClient();
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    const normalized = await fetchTemplatesWithComputedPlays();
+    setTemplates(normalized);
+
+    if (user?.id) {
+      const ownedTemplates = normalized.filter((template) => template.created_by === user.id);
+      await Promise.all(
+        ownedTemplates.map((template) =>
+          supabase
+            .from("templates")
+            .update({ play_count: template.play_count })
+            .eq("id", template.id)
+            .eq("created_by", user.id)
+        )
+      );
+    }
+
     setRefreshing(false);
   }
 
