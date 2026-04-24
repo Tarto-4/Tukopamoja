@@ -2,24 +2,43 @@
 
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { clearCacheKey, getOrLoadCached } from "@/lib/query-cache";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { RefreshCw } from "lucide-react";
+
+const SESSIONS_CACHE_KEY = "dashboard:sessions:list";
 
 export default function SessionsPage() {
   const [sessions, setSessions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  async function loadSessions() {
-    const supabase = createClient();
-    const { data } = await supabase
-      .from("sessions")
-      .select("*, templates(title)")
-      .order("created_at", { ascending: false })
-      .limit(50);
+  async function loadSessions(forceRefresh = false) {
+    if (forceRefresh) {
+      clearCacheKey(SESSIONS_CACHE_KEY);
+    }
 
-    if (data) setSessions(data);
+    const data = await getOrLoadCached(
+      SESSIONS_CACHE_KEY,
+      async () => {
+        const supabase = createClient();
+        const { data: latest } = await supabase
+          .from("sessions")
+          .select("*, templates(title)")
+          .order("created_at", { ascending: false })
+          .limit(50);
+
+        return latest || [];
+      },
+      {
+        ttlMs: 8_000,
+        earlyRefreshRatio: 0.65,
+        maxInflightLoads: 6,
+      }
+    );
+
+    setSessions(data);
   }
 
   useEffect(() => {
@@ -29,7 +48,7 @@ export default function SessionsPage() {
   async function handleRefreshSessions() {
     if (refreshing) return;
     setRefreshing(true);
-    await loadSessions();
+    await loadSessions(true);
     setRefreshing(false);
   }
 

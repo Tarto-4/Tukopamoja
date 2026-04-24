@@ -7,6 +7,7 @@
 
 import { create } from "zustand";
 import { createClient } from "@/lib/supabase/client";
+import { clearSessionQueryCache } from "@/lib/query-cache";
 import { calculateScore } from "@quizarena/shared";
 import type {
   Session,
@@ -453,6 +454,7 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
 
   reset: () => {
     localStorage.removeItem(STORAGE_KEY);
+    clearSessionQueryCache();
     set({
       playerId: null,
       nickname: "",

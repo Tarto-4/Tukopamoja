@@ -3,10 +3,13 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+import { clearCacheByPrefix, clearCacheKey, getOrLoadCached } from "@/lib/query-cache";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Template } from "@quizarena/shared";
 import { Plus, FileText, RefreshCw } from "lucide-react";
+
+const TEMPLATES_CACHE_KEY = "dashboard:templates:list";
 
 export default function TemplatesPage() {
   const [templates, setTemplates] = useState<Template[]>([]);
@@ -40,8 +43,21 @@ export default function TemplatesPage() {
     return normalized;
   }
 
-  async function loadTemplates() {
-    const normalized = await fetchTemplatesWithComputedPlays();
+  async function loadTemplates(forceRefresh = false) {
+    if (forceRefresh) {
+      clearCacheKey(TEMPLATES_CACHE_KEY);
+    }
+
+    const normalized = await getOrLoadCached(
+      TEMPLATES_CACHE_KEY,
+      fetchTemplatesWithComputedPlays,
+      {
+        ttlMs: 8_000,
+        earlyRefreshRatio: 0.65,
+        maxInflightLoads: 6,
+      }
+    );
+
     setTemplates(normalized);
   }
 
@@ -73,6 +89,8 @@ export default function TemplatesPage() {
         )
       );
     }
+
+    clearCacheByPrefix("dashboard:templates");
 
     setRefreshing(false);
   }

@@ -6,6 +6,7 @@ import AuthGuard from "@/components/AuthGuard";
 import ThemeToggle from "@/components/theme/ThemeToggle";
 import BrandedBackground from "@/components/ui/BrandedBackground";
 import { createClient } from "@/lib/supabase/client";
+import { clearSessionQueryCache } from "@/lib/query-cache";
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
 import { useState } from "react";
@@ -38,11 +39,15 @@ export default function DashboardLayout({
   async function handleSignOut() {
     if (signingOut) return;
     setSigningOut(true);
-    const supabase = createClient();
-    await supabase.auth.signOut();
-    router.replace("/auth/login-v2");
-    router.refresh();
-    setSigningOut(false);
+    try {
+      clearSessionQueryCache();
+      const supabase = createClient();
+      await supabase.auth.signOut();
+      router.replace("/auth/login-v2");
+      router.refresh();
+    } finally {
+      setSigningOut(false);
+    }
   }
 
   return (
