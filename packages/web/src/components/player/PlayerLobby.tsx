@@ -5,13 +5,17 @@
 "use client";
 
 import { usePlayerStore } from "@/stores/usePlayerStore";
-import { Users } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { CheckCircle2, Circle, Users } from "lucide-react";
 import HamsterLoader from "@/components/ui/HamsterLoader";
 
 export default function PlayerLobby() {
-  const { session, players, nickname, avatar } = usePlayerStore();
+  const { session, players, nickname, avatar, playerId, toggleReady } = usePlayerStore();
 
   if (!session) return null;
+
+  const me = players.find((p) => p.id === playerId);
+  const isReady = !!me?.is_ready;
 
   return (
     <div className="game-screen items-center justify-center gradient-dark px-4">
@@ -26,10 +30,30 @@ export default function PlayerLobby() {
         {/* Waiting indicator */}
         <div className="glass-card rounded-2xl p-6 space-y-4">
           <HamsterLoader label="Waiting for host to start" className="scale-75" />
-          <p className="text-lg font-serif">Waiting for host to start...</p>
+          <p className="text-lg font-serif">
+            {isReady ? "Waiting for host to start..." : "Tap ready so the host can start"}
+          </p>
           <p className="text-muted-foreground text-sm">
             Game PIN: <span className="font-mono font-bold tracking-wider">{session.pin}</span>
           </p>
+          <div className="flex flex-col items-center gap-3 pt-2">
+            <Button
+              size="lg"
+              onClick={() => toggleReady(!isReady)}
+              className={isReady ? "gradient-primary border-0 btn-3d text-white font-semibold" : "w-full sm:w-auto"}
+              variant={isReady ? "default" : "outline"}
+            >
+              {isReady ? (
+                <CheckCircle2 className="w-4 h-4 mr-2" />
+              ) : (
+                <Circle className="w-4 h-4 mr-2" />
+              )}
+              {isReady ? "Ready" : "Mark me ready"}
+            </Button>
+            <p className="text-xs text-muted-foreground">
+              Host start is blocked until all joined players are ready.
+            </p>
+          </div>
         </div>
 
         {/* Player list */}
@@ -51,7 +75,7 @@ export default function PlayerLobby() {
                       : "bg-card border"
                   }`}
                 >
-                  {p.avatar} {p.nickname}
+                  {p.avatar} {p.nickname}{p.is_ready ? " ✓" : ""}
                 </span>
               ))}
             </div>
