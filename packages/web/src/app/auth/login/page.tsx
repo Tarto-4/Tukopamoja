@@ -9,7 +9,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { withBasePath } from "@/lib/base-path";
-import Ballpit from "@/components/ui/Ballpit";
 import ThemeToggle from "@/components/theme/ThemeToggle";
 
 export default function LoginPage() {
@@ -112,16 +111,10 @@ export default function LoginPage() {
       </div>
 
       <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
-        <Ballpit
-          className="absolute inset-0 opacity-[0.9]"
-          forceFallback
-          count={100}
-          gravity={0.01}
-          friction={0.9975}
-          wallBounce={0.95}
-          followCursor={false}
-          colors={["#C9A84C", "#E0C071", "#F9D66B"]}
-        />
+        <div className="absolute -top-8 left-[7%] h-28 w-28 rounded-full bg-[#EEDC00]/20 blur-md" />
+        <div className="absolute top-20 left-[30%] h-20 w-20 rounded-full bg-[#F5E500]/18 blur-md" />
+        <div className="absolute top-[45%] right-[12%] h-24 w-24 rounded-full bg-[#D4C500]/18 blur-md" />
+        <div className="absolute bottom-[12%] left-[24%] h-16 w-16 rounded-full bg-[#EEDC00]/16 blur-md" />
         <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black/25 to-transparent" />
         <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/35 to-transparent" />
       </div>
