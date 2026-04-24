@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "@/styles/globals.css";
+import { withBasePath } from "@/lib/base-path";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -12,9 +13,9 @@ export const metadata: Metadata = {
   title: "QuizArena — ENS Africa",
   description: "Premium real-time quiz platform. Create, host, and engage.",
   icons: {
-    icon: "/favicon.svg",
-    shortcut: "/favicon.svg",
-    apple: "/favicon.svg",
+    icon: withBasePath("/favicon.svg"),
+    shortcut: withBasePath("/favicon.svg"),
+    apple: withBasePath("/favicon.svg"),
   },
 };
 

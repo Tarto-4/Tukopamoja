@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { withBasePath } from "@/lib/base-path";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -43,7 +44,7 @@ export default function LoginPage() {
       <Card className="w-full max-w-md glass-card-elevated relative z-10">
         <CardHeader className="text-center">
           <img
-            src="/logo.svg"
+            src={withBasePath("/logo.svg")}
             alt="QuizArena"
             className="h-12 w-auto mx-auto mb-2"
           />

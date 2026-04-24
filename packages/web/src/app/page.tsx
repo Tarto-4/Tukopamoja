@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { withBasePath } from "@/lib/base-path";
 
 export default function HomePage() {
   return (
@@ -14,7 +15,7 @@ export default function HomePage() {
         {/* Logo / brand */}
         <div className="space-y-3">
           <img
-            src="/logo.svg"
+            src={withBasePath("/logo.svg")}
             alt="QuizArena"
             className="h-16 sm:h-20 w-auto mx-auto opacity-95"
           />
