@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,6 +13,7 @@ import { withBasePath } from "@/lib/base-path";
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const supabase = createClient();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -73,6 +76,11 @@ export default function LoginPage() {
               ? "Sign up to start creating quizzes"
               : "Sign in to your host dashboard"}
           </CardDescription>
+          {searchParams.get("reset") === "success" && (
+            <p className="text-sm text-quiz-green">
+              Password updated. Sign in with your new password.
+            </p>
+          )}
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -120,6 +128,14 @@ export default function LoginPage() {
                 ? "Create Account"
                 : "Sign In"}
             </Button>
+
+            {!isSignUp && (
+              <p className="text-center text-sm text-muted-foreground">
+                <Link href="/auth/reset-password" className="text-primary underline-offset-4 hover:underline">
+                  Forgot password?
+                </Link>
+              </p>
+            )}
 
             <p className="text-center text-sm text-muted-foreground">
               {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}
