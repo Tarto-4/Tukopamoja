@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { withBasePath } from "@/lib/base-path";
 import ThemeToggle from "@/components/theme/ThemeToggle";
+import BrandedBackground from "@/components/ui/BrandedBackground";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -110,22 +111,12 @@ export default function LoginPage() {
         <ThemeToggle className="h-9 px-3 glass border-[#EEDC00]/30 text-white hover:bg-black/60" />
       </div>
 
-      <img
-        src={withBasePath("/designs/backgrounds/login_background.webp")}
-        alt=""
-        aria-hidden="true"
-        className="absolute inset-0 h-full w-full object-cover pointer-events-none z-0"
+      <BrandedBackground
+        imagePath="/designs/backgrounds/login_background.webp"
+        imageClassName="absolute inset-0 h-full w-full object-cover object-center opacity-100"
+        overlayClassName="bg-black/42"
+        className="z-0"
       />
-      <div className="absolute inset-0 bg-black/45 pointer-events-none z-10" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(238,220,0,0.18),_transparent_42%),linear-gradient(180deg,rgba(10,10,10,0.2),rgba(10,10,10,0.6))] pointer-events-none z-10" />
-
-      <img
-        src={withBasePath("/designs/backgrounds/brand-mark-overlay.svg")}
-        alt=""
-        aria-hidden="true"
-        className="absolute inset-0 m-auto w-[420px] h-[420px] object-contain opacity-[0.16] pointer-events-none z-10"
-      />
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full bg-ens-crimson/8 blur-[120px] pointer-events-none z-10" />
 
       <Card className="w-full max-w-md glass relative z-20 border-[#EEDC00]/20">
         <CardHeader className="text-center">

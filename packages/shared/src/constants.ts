@@ -16,7 +16,9 @@ export const SCORING = {
   /** Maximum points for a perfect answer */
   MAX_POINTS: 1000,
   /** Lowest rank-based share awarded to the slowest valid correct answer */
-  MIN_RANK_SHARE: 0.1,
+  MIN_RANK_SHARE: 0.2,
+  /** Controls how quickly points decay by answer rank (lower = more forgiving) */
+  RANK_DECAY_FACTOR: 0.28,
 } as const;
 
 /** Default question settings */

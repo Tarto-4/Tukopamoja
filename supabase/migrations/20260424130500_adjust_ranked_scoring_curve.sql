@@ -1,5 +1,5 @@
--- Ranked scoring by answer speed (fastest gets max points)
--- Recomputes question scores and player totals after each submitted answer.
+-- Adjust ranked scoring curve to be more forgiving for 2nd/3rd answers.
+-- Keeps fastest answer at full points and raises lower-rank shares.
 
 create or replace function public.recompute_ranked_question_scores(
   p_session_id uuid,
@@ -33,7 +33,6 @@ begin
   with ranked as (
     select
       pa.id,
-      pa.player_id,
       pa.is_correct,
       pa.time_taken_ms,
       row_number() over (
@@ -81,21 +80,3 @@ begin
     and sp.session_id = p_session_id;
 end;
 $$;
-
-create or replace function public.trg_ranked_scoring_after_answer()
-returns trigger
-language plpgsql
-security definer
-as $$
-begin
-  perform public.recompute_ranked_question_scores(new.session_id, new.question_index);
-  return new;
-end;
-$$;
-
-drop trigger if exists trg_ranked_scoring_after_answer on public.player_answers;
-
-create trigger trg_ranked_scoring_after_answer
-after insert on public.player_answers
-for each row
-execute function public.trg_ranked_scoring_after_answer();

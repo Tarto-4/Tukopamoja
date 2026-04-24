@@ -50,9 +50,11 @@ export function calculateScore(input: ScoreInput): ScoreResult {
 
   const rank = Math.max(1, answerRank);
   const playerCount = Math.max(1, activePlayers);
-  const rankSpan = Math.max(1, playerCount - 1);
-  const rankProgress = Math.min(1, (rank - 1) / rankSpan);
-  const rankShare = Math.max(SCORING.MIN_RANK_SHARE, 1 - rankProgress);
+  const boundedRank = Math.min(rank, playerCount);
+  const rankShare = Math.max(
+    SCORING.MIN_RANK_SHARE,
+    1 / (1 + SCORING.RANK_DECAY_FACTOR * (boundedRank - 1))
+  );
 
   const newStreak = currentStreak + 1;
   const points = Math.floor(maxPoints * rankShare);

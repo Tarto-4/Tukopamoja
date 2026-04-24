@@ -2,24 +2,36 @@
 
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { RefreshCw } from "lucide-react";
 
 export default function SessionsPage() {
   const [sessions, setSessions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
-  useEffect(() => {
+  async function loadSessions() {
     const supabase = createClient();
-    supabase
+    const { data } = await supabase
       .from("sessions")
       .select("*, templates(title)")
       .order("created_at", { ascending: false })
-      .limit(50)
-      .then(({ data }) => {
-        if (data) setSessions(data);
-        setLoading(false);
-      });
+      .limit(50);
+
+    if (data) setSessions(data);
+  }
+
+  useEffect(() => {
+    loadSessions().finally(() => setLoading(false));
   }, []);
+
+  async function handleRefreshSessions() {
+    if (refreshing) return;
+    setRefreshing(true);
+    await loadSessions();
+    setRefreshing(false);
+  }
 
   if (loading) {
     return (
@@ -33,10 +45,23 @@ export default function SessionsPage() {
     <div className="page-container relative z-10">
       <div className="mb-8 rounded-2xl glass p-6 border border-border/60 relative overflow-hidden">
         <div className="absolute top-0 left-0 right-0 accent-bar" />
-        <h1 className="text-3xl font-serif font-black">Game Sessions</h1>
-        <p className="text-muted-foreground mt-1">
-          History of all hosted game sessions
-        </p>
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h1 className="text-3xl font-serif font-black">Game Sessions</h1>
+            <p className="text-muted-foreground mt-1">
+              History of all hosted game sessions
+            </p>
+          </div>
+          <Button
+            variant="outline"
+            onClick={handleRefreshSessions}
+            disabled={refreshing}
+            className="border-[#EEDC00]/30 text-foreground dark:text-white hover:bg-black/5 dark:hover:bg-white/10"
+          >
+            <RefreshCw className={`w-4 h-4 mr-2 ${refreshing ? "animate-spin" : ""}`} />
+            {refreshing ? "Refreshing..." : "Refresh Sessions"}
+          </Button>
+        </div>
       </div>
 
       {!sessions.length ? (
