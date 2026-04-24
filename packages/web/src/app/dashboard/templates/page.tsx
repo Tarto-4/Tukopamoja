@@ -6,23 +6,50 @@ import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Template } from "@quizarena/shared";
-import { Plus, FileText } from "lucide-react";
+import { Plus, FileText, RefreshCw } from "lucide-react";
 
 export default function TemplatesPage() {
   const [templates, setTemplates] = useState<Template[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+
+  async function loadTemplates() {
+    const supabase = createClient();
+
+    const [{ data: templateData }, { data: sessionsData }] = await Promise.all([
+      supabase
+        .from("templates")
+        .select("*")
+        .order("updated_at", { ascending: false }),
+      supabase
+        .from("sessions")
+        .select("template_id"),
+    ]);
+
+    const playCounts = (sessionsData || []).reduce<Record<string, number>>((acc, row) => {
+      if (!row.template_id) return acc;
+      acc[row.template_id] = (acc[row.template_id] || 0) + 1;
+      return acc;
+    }, {});
+
+    const normalized = (templateData as Template[] | null)?.map((template) => ({
+      ...template,
+      play_count: playCounts[template.id] ?? template.play_count ?? 0,
+    })) || [];
+
+    setTemplates(normalized);
+  }
 
   useEffect(() => {
-    const supabase = createClient();
-    supabase
-      .from("templates")
-      .select("*")
-      .order("updated_at", { ascending: false })
-      .then(({ data }) => {
-        if (data) setTemplates(data as Template[]);
-        setLoading(false);
-      });
+    loadTemplates().finally(() => setLoading(false));
   }, []);
+
+  async function handleRefreshStats() {
+    if (refreshing) return;
+    setRefreshing(true);
+    await loadTemplates();
+    setRefreshing(false);
+  }
 
   if (loading) {
     return (
@@ -42,12 +69,23 @@ export default function TemplatesPage() {
             Create and manage your quiz templates
           </p>
         </div>
-        <Link href="/dashboard/templates/new">
-          <Button className="gradient-primary border-0 btn-3d text-white font-semibold">
-            <Plus className="w-4 h-4 mr-2" />
-            New Template
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            onClick={handleRefreshStats}
+            disabled={refreshing}
+            className="border-[#EEDC00]/30 text-foreground dark:text-white hover:bg-black/5 dark:hover:bg-white/10"
+          >
+            <RefreshCw className={`w-4 h-4 mr-2 ${refreshing ? "animate-spin" : ""}`} />
+            {refreshing ? "Refreshing..." : "Refresh Plays"}
           </Button>
-        </Link>
+          <Link href="/dashboard/templates/new">
+            <Button className="gradient-primary border-0 btn-3d text-white font-semibold">
+              <Plus className="w-4 h-4 mr-2" />
+              New Template
+            </Button>
+          </Link>
+        </div>
       </div>
 
       {!templates.length ? (

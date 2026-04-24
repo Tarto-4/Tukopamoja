@@ -9,6 +9,7 @@ import { motion } from "framer-motion";
 import { usePlayerStore } from "@/stores/usePlayerStore";
 import { OPTION_COLORS } from "@quizarena/shared";
 import { CheckCircle, XCircle, Clock } from "lucide-react";
+import BrandedBackground from "@/components/ui/BrandedBackground";
 
 const BAR_WIDTH_CLASSES = ["w-[4%]", "w-[12%]", "w-[24%]", "w-[36%]", "w-[48%]", "w-[60%]", "w-[72%]", "w-[84%]", "w-full"];
 
@@ -40,6 +41,7 @@ export default function PlayerQuestion() {
     return (
       <div className="game-screen items-center justify-center gradient-dark px-4 relative overflow-hidden">
         <div className="absolute top-0 left-0 right-0 accent-bar z-20" />
+        <BrandedBackground imagePath="/designs/backgrounds/Sessions.avif" className="z-0" />
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -89,10 +91,11 @@ export default function PlayerQuestion() {
     return (
       <div className="game-screen items-center justify-center gradient-dark px-4 relative overflow-hidden">
         <div className="absolute top-0 left-0 right-0 accent-bar z-20" />
+        <BrandedBackground imagePath="/designs/backgrounds/Sessions.avif" className="z-0" />
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          className="text-center space-y-6"
+          className="text-center space-y-6 relative z-10"
         >
           <Clock className="w-20 h-20 mx-auto text-muted-foreground" />
           <h2 className="text-3xl font-serif font-black">Time&apos;s Up!</h2>
@@ -109,6 +112,7 @@ export default function PlayerQuestion() {
   return (
     <div className="game-screen p-4 gradient-dark relative overflow-hidden">
       <div className="absolute top-0 left-0 right-0 accent-bar z-20" />
+      <BrandedBackground imagePath="/designs/backgrounds/Sessions.avif" className="z-0" />
       <div className="relative z-10 mb-3 rounded-2xl glass px-4 py-3 border border-white/15">
         <div className="flex items-center justify-between">
           <span className="text-xs uppercase tracking-wider text-white/60">Question {qIndex + 1} of {totalQuestions}</span>

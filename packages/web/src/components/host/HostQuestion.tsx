@@ -10,6 +10,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useGameStore } from "@/stores/useGameStore";
 import { Button } from "@/components/ui/button";
+import BrandedBackground from "@/components/ui/BrandedBackground";
 import { OPTION_COLORS } from "@quizarena/shared";
 import { SkipForward, BarChart3, StopCircle, Users } from "lucide-react";
 
@@ -73,6 +74,7 @@ export default function HostQuestion() {
   return (
     <div className="game-screen p-4 sm:p-8 gradient-dark relative overflow-hidden">
       <div className="absolute top-0 left-0 right-0 accent-bar z-20" />
+      <BrandedBackground imagePath="/designs/backgrounds/Template.avif" className="z-0" />
       <div className="relative z-10 mb-4 sm:mb-6 grid grid-cols-1 md:grid-cols-3 gap-3">
         <div className="glass rounded-xl border border-white/15 p-4">
           <p className="text-xs uppercase tracking-wider text-white/60">Question</p>

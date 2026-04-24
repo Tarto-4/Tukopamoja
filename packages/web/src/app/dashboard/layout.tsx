@@ -1,10 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import AuthGuard from "@/components/AuthGuard";
 import ThemeToggle from "@/components/theme/ThemeToggle";
 import BrandedBackground from "@/components/ui/BrandedBackground";
+import { createClient } from "@/lib/supabase/client";
+import { Button } from "@/components/ui/button";
+import { LogOut } from "lucide-react";
+import { useState } from "react";
 
 export default function DashboardLayout({
   children,
@@ -12,6 +16,8 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
+  const [signingOut, setSigningOut] = useState(false);
 
   const backgroundByRoute: Record<string, string> = {
     "/dashboard/templates": "/designs/backgrounds/Template.avif",
@@ -28,6 +34,16 @@ export default function DashboardLayout({
     { href: "/dashboard/sessions", label: "Sessions" },
     { href: "/dashboard/branding", label: "Branding" },
   ];
+
+  async function handleSignOut() {
+    if (signingOut) return;
+    setSigningOut(true);
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    router.replace("/auth/login-v2");
+    router.refresh();
+    setSigningOut(false);
+  }
 
   return (
     <AuthGuard>
@@ -63,6 +79,17 @@ export default function DashboardLayout({
                 </Link>
               ))}
               <ThemeToggle className="h-8 px-2 border-[#EEDC00]/30 text-foreground dark:text-white hover:bg-black/5 dark:hover:bg-white/10" />
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={handleSignOut}
+                disabled={signingOut}
+                className="h-8 px-2 border-[#EEDC00]/30 text-foreground dark:text-white hover:bg-black/5 dark:hover:bg-white/10"
+              >
+                <LogOut className="w-3.5 h-3.5 mr-1.5" />
+                {signingOut ? "Signing out..." : "Sign out"}
+              </Button>
             </nav>
           </div>
         </header>
