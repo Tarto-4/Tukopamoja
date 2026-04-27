@@ -21,7 +21,7 @@ concurrency:
 
 jobs:
   deploy:
-    runs-on: self-hosted
+    runs-on: ${{ vars.WORKFLOW_RUNNER || 'ubuntu-latest' }}
     steps:
       - name: Checkout enterprise repo
         uses: actions/checkout@v4

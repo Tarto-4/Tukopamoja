@@ -8,9 +8,7 @@ on:
 
 jobs:
   check:
-    # GitHub Enterprise: hosted runners disabled. Use self-hosted or run locally.
-    # To run locally instead: npm ci && npm run build:web
-    runs-on: self-hosted
+    runs-on: ${{ vars.WORKFLOW_RUNNER || 'ubuntu-latest' }}
     steps:
       - uses: actions/checkout@v4
 

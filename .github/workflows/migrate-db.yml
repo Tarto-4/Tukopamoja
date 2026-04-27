@@ -8,8 +8,7 @@ on:
 
 jobs:
   migrate:
-    # GitHub Enterprise: hosted runners disabled
-    runs-on: self-hosted
+    runs-on: ${{ vars.WORKFLOW_RUNNER || 'ubuntu-latest' }}
     steps:
       - uses: actions/checkout@v4
 
