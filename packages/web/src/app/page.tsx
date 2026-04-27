@@ -141,7 +141,7 @@ export default function HomePage() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           {isQuizMode ? (
             <>
-              <Link href="/auth/login-v2">
+              <Link href="/auth/login">
                 <Button
                   size="xl"
                   className="w-full sm:w-auto gradient-primary border-0 btn-3d text-black font-semibold tracking-wide hover:opacity-90"

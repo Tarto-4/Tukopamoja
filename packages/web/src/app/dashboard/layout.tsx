@@ -43,7 +43,7 @@ export default function DashboardLayout({
       clearSessionQueryCache();
       const supabase = createClient();
       await supabase.auth.signOut();
-      router.replace("/auth/login-v2");
+      router.replace("/auth/login");
       router.refresh();
     } finally {
       setSigningOut(false);

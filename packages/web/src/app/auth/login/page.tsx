@@ -25,6 +25,15 @@ export default function LoginPage() {
   const [showConfirmSuccess, setShowConfirmSuccess] = useState(false);
   const [pendingConfirmationEmail, setPendingConfirmationEmail] = useState<string | null>(null);
 
+  const normalizeEmail = (value: string) => value.trim().toLowerCase();
+
+  const toFriendlyAuthError = (value: string) => {
+    if (/already registered|already exists|user already registered|email already/i.test(value)) {
+      return "An account with this email already exists. Sign in or reset your password.";
+    }
+    return value;
+  };
+
   useEffect(() => {
     const query = new URLSearchParams(window.location.search);
     setShowResetSuccess(query.get("reset") === "success");
@@ -37,15 +46,33 @@ export default function LoginPage() {
     setError(null);
     setMessage(null);
 
+    const normalizedEmail = normalizeEmail(email);
+
+    if (!normalizedEmail) {
+      setError("Enter a valid email address.");
+      setLoading(false);
+      return;
+    }
+
     if (isSignUp) {
-      const confirmationUrl = new URL(withBasePath("/auth/login-v2/?confirmed=1"), window.location.origin).toString();
+      const confirmationUrl = new URL(withBasePath("/auth/login/?confirmed=1"), window.location.origin).toString();
       const { data, error: authError } = await supabase.auth.signUp({
-        email,
+        email: normalizedEmail,
         password,
         options: { emailRedirectTo: confirmationUrl },
       });
       if (authError) {
-        setError(authError.message);
+        setError(toFriendlyAuthError(authError.message));
+        setLoading(false);
+        return;
+      }
+
+      const duplicateEmailDetected = Boolean(data.user && Array.isArray(data.user.identities) && data.user.identities.length === 0);
+
+      if (duplicateEmailDetected) {
+        setError("An account with this email already exists. Sign in or reset your password.");
+        setPendingConfirmationEmail(null);
+        setIsSignUp(false);
         setLoading(false);
         return;
       }
@@ -53,9 +80,8 @@ export default function LoginPage() {
       if (data.session) {
         await supabase.auth.signOut();
         setMessage("Account created, but email confirmation is disabled for this project. Enable 'Confirm email' in Supabase Auth settings to require verification.");
-        setPendingConfirmationEmail(email.trim());
+        setPendingConfirmationEmail(normalizedEmail);
       } else {
-        const normalizedEmail = email.trim();
         const { error: resendError } = await supabase.auth.resend({
           type: "signup",
           email: normalizedEmail,
@@ -73,9 +99,9 @@ export default function LoginPage() {
       return;
     }
 
-    const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
+    const { error: authError } = await supabase.auth.signInWithPassword({ email: normalizedEmail, password });
     if (authError) {
-      setError(authError.message);
+      setError(toFriendlyAuthError(authError.message));
       setLoading(false);
       return;
     }
@@ -88,7 +114,7 @@ export default function LoginPage() {
     if (!pendingConfirmationEmail) return;
     setLoading(true);
     setError(null);
-    const confirmationUrl = new URL(withBasePath("/auth/login-v2/?confirmed=1"), window.location.origin).toString();
+    const confirmationUrl = new URL(withBasePath("/auth/login/?confirmed=1"), window.location.origin).toString();
 
     const { error: resendError } = await supabase.auth.resend({
       type: "signup",
@@ -155,7 +181,11 @@ export default function LoginPage() {
                 type="email"
                 placeholder="you@company.com"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (error) setError(null);
+                }}
+                autoComplete="email"
                 required
               />
             </div>
@@ -166,14 +196,18 @@ export default function LoginPage() {
                 type="password"
                 placeholder="••••••••"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  if (error) setError(null);
+                }}
+                autoComplete={isSignUp ? "new-password" : "current-password"}
                 required
                 minLength={6}
               />
             </div>
 
             {error && (
-              <p className="text-sm text-destructive">{error}</p>
+              <p className="text-sm text-destructive" role="alert" aria-live="polite">{error}</p>
             )}
 
             {message && (
@@ -197,10 +231,12 @@ export default function LoginPage() {
               type="submit"
               className="w-full gradient-primary border-0 btn-3d text-black font-semibold"
               size="lg"
-              disabled={loading}
+              disabled={loading || !email.trim() || !password}
             >
               {loading
-                ? "Loading..."
+                ? isSignUp
+                  ? "Creating account..."
+                  : "Signing in..."
                 : isSignUp
                 ? "Create Account"
                 : "Sign In"}
@@ -218,7 +254,11 @@ export default function LoginPage() {
               {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}
               <button
                 type="button"
-                onClick={() => setIsSignUp(!isSignUp)}
+                onClick={() => {
+                  setIsSignUp(!isSignUp);
+                  setError(null);
+                  setMessage(null);
+                }}
                 className="text-primary underline-offset-4 hover:underline"
               >
                 {isSignUp ? "Sign in" : "Sign up"}
