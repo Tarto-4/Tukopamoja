@@ -112,7 +112,7 @@ function JoinPageContent() {
               value={pin}
               onChange={(e) => setPin(e.target.value.replace(/\D/g, ""))}
               className="w-full h-14 text-center text-3xl font-serif font-black tracking-[0.3em]
-                         rounded-xl border border-white/15 bg-white/5 px-4 text-black placeholder:text-black/40 focus:outline-none focus:ring-2 focus:ring-[#EEDC00]/20 focus:border-[#EEDC00]/50"
+                         rounded-xl border border-white/15 bg-white/5 px-4 text-white caret-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-[#EEDC00]/20 focus:border-[#EEDC00]/50"
               autoFocus={!initialPin}
             />
           </div>

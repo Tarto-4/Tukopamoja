@@ -87,7 +87,7 @@ export default function JoinScreen() {
               styles.pinInput,
               {
                 backgroundColor: theme.colors.surface,
-                color: "#000000",
+                color: theme.colors.text,
                 borderColor: theme.colors.primary,
               },
             ]}
