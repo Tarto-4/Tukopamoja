@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// QuizArena — /play page
+// Tokupojomo — /play page
 // Player game loop: lobby → question → leaderboard → game over
 // ─────────────────────────────────────────────────────────────
 

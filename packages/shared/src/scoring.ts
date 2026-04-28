@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// QuizArena — Scoring Engine
+// Tokupojomo — Scoring Engine
 // Shared between web (evaluation) and mobile (optimistic UI).
 // Mirrors the PostgreSQL function `calculate_score`.
 // ─────────────────────────────────────────────────────────────

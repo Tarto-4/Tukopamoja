@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// QuizArena Mobile — Branding Store (Zustand)
+// Tokupojomo Mobile — Branding Store (Zustand)
 // Fetches company branding on session join, applies theme.
 // ─────────────────────────────────────────────────────────────
 

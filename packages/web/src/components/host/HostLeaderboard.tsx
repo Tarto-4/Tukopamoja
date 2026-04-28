@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// QuizArena — Host Leaderboard View
+// Tokupojomo — Host Leaderboard View
 // ─────────────────────────────────────────────────────────────
 
 "use client";

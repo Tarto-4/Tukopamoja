@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// QuizArena — Question Editor Component
+// Tokupojomo — Question Editor Component
 // Edits a single question: text, type, options, time, points.
 // ─────────────────────────────────────────────────────────────
 

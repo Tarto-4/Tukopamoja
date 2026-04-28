@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// QuizArena Mobile — Player Lobby (waiting for host to start)
+// Tokupojomo Mobile — Player Lobby (waiting for host to start)
 // ─────────────────────────────────────────────────────────────
 
 import { View, Text, StyleSheet, Image } from "react-native";

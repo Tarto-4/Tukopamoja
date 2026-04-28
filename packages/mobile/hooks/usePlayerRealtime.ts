@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// QuizArena Mobile — Realtime Hook for Player
+// Tokupojomo Mobile — Realtime Hook for Player
 // Subscribes to session changes via Supabase Realtime.
 // ─────────────────────────────────────────────────────────────
 

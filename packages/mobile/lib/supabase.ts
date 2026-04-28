@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// QuizArena Mobile — Supabase Client
+// Tokupojomo Mobile — Supabase Client
 // ─────────────────────────────────────────────────────────────
 
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";

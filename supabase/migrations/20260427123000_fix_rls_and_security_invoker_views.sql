@@ -1,5 +1,5 @@
 -- ╔══════════════════════════════════════════════════════════════╗
--- ║  QuizArena — Security hardening                             ║
+-- ║  Tokupojomo — Security hardening                            ║
 -- ║  - Enable RLS on archived_sessions                          ║
 -- ║  - Remove definer-context from analytics views              ║
 -- ╚══════════════════════════════════════════════════════════════╝

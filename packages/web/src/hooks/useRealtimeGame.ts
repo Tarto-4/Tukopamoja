@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// QuizArena — Realtime Game Hook
+// Tokupojomo — Realtime Game Hook
 // Subscribes to Supabase Realtime for live game state changes.
 // ─────────────────────────────────────────────────────────────
 

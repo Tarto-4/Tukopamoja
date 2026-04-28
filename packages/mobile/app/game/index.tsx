@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// QuizArena Mobile — Game Screen
+// Tokupojomo Mobile — Game Screen
 // Renders different views based on session status.
 // ─────────────────────────────────────────────────────────────
 

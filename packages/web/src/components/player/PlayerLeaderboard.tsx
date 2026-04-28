@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// QuizArena — Player Leaderboard (between rounds)
+// Tokupojomo — Player Leaderboard (between rounds)
 // ─────────────────────────────────────────────────────────────
 
 "use client";

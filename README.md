@@ -1,12 +1,12 @@
-# QuizArena
+# Tokupojomo
 
 **Production-ready multiplayer game platform** centered on live quiz experiences today, with the architecture already prepared for additional modes such as puzzle, chess, and word-based multiplayer.
 
-QuizArena is built as a branded monorepo product with a web presenter experience, a mobile player experience, shared game logic, and a Supabase backend that keeps sessions, scoring, and real-time state synchronized.
+Tokupojomo is built as a branded monorepo product with a web presenter experience, a mobile player experience, shared game logic, and a Supabase backend that keeps sessions, scoring, and real-time state synchronized.
 
 ## Executive Summary
 
-QuizArena currently runs as a presenter-led multiplayer quiz platform.
+Tokupojomo currently runs as a presenter-led multiplayer quiz platform.
 
 - Hosts sign in on the web app, create templates, launch sessions, and control progression.
 - Players join with a PIN or QR path and participate in real time.
@@ -511,7 +511,7 @@ From host screen:
 
 ## Scoring Algorithm
 
-QuizArena currently uses explicit **rank-based multiplayer scoring** for correct answers.
+Tokupojomo currently uses explicit **rank-based multiplayer scoring** for correct answers.
 
 ```
 1st correct answer  = 100%
@@ -556,7 +556,7 @@ gh repo create quizarena --private --source=. --push
 # 4. Then push:
 git init
 git add .
-git commit -m "Initial commit: QuizArena monorepo"
+git commit -m "Initial commit: Tokupojomo monorepo"
 git branch -M main
 git remote add origin https://ens.ghe.com/tmongwe/quizarena.git
 git push -u origin main

@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// QuizArena — Quiz Builder (Web Host Dashboard)
+// Tokupojomo — Quiz Builder (Web Host Dashboard)
 // Full CRUD for template + questions, drag-reorder, save.
 // ─────────────────────────────────────────────────────────────
 

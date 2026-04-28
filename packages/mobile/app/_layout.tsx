@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// QuizArena Mobile — Root Layout
+// Tokupojomo Mobile — Root Layout
 // ─────────────────────────────────────────────────────────────
 
 import { Stack } from "expo-router";

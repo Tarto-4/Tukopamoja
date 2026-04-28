@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// QuizArena Mobile — Home / Join Screen
+// Tokupojomo Mobile — Home / Join Screen
 // Players enter a PIN or scan QR to join a game.
 // Dynamically applies company branding.
 // ─────────────────────────────────────────────────────────────

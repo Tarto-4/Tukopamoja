@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// QuizArena — Player Lobby (waiting for host to start)
+// Tokupojomo — Player Lobby (waiting for host to start)
 // ─────────────────────────────────────────────────────────────
 
 "use client";

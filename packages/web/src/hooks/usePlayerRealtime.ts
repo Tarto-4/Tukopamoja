@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// QuizArena — Player Realtime Hook
+// Tokupojomo — Player Realtime Hook
 // Subscribes to session changes for the player side.
 // ─────────────────────────────────────────────────────────────
 

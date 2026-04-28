@@ -1,5 +1,5 @@
 -- ╔══════════════════════════════════════════════════════════════╗
--- ║  QuizArena — Row Level Security Policies                   ║
+-- ║  Tokupojomo — Row Level Security Policies                  ║
 -- ║  Migration 00002                                           ║
 -- ╚══════════════════════════════════════════════════════════════╝
 

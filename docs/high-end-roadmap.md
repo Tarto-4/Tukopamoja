@@ -1,4 +1,4 @@
-# QuizArena High-End Roadmap
+# Tokupojomo High-End Roadmap
 
 This roadmap turns the required outcomes into implementable workstreams.
 

@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// QuizArena — Player Question Screen
+// Tokupojomo — Player Question Screen
 // Shows question + tappable answer options.
 // ─────────────────────────────────────────────────────────────
 

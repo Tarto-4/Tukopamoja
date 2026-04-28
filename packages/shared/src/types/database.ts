@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// QuizArena — Database Types (mirrors Supabase schema)
+// Tokupojomo — Database Types (mirrors Supabase schema)
 // Run `npm run db:types` from root to auto-generate from live DB.
 // These manual types serve as the dev-time contract.
 // ─────────────────────────────────────────────────────────────

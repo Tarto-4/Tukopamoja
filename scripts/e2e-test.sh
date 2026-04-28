@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# ─── QuizArena E2E Smoke Test ────────────────────────────────
+# ─── Tokupojomo E2E Smoke Test ───────────────────────────────
 # Tests the full game flow via Supabase REST API:
 #   Sign up → Create template → Start session → Join player → 
 #   Answer question → Show leaderboard → End game
@@ -46,7 +46,7 @@ sb_get()    { curl -s -X GET    "$REST/$1" -H "apikey: $ANON_KEY" -H "Authorizat
 sb_rpc()    { curl -s -X POST   "$REST/rpc/$1" -H "apikey: $ANON_KEY" -H "Authorization: Bearer $2" -H "Content-Type: application/json" -d "$3"; }
 
 echo "╔══════════════════════════════════════════╗"
-echo "║     QuizArena E2E Smoke Test             ║"
+echo "║    Tokupojomo E2E Smoke Test             ║"
 echo "╚══════════════════════════════════════════╝"
 
 # ─── 1. Sign up host ─────────────────────────────────────────

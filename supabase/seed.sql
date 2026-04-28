@@ -1,5 +1,5 @@
 -- ╔══════════════════════════════════════════════════════════════╗
--- ║  QuizArena — Seed Data                                     ║
+-- ║  Tokupojomo — Seed Data                                    ║
 -- ╚══════════════════════════════════════════════════════════════╝
 -- Run after migrations to populate sample data for development.
 -- Usage: supabase db reset (runs migrations + seed automatically)

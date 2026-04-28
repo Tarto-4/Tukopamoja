@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// QuizArena — Host Question Screen
+// Tokupojomo — Host Question Screen
 // Shows question, options, timer, answer count, and
 // presenter controls (end question / show leaderboard / skip).
 // ─────────────────────────────────────────────────────────────

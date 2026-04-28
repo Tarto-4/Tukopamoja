@@ -1,5 +1,5 @@
 -- ╔══════════════════════════════════════════════════════════════╗
--- ║  QuizArena — Supabase Database Schema                      ║
+-- ║  Tokupojomo — Supabase Database Schema                     ║
 -- ║  Migration 00001: Core tables, RLS, functions              ║
 -- ╚══════════════════════════════════════════════════════════════╝
 
@@ -13,7 +13,7 @@ create extension if not exists "pgcrypto";
 -- ─────────────────────────────────────────────────────────────
 create table public.organization (
   id            uuid primary key default gen_random_uuid(),
-  name          text not null default 'QuizArena',
+  name          text not null default 'Tokupojomo',
   tagline       text default 'Real-time Quiz Platform',
   logo_url      text,                          -- Supabase Storage URL
   primary_color text not null default '#8E191E',
@@ -24,7 +24,7 @@ create table public.organization (
 );
 
 -- Seed the single org row
-insert into public.organization (name) values ('QuizArena');
+insert into public.organization (name) values ('Tokupojomo');
 
 -- ─────────────────────────────────────────────────────────────
 -- 2. PROFILES (linked to auth.users)

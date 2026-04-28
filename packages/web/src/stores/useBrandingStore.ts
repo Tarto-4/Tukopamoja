@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// QuizArena — Branding Store (Zustand)
+// Tokupojomo — Branding Store (Zustand)
 // Fetches and caches company branding from Supabase.
 // ─────────────────────────────────────────────────────────────
 

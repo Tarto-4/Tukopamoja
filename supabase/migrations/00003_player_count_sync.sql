@@ -1,5 +1,5 @@
 -- ╔══════════════════════════════════════════════════════════════╗
--- ║  QuizArena — Migration 00003                              ║
+-- ║  Tokupojomo — Migration 00003                             ║
 -- ║  Milestone 3: player count sync + leaderboard helpers     ║
 -- ╚══════════════════════════════════════════════════════════════╝
 

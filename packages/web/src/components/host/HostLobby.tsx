@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// QuizArena — Host Lobby (waiting room with QR + player list)
+// Tokupojomo — Host Lobby (waiting room with QR + player list)
 // ─────────────────────────────────────────────────────────────
 
 "use client";

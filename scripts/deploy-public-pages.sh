@@ -51,7 +51,7 @@ rsync -a --exclude='.git' "$REPO_ROOT/packages/web/out/" ./
 touch .nojekyll
 
 echo "[6/7] Committing changes..."
-git config user.name "QuizArena Deploy Bot"
+git config user.name "Tokupojomo Deploy Bot"
 git config user.email "deploy-bot@users.noreply.github.com"
 git add -A
 

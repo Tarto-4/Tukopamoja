@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// QuizArena Mobile — Game Store (Zustand)
+// Tokupojomo Mobile — Game Store (Zustand)
 // Player-side game state management.
 // ─────────────────────────────────────────────────────────────
 

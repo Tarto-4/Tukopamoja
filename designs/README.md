@@ -1,4 +1,4 @@
-# QuizArena Design Workspace
+# Tokupojomo Design Workspace
 
 This folder stores visual references and reusable brand assets used to guide UI improvements.
 

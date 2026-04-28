@@ -10,7 +10,7 @@ TEMP_BRANCH="gh-pages-clean"
 cd "$REPO_ROOT"
 
 echo "╔══════════════════════════════════════════════════════╗"
-echo "║          QuizArena — Deploy to GitHub Pages          ║"
+echo "║          Tokupojomo — Deploy to GitHub Pages         ║"
 echo "╚══════════════════════════════════════════════════════╝"
 echo ""
 

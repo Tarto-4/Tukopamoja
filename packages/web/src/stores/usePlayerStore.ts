@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// QuizArena — Player Store (Zustand)
+// Tokupojomo — Player Store (Zustand)
 // Central state for the live game session (player side).
 // ─────────────────────────────────────────────────────────────
 

@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// QuizArena Mobile — Player Question Screen
+// Tokupojomo Mobile — Player Question Screen
 // Large touch-friendly answer buttons, timer, feedback.
 // ─────────────────────────────────────────────────────────────
 

@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// QuizArena Mobile — Player Game Over Screen
+// Tokupojomo Mobile — Player Game Over Screen
 // ─────────────────────────────────────────────────────────────
 
 import { View, Text, Pressable, StyleSheet } from "react-native";
