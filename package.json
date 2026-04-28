@@ -15,6 +15,7 @@
     "build:web": "npm -w packages/web run build",
     "deploy:pages": "bash ./scripts/deploy-pages.sh",
     "deploy:public-pages": "bash ./scripts/deploy-public-pages.sh",
+    "verify:public-live": "bash ./scripts/verify-public-live.sh",
     "build:shared": "npm -w packages/shared run build",
     "db:migrate": "supabase db push",
     "db:reset": "supabase db reset",
