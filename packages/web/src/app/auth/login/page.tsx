@@ -149,7 +149,7 @@ export default function LoginPage() {
           <Link href="/" className="inline-flex justify-center">
             <img
               src={withBasePath("/logo.svg")}
-              alt="QuizArena"
+              alt="Tokupojomo"
               className="h-12 w-auto mx-auto mb-2"
             />
           </Link>

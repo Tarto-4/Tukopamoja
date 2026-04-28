@@ -68,7 +68,7 @@ export default function JoinScreen() {
             />
           ) : null}
           <Text style={[styles.title, { color: theme.colors.primary }]}>
-            {branding?.name || "QuizArena"}
+            {branding?.name || "Tokupojomo"}
           </Text>
           {branding?.tagline ? (
             <Text style={[styles.tagline, { color: theme.colors.textMuted }]}>
@@ -87,7 +87,7 @@ export default function JoinScreen() {
               styles.pinInput,
               {
                 backgroundColor: theme.colors.surface,
-                color: theme.colors.text,
+                color: "#000000",
                 borderColor: theme.colors.primary,
               },
             ]}

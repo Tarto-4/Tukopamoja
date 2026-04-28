@@ -66,7 +66,7 @@ export default function DashboardLayout({
               href="/dashboard/templates"
               className="text-xl font-serif font-black text-black dark:gradient-ens dark:bg-clip-text dark:text-transparent"
             >
-              QuizArena
+              Tokupojomo
             </Link>
 
             <nav className="flex items-center gap-3 sm:gap-6 text-sm">

@@ -116,7 +116,7 @@ export default function ResetPasswordPage() {
 
       <Card className="w-full max-w-md glass-card-elevated relative z-10">
         <CardHeader className="text-center">
-          <img src={withBasePath("/logo.svg")} alt="QuizArena" className="h-12 w-auto mx-auto mb-2" />
+          <img src={withBasePath("/logo.svg")} alt="Tokupojomo" className="h-12 w-auto mx-auto mb-2" />
           <CardTitle className="text-2xl font-serif">
             {mode === "request" ? "Reset Password" : "Set New Password"}
           </CardTitle>

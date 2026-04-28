@@ -98,7 +98,7 @@ export default function HostLobby() {
             />
           )}
           <span className="font-serif font-bold text-lg text-white">
-            {branding?.name || "QuizArena"}
+            {branding?.name || "Tokupojomo"}
           </span>
         </div>
       </div>

@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "QuizArena",
+    "name": "Tokupojomo",
     "slug": "quizarena",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -18,7 +18,7 @@
       "bundleIdentifier": "com.quizarena.player",
       "associatedDomains": ["applinks:quizarena.example.com"],
       "infoPlist": {
-        "NSCameraUsageDescription": "QuizArena uses the camera to scan QR codes"
+        "NSCameraUsageDescription": "Tokupojomo uses the camera to scan QR codes"
       }
     },
     "android": {
@@ -50,7 +50,7 @@
       "expo-router",
       [
         "expo-camera",
-        { "cameraPermission": "Allow QuizArena to scan QR codes" }
+        { "cameraPermission": "Allow Tokupojomo to scan QR codes" }
       ]
     ],
     "experiments": {

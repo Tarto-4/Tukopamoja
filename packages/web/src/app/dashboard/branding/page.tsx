@@ -70,7 +70,7 @@ export default function BrandingPage() {
         <rect width="720" height="220" rx="28" fill="url(#brandGradient)" />
         <rect x="18" y="18" width="684" height="184" rx="22" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.18)" />
         <text x="360" y="102" text-anchor="middle" fill="#111111" font-size="30" font-family="Inter, Arial, sans-serif" font-weight="700">
-          ${org.name || "QuizArena"} — Live Preview
+          ${org.name || "Tokupojomo"} — Live Preview
         </text>
         <text x="360" y="142" text-anchor="middle" fill="rgba(17,17,17,0.72)" font-size="16" font-family="Inter, Arial, sans-serif">
           ${(org.primary_color || "#EEDC00")} / ${(org.secondary_color || "#f5e500")}

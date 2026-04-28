@@ -80,7 +80,7 @@ export default function PlayerLobby() {
           ]}
         >
           <Text style={[styles.brandText, { color: theme.colors.primary }]}> 
-            {branding?.name || "QuizArena"}
+            {branding?.name || "Tokupojomo"}
           </Text>
         </View>
       </View>

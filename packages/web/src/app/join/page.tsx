@@ -75,7 +75,7 @@ function JoinPageContent() {
             <Gamepad2 className="w-7 h-7 mx-auto text-[#EEDC00]" />
           </div>
           <h1 className="text-3xl font-serif font-black gradient-ens bg-clip-text text-transparent">
-            QuizArena
+            Tokupojomo
           </h1>
           <p className="text-white/70 text-sm">
             Join a live quiz game
@@ -112,7 +112,7 @@ function JoinPageContent() {
               value={pin}
               onChange={(e) => setPin(e.target.value.replace(/\D/g, ""))}
               className="w-full h-14 text-center text-3xl font-serif font-black tracking-[0.3em]
-                         rounded-xl border border-white/15 bg-white/5 px-4 text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-[#EEDC00]/20 focus:border-[#EEDC00]/50"
+                         rounded-xl border border-white/15 bg-white/5 px-4 text-black placeholder:text-black/40 focus:outline-none focus:ring-2 focus:ring-[#EEDC00]/20 focus:border-[#EEDC00]/50"
               autoFocus={!initialPin}
             />
           </div>
