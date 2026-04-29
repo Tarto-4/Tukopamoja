@@ -64,6 +64,9 @@ export interface PlayerJoinEvent {
   type: "PLAYER_JOIN";
   payload: {
     player_id: string;
+    first_name: string;
+    last_name: string;
+    /** Display name (first + last) */
     nickname: string;
     avatar: string;
   };
@@ -139,6 +142,9 @@ export type HostCommand =
 
 export interface LeaderboardEntry {
   player_id: string;
+  first_name: string;
+  last_name: string;
+  /** Display name (first + last) */
   nickname: string;
   avatar: string;
   score: number;

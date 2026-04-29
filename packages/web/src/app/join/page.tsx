@@ -12,7 +12,8 @@ function JoinPageContent() {
   const initialPin = searchParams.get("pin") || "";
 
   const [pin, setPin] = useState(initialPin);
-  const [nickname, setNickname] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [avatar, setAvatar] = useState(randomAvatar());
   const [error, setError] = useState("");
@@ -32,15 +33,20 @@ function JoinPageContent() {
     setError("");
 
     const cleanPin = pin.trim();
-    const cleanName = nickname.trim();
+    const cleanFirst = firstName.trim();
+    const cleanLast = lastName.trim();
     const cleanEmail = email.trim().toLowerCase();
 
     if (!cleanPin || !/^\d{4,8}$/.test(cleanPin)) {
       setError("Enter a valid game PIN (4–8 digits).");
       return;
     }
-    if (!cleanName || cleanName.length < 1 || cleanName.length > 20) {
-      setError("Pick a nickname (1–20 characters).");
+    if (!cleanFirst || cleanFirst.length < 1 || cleanFirst.length > 30) {
+      setError("Enter your first name (1–30 characters).");
+      return;
+    }
+    if (!cleanLast || cleanLast.length < 1 || cleanLast.length > 30) {
+      setError("Enter your surname (1–30 characters).");
       return;
     }
     if (!cleanEmail || !/^\S+@\S+\.\S+$/.test(cleanEmail)) {
@@ -53,7 +59,7 @@ function JoinPageContent() {
     try {
       // Set avatar before joining
       usePlayerStore.setState({ avatar });
-      const sessionId = await joinSession(cleanPin, cleanName, cleanEmail);
+      const sessionId = await joinSession(cleanPin, cleanFirst, cleanLast, cleanEmail);
       router.push(`/play/?sessionId=${sessionId}`);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Failed to join game.");
@@ -117,21 +123,37 @@ function JoinPageContent() {
             />
           </div>
 
-          {/* Nickname input */}
-          <div className="space-y-1.5">
-            <label htmlFor="nickname" className="text-sm font-medium text-muted-foreground">
-              Nickname
-            </label>
-            <input
-              id="nickname"
-              type="text"
-              maxLength={20}
-              placeholder="Your nickname"
-              value={nickname}
-              onChange={(e) => setNickname(e.target.value)}
-              className="w-full h-12 rounded-xl border border-white/15 bg-white/5 px-4 text-lg font-medium text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-[#EEDC00]/20 focus:border-[#EEDC00]/50"
-              autoFocus={!!initialPin}
-            />
+          {/* Name inputs */}
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <label htmlFor="firstName" className="text-sm font-medium text-muted-foreground">
+                Name
+              </label>
+              <input
+                id="firstName"
+                type="text"
+                maxLength={30}
+                placeholder="First name"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                className="w-full h-12 rounded-xl border border-white/15 bg-white/5 px-4 text-base font-medium text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-[#EEDC00]/20 focus:border-[#EEDC00]/50"
+                autoFocus={!!initialPin}
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label htmlFor="lastName" className="text-sm font-medium text-muted-foreground">
+                Surname
+              </label>
+              <input
+                id="lastName"
+                type="text"
+                maxLength={30}
+                placeholder="Surname"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                className="w-full h-12 rounded-xl border border-white/15 bg-white/5 px-4 text-base font-medium text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-[#EEDC00]/20 focus:border-[#EEDC00]/50"
+              />
+            </div>
           </div>
 
           {/* Email input */}

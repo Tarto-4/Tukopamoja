@@ -170,7 +170,7 @@ export default function HostLobby() {
                       className="rounded-xl px-3 py-2 flex items-center justify-between gap-3 bg-white/5 border border-white/10"
                   >
                     <div className="text-left min-w-0">
-                      <p className="font-medium truncate">{p.avatar} {p.nickname}</p>
+                      <p className="font-medium truncate">{p.avatar} {p.first_name} {p.last_name}</p>
                       <p className="text-xs text-muted-foreground">
                         {p.is_ready ? "Ready" : "Not ready"}
                         {p.is_muted ? " • Muted" : ""}

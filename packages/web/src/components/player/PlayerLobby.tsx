@@ -83,7 +83,7 @@ export default function PlayerLobby() {
                       : "bg-white/5 border border-white/10"
                   }`}
                 >
-                  {p.avatar} {p.nickname}{p.is_ready ? " ✓" : ""}
+                  {p.avatar} {p.first_name} {p.last_name}{p.is_ready ? " ✓" : ""}
                 </span>
               ))}
             </div>

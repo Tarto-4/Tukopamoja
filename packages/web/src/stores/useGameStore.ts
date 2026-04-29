@@ -170,7 +170,9 @@ export const useGameStore = create<GameState>((set, get) => ({
 
     const rankings: LeaderboardEntry[] = (leaderboardPage || []).map((p: any) => ({
       player_id: p.player_id,
-      nickname: p.nickname,
+      first_name: p.first_name || "",
+      last_name: p.last_name || "",
+      nickname: p.nickname || `${p.first_name || ""} ${p.last_name || ""}`.trim(),
       avatar: p.avatar,
       score: p.score ?? 0,
       streak: p.streak ?? 0,

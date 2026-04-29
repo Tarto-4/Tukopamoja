@@ -185,22 +185,22 @@ const styles = StyleSheet.create({
   optionButton: {
     width: (SCREEN_W - 32) / 2, // 12px padding * 2 + 8px gap
     flex: 1,
-    minHeight: 120,
-    borderRadius: 16,
+    minHeight: 80,
+    borderRadius: 14,
     borderWidth: 2,
     justifyContent: "center",
     alignItems: "center",
-    padding: 16,
+    padding: 12,
     flexBasis: "48%",
   },
   optionShape: {
-    fontSize: 24,
+    fontSize: 18,
     color: "rgba(255,255,255,0.7)",
-    marginBottom: 8,
+    marginBottom: 4,
   },
   optionText: {
     color: "#FFFFFF",
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: "700",
     textAlign: "center",
   },

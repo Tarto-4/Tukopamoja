@@ -23,7 +23,8 @@ const STORAGE_KEY = "quizarena_player";
 interface StoredPlayer {
   playerId: string;
   sessionId: string;
-  nickname: string;
+  firstName: string;
+  lastName: string;
   avatar: string;
 }
 
@@ -55,6 +56,9 @@ export function randomAvatar(): string {
 interface PlayerState {
   // Identity
   playerId: string | null;
+  firstName: string;
+  lastName: string;
+  /** Display name (first + last) */
   nickname: string;
   avatar: string;
 
@@ -91,7 +95,7 @@ interface PlayerState {
   realtimeStatus: "connected" | "connecting" | "reconnecting" | "disconnected";
 
   // Actions
-  joinSession: (pin: string, nickname: string, email: string) => Promise<string>;
+  joinSession: (pin: string, firstName: string, lastName: string, email: string) => Promise<string>;
   rejoinSession: () => Promise<boolean>;
   toggleReady: (ready: boolean) => Promise<void>;
   submitAnswer: (optionIndex: number) => Promise<void>;
@@ -109,6 +113,8 @@ interface PlayerState {
 
 export const usePlayerStore = create<PlayerState>((set, get) => ({
   playerId: null,
+  firstName: "",
+  lastName: "",
   nickname: "",
   avatar: randomAvatar(),
   session: null,
@@ -130,7 +136,7 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
 
   // ─── Join via PIN ──────────────────────────────────────────
 
-  joinSession: async (pin, nickname, email) => {
+  joinSession: async (pin, firstName, lastName, email) => {
     const supabase = createClient();
 
     // Find session by PIN first (for hydration); guarded join RPC enforces controls.
@@ -146,18 +152,20 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
     }
 
     const avatar = get().avatar;
+    const displayName = `${firstName} ${lastName}`;
 
     const { data: joinData, error: joinErr } = await supabase.rpc("join_session_guarded", {
       p_pin: pin,
-      p_nickname: nickname,
+      p_first_name: firstName,
+      p_last_name: lastName,
       p_email: email,
       p_avatar: avatar,
     });
 
     if (joinErr || !joinData || joinData.length === 0) {
       const msg = joinErr?.message || "Failed to join game.";
-      if (msg.toLowerCase().includes("nickname") || joinErr?.code === "23505") {
-        throw new Error("That nickname is already taken — choose another.");
+      if (msg.toLowerCase().includes("name") || joinErr?.code === "23505") {
+        throw new Error("That name is already taken in this session — try a variation.");
       }
       throw new Error(msg);
     }
@@ -182,13 +190,16 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
     savePlayerIdentity({
       playerId: joinRow.player_id,
       sessionId: joinRow.session_id,
-      nickname,
+      firstName,
+      lastName,
       avatar,
     });
 
     set({
       playerId: joinRow.player_id,
-      nickname,
+      firstName,
+      lastName,
+      nickname: displayName,
       avatar,
       session: session as Session,
       players: (allPlayers as SessionPlayer[]) || [],
@@ -224,11 +235,12 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
       return false;
     }
 
-    // Check player still exists
+    // Check player still exists and not kicked
     const { data: player } = await supabase
       .from("session_players")
       .select("*")
       .eq("id", stored.playerId)
+      .is("kicked_at", null)
       .single();
 
     if (!player) {
@@ -236,10 +248,10 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
       return false;
     }
 
-    // Check if already answered current question
+    // Fetch full answer record for current question (not just id)
     const { data: existingAnswer } = await supabase
       .from("player_answers")
-      .select("id")
+      .select("*")
       .eq("session_id", session.id)
       .eq("player_id", stored.playerId)
       .eq("question_index", session.current_q_index)
@@ -249,24 +261,89 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
       .from("session_players")
       .select("*")
       .eq("session_id", session.id)
+      .is("kicked_at", null)
       .order("score", { ascending: false });
+
+    // ── Calculate correct questionStartTime from DB timestamp ──
+    const question = session.questions_snapshot?.[session.current_q_index] || null;
+    let questionStartTime: number | null = null;
+    if (session.status === "question_active" && !existingAnswer) {
+      if (session.current_question_started_at) {
+        questionStartTime = new Date(session.current_question_started_at).getTime();
+      } else {
+        questionStartTime = Date.now();
+      }
+    }
+
+    // ── Restore answer result if player already answered ──
+    let restoredAnswerResult: PlayerState["answerResult"] = null;
+    let restoredSelectedOption: number | null = null;
+    if (existingAnswer && question) {
+      const correctIndex = question.options.findIndex((o: { is_correct: boolean }) => o.is_correct);
+      restoredSelectedOption = existingAnswer.selected_option;
+      restoredAnswerResult = {
+        isCorrect: existingAnswer.is_correct,
+        correctIndex,
+        pointsAwarded: existingAnswer.points_awarded,
+        totalScore: player.score ?? 0,
+        streak: player.streak ?? 0,
+      };
+    }
+
+    // ── Reconstruct leaderboard for leaderboard / finished states ──
+    let leaderboard: LeaderboardEntry[] = [];
+    let rank: number | null = null;
+    if (
+      (session.status === "leaderboard" || session.status === "evaluating") &&
+      allPlayers
+    ) {
+      leaderboard = (allPlayers as SessionPlayer[]).map((p, i) => ({
+        player_id: p.id,
+        first_name: p.first_name,
+        last_name: p.last_name,
+        nickname: p.nickname || `${p.first_name} ${p.last_name}`,
+        avatar: p.avatar,
+        score: p.score,
+        streak: p.streak,
+        rank: i + 1,
+      }));
+      const me = leaderboard.find((r) => r.player_id === stored.playerId);
+      rank = me?.rank ?? null;
+    }
 
     set({
       playerId: stored.playerId,
-      nickname: stored.nickname,
+      firstName: stored.firstName,
+      lastName: stored.lastName,
+      nickname: `${stored.firstName} ${stored.lastName}`,
       avatar: stored.avatar,
       session: session as Session,
       players: (allPlayers as SessionPlayer[]) || [],
-      currentQuestion:
-        session.questions_snapshot?.[session.current_q_index] || null,
+      currentQuestion: question,
       totalScore: player.score ?? 0,
       streak: player.streak ?? 0,
       hasAnswered: !!existingAnswer,
-      questionStartTime:
-        session.status === "question_active" && !existingAnswer
-          ? Date.now()
-          : null,
+      selectedOption: restoredSelectedOption,
+      answerResult: restoredAnswerResult,
+      questionStartTime,
+      leaderboard,
+      rank,
     });
+
+    // ── Start timer with correct remaining seconds ──
+    if (session.status === "question_active" && !existingAnswer && question) {
+      const limitSec =
+        session.current_question_time_limit_sec ||
+        question.time_limit_sec;
+      let remainingSec = limitSec;
+      if (session.current_question_started_at) {
+        const elapsedMs = Date.now() - new Date(session.current_question_started_at).getTime();
+        remainingSec = Math.max(0, limitSec - Math.floor(elapsedMs / 1000));
+      }
+      if (remainingSec > 0) {
+        get().startTimer(remainingSec);
+      }
+    }
 
     return true;
   },
@@ -457,6 +534,8 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
     clearSessionQueryCache();
     set({
       playerId: null,
+      firstName: "",
+      lastName: "",
       nickname: "",
       avatar: randomAvatar(),
       session: null,

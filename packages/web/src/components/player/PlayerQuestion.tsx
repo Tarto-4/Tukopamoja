@@ -148,33 +148,30 @@ export default function PlayerQuestion() {
         )}
       </motion.div>
 
-      {/* Options — full screen tappable buttons */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 flex-1 relative z-10">
+      {/* Options — compact tappable buttons */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 flex-1 relative z-10">
         {currentQuestion.options.map((opt, i) => {
           const color = OPTION_COLORS[i];
           const isSelected = selectedOption === i;
           return (
             <motion.button
               key={i}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.05 }}
+              transition={{ delay: i * 0.04 }}
               onClick={() => submitAnswer(i)}
               disabled={hasAnswered}
               style={{ backgroundColor: color.bg }}
-              className={`rounded-xl p-5 text-left text-white
-                        font-sans font-bold text-lg shadow-ens-lg active:scale-95 border border-white/10
+              className={`rounded-xl px-4 py-3 text-left text-white
+                        font-sans font-semibold text-base shadow-md active:scale-[0.97] border border-white/10
                         transition-transform disabled:opacity-50 ${isSelected ? "ring-2 ring-white/80" : ""}`}
             >
-              <div className="flex items-start justify-between gap-3 w-full">
-                <div>
-                  <p className="text-xs uppercase tracking-wider text-white/70 mb-1">Option {i + 1}</p>
-                  <p className="leading-snug">
-                    <span className="mr-2 opacity-80 text-xl">{color.shape}</span>
-                    <span className="line-clamp-2">{opt.text}</span>
-                  </p>
+              <div className="flex items-center justify-between gap-2 w-full">
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="opacity-80 text-lg shrink-0">{color.shape}</span>
+                  <span className="line-clamp-2 text-sm sm:text-base leading-snug">{opt.text}</span>
                 </div>
-                {isSelected && <span className="text-sm text-white/90">Selected</span>}
+                {isSelected && <span className="text-xs text-white/90 shrink-0">✓</span>}
               </div>
             </motion.button>
           );

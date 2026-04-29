@@ -22,19 +22,17 @@ function PlayPageContent() {
   const { session, rejoinSession } = usePlayerStore();
   const [loading, setLoading] = useState(true);
 
-  // Try to rejoin or redirect to /join if no session
+  // Try to rejoin or redirect to /join if no session.
+  // On browser refresh Zustand state is lost — we always attempt a
+  // localStorage-backed rejoin before giving up and redirecting.
   useEffect(() => {
     async function init() {
-      if (sessionId && !session) {
-        // Already have sessionId in URL — try rejoin from localStorage
+      if (!session) {
         const ok = await rejoinSession();
         if (!ok) {
-          router.replace(`/join/?pin=`);
+          router.replace(sessionId ? `/join/?pin=` : "/join/");
           return;
         }
-      } else if (!sessionId && !session) {
-        router.replace("/join/");
-        return;
       }
       setLoading(false);
     }

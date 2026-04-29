@@ -98,6 +98,9 @@ export interface Session {
 export interface SessionPlayer {
   id: string;
   session_id: string;
+  first_name: string;
+  last_name: string;
+  /** Display name (first + last). Kept for backward compat. */
   nickname: string;
   email: string | null;
   avatar: string;
