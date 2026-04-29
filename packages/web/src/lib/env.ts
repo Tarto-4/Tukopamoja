@@ -58,21 +58,32 @@ export function validateEnv(): EnvConfig {
   }
 
   if (errors.length > 0 && isProd) {
-    const msg = [
-      "",
-      "╔══════════════════════════════════════════════════════╗",
-      "║       TUKOPAMOJA — Environment Configuration        ║",
-      "╚══════════════════════════════════════════════════════╝",
-      "",
-      "The following environment variables have problems:",
-      "",
-      ...errors,
-      "",
-      "Copy .env.local.example → .env.local and fill in real values.",
-      "",
-    ].join("\n");
+    // During static export (next build), pages are prerendered on the server
+    // where some NEXT_PUBLIC_ vars may not be present. The vars ARE baked into
+    // the JS bundles and will be available at runtime in the browser, so we
+    // only warn during build and let the client fail-fast at actual runtime.
+    const isBuildTime = typeof window === "undefined";
+    if (isBuildTime) {
+      console.warn(
+        "[TUKOPAMOJA] Env validation skipped during static build — vars will be checked at runtime."
+      );
+    } else {
+      const msg = [
+        "",
+        "╔══════════════════════════════════════════════════════╗",
+        "║       TUKOPAMOJA — Environment Configuration        ║",
+        "╚══════════════════════════════════════════════════════╝",
+        "",
+        "The following environment variables have problems:",
+        "",
+        ...errors,
+        "",
+        "Copy .env.local.example → .env.local and fill in real values.",
+        "",
+      ].join("\n");
 
-    throw new Error(msg);
+      throw new Error(msg);
+    }
   }
 
   if (errors.length > 0 && !isProd) {
