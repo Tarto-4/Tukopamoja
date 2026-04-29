@@ -67,32 +67,33 @@ export default function TemplatesPage() {
 
   async function handleRefreshStats() {
     if (refreshing) return;
+
+    const confirmed = window.confirm(
+      "Refresh Plays will permanently clear your played sessions and host logs. Continue?"
+    );
+    if (!confirmed) return;
+
     setRefreshing(true);
     const supabase = createClient();
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    try {
+      const { data, error } = await supabase.rpc("reset_host_play_history");
+      if (error) throw error;
 
-    const normalized = await fetchTemplatesWithComputedPlays();
-    setTemplates(normalized);
+      clearCacheByPrefix("dashboard:templates");
+      clearCacheByPrefix("dashboard:sessions");
 
-    if (user?.id) {
-      const ownedTemplates = normalized.filter((template) => template.created_by === user.id);
-      await Promise.all(
-        ownedTemplates.map((template) =>
-          supabase
-            .from("templates")
-            .update({ play_count: template.play_count })
-            .eq("id", template.id)
-            .eq("created_by", user.id)
-        )
-      );
+      await loadTemplates(true);
+
+      const deletedSessions = Number((data as { deleted_sessions?: number } | null)?.deleted_sessions ?? 0);
+      const deletedLogs = Number((data as { deleted_logs?: number } | null)?.deleted_logs ?? 0);
+      window.alert(`Refresh complete. Deleted ${deletedSessions} sessions and ${deletedLogs} log entries.`);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Failed to refresh play history.";
+      window.alert(message);
+    } finally {
+      setRefreshing(false);
     }
-
-    clearCacheByPrefix("dashboard:templates");
-
-    setRefreshing(false);
   }
 
   if (loading) {
