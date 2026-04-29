@@ -11,6 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { withBasePath } from "@/lib/base-path";
 import ThemeToggle from "@/components/theme/ThemeToggle";
 import BrandedBackground from "@/components/ui/BrandedBackground";
+import GameLogo from "@/components/ui/GameLogo";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -147,11 +148,7 @@ export default function LoginPage() {
       <Card className="w-full max-w-md glass relative z-20 border-[#EEDC00]/20">
         <CardHeader className="text-center">
           <Link href="/" className="inline-flex justify-center">
-            <img
-              src={withBasePath("/logo.svg")}
-              alt="TUKOPAMOJA"
-              className="h-12 w-auto mx-auto mb-2"
-            />
+            <GameLogo size="md" static />
           </Link>
           <CardTitle className="text-2xl font-serif">
             {isSignUp ? "Create Account" : "Welcome Back"}

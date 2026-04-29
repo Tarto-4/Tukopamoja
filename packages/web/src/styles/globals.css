@@ -245,6 +245,51 @@
     text-shadow: 0 0 18px rgba(238, 220, 0, 0.22);
   }
 
+  /* ─── Game-Like Effects ────────────────────────────── */
+  .text-glow-gold {
+    text-shadow: 0 0 16px rgba(238, 220, 0, 0.4), 0 0 32px rgba(238, 220, 0, 0.15);
+  }
+
+  .game-card {
+    position: relative;
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+  }
+
+  .game-card:hover {
+    transform: translateY(-3px) scale(1.01);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(238, 220, 0, 0.12);
+  }
+
+  .game-card:active {
+    transform: translateY(0) scale(0.99);
+  }
+
+  .game-pulse {
+    animation: game-pulse 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes game-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+
+  @keyframes letter-bounce {
+    0% { transform: translateY(0) rotate(0deg); }
+    30% { transform: translateY(-8px) rotate(-2deg); }
+    50% { transform: translateY(-4px) rotate(1deg); }
+    70% { transform: translateY(-2px) rotate(-0.5deg); }
+    100% { transform: translateY(0) rotate(0deg); }
+  }
+
+  @keyframes float-in {
+    0% { opacity: 0; transform: translateY(16px) scale(0.95); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .animate-float-in {
+    animation: float-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
       animation-duration: 0.01ms !important;

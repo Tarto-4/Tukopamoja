@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { withBasePath } from "@/lib/base-path";
 import BrandedBackground from "@/components/ui/BrandedBackground";
+import GameLogo from "@/components/ui/GameLogo";
 import { BrainCircuit, Puzzle, Swords, Sparkles } from "lucide-react";
 
 type GameMode = {
@@ -66,16 +67,7 @@ export default function HomePage() {
 
       <div className="text-center space-y-8 px-4 relative z-10 rounded-2xl glass p-8 sm:p-10 border border-[#EEDC00]/20 max-w-6xl w-full mx-4">
         <div className="space-y-3">
-          <img
-            src={withBasePath("/logo.svg")}
-            alt="TUKOPAMOJA"
-            className="h-16 sm:h-20 w-auto mx-auto opacity-95"
-          />
-          <h1 className="text-5xl sm:text-7xl font-serif font-bold tracking-tight">
-            <span className="text-black dark:gradient-ens dark:bg-clip-text dark:text-transparent text-glow">
-              TUKOPAMOJA
-            </span>
-          </h1>
+          <GameLogo size="xl" showSubtitle className="animate-float-in" />
           <p className="text-lg text-foreground/80 dark:text-white/70 tracking-wide">
             Premium multiplayer arena for quiz, puzzle, strategy, and word games.
           </p>
@@ -95,7 +87,7 @@ export default function HomePage() {
                   key={mode.id}
                   type="button"
                   onClick={() => setSelectedModeId(mode.id)}
-                  className={`rounded-2xl border p-4 transition-all duration-300 ${
+                  className={`rounded-2xl border p-4 transition-all duration-300 game-card ${
                     isSelected
                       ? "border-[#EEDC00]/60 bg-[#EEDC00]/12 shadow-[0_0_0_1px_rgba(238,220,0,0.18)]"
                       : "border-white/10 bg-white/5 hover:border-[#EEDC00]/35 hover:bg-white/10"

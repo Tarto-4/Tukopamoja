@@ -9,6 +9,7 @@ import { createClient } from "@/lib/supabase/client";
 import { clearSessionQueryCache } from "@/lib/query-cache";
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
+import { GameLogoInline } from "@/components/ui/GameLogo";
 import { useState } from "react";
 
 export default function DashboardLayout({
@@ -64,9 +65,9 @@ export default function DashboardLayout({
           <div className="page-container flex items-center justify-between py-3">
             <Link
               href="/dashboard/templates"
-              className="text-xl font-serif font-black text-black dark:gradient-ens dark:bg-clip-text dark:text-transparent"
+              className="inline-flex"
             >
-              TUKOPAMOJA
+              <GameLogoInline />
             </Link>
 
             <nav className="flex items-center gap-3 sm:gap-6 text-sm">

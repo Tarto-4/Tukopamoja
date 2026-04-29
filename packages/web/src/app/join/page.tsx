@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useSearchParams, useRouter } from "next/navigation";
 import { usePlayerStore, randomAvatar } from "@/stores/usePlayerStore";
 import { Gamepad2, ArrowRight, RefreshCw } from "lucide-react";
+import GameLogo from "@/components/ui/GameLogo";
 
 function JoinPageContent() {
   const searchParams = useSearchParams();
@@ -80,9 +81,7 @@ function JoinPageContent() {
           <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#EEDC00]/15 border border-[#EEDC00]/30">
             <Gamepad2 className="w-7 h-7 mx-auto text-[#EEDC00]" />
           </div>
-          <h1 className="text-3xl font-serif font-black gradient-ens bg-clip-text text-transparent">
-            TUKOPAMOJA
-          </h1>
+          <GameLogo size="md" static />
           <p className="text-white/70 text-sm">
             Join a live quiz game
           </p>

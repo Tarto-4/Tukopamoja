@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import GameLogo from "@/components/ui/GameLogo";
 
 type Mode = "request" | "update";
 
@@ -116,7 +117,7 @@ export default function ResetPasswordPage() {
 
       <Card className="w-full max-w-md glass-card-elevated relative z-10">
         <CardHeader className="text-center">
-          <img src={withBasePath("/logo.svg")} alt="TUKOPAMOJA" className="h-12 w-auto mx-auto mb-2" />
+          <GameLogo size="md" static className="mb-2" />
           <CardTitle className="text-2xl font-serif">
             {mode === "request" ? "Reset Password" : "Set New Password"}
           </CardTitle>

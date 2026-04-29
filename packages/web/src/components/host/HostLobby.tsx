@@ -98,7 +98,7 @@ export default function HostLobby() {
             />
           )}
           <span className="font-serif font-bold text-lg text-white">
-            {branding?.name || "TUKOPAMOJA"}
+            {branding?.name || (<><span className="text-[#EEDC00]">TUKO</span><span className="text-white/90">PAMOJA</span></>)}
           </span>
         </div>
       </div>
