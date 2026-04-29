@@ -55,6 +55,8 @@ export default function BrandingPage() {
   const [org, setOrg] = useState<Organization | null>(null);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   const livePreviewSvg = useMemo(() => {
     if (!org) return "";
@@ -83,14 +85,43 @@ export default function BrandingPage() {
 
   useEffect(() => {
     async function load() {
-      const { data } = await supabase
-        .from("organization")
-        .select("*")
-        .single();
-      if (data) setOrg(data as Organization);
+      try {
+        const { data, error: queryError } = await supabase
+          .from("organization")
+          .select("*")
+          .single();
+        if (queryError) {
+          console.error("[Branding] load error:", queryError);
+          setLoadError(queryError.message);
+          return;
+        }
+        if (data) setOrg(data as Organization);
+        else setLoadError("No branding data found. Please contact support.");
+      } catch (err) {
+        console.error("[Branding] load failed:", err);
+        setLoadError(err instanceof Error ? err.message : "Failed to load branding data");
+      }
     }
     load();
   }, []);
+
+  if (loadError) {
+    return (
+      <div className="page-container relative z-10">
+        <div className="rounded-2xl glass p-6 border border-rose-500/30 bg-rose-500/10">
+          <h1 className="text-xl font-bold text-rose-400 mb-2">Failed to load branding</h1>
+          <p className="text-rose-300 text-sm mb-4">{loadError}</p>
+          <Button
+            onClick={() => { setLoadError(null); window.location.reload(); }}
+            variant="outline"
+            className="border-rose-500/30 text-rose-400 hover:bg-rose-500/10"
+          >
+            Retry
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   if (!org) return <div className="page-container relative z-10">Loading...</div>;
 
@@ -98,6 +129,7 @@ export default function BrandingPage() {
     if (!org) return;
     setSaving(true);
     setSaved(false);
+    setSaveError(null);
 
     const { error } = await supabase
       .from("organization")
@@ -112,7 +144,10 @@ export default function BrandingPage() {
       .eq("id", org.id);
 
     setSaving(false);
-    if (!error) {
+    if (error) {
+      console.error("[Branding] save error:", error);
+      setSaveError(error.message);
+    } else {
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
     }
@@ -350,6 +385,11 @@ export default function BrandingPage() {
           {saved && (
             <span className="text-sm text-green-400">
               ✓ Branding saved successfully
+            </span>
+          )}
+          {saveError && (
+            <span className="text-sm text-rose-400">
+              ✗ {saveError}
             </span>
           )}
         </div>

@@ -19,6 +19,7 @@ export default function SessionsPage() {
   const [sessions, setSessions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [details, setDetails] = useState<Record<string, SessionDetail>>({});
   const [loadingDetail, setLoadingDetail] = useState<string | null>(null);
@@ -32,11 +33,16 @@ export default function SessionsPage() {
       SESSIONS_CACHE_KEY,
       async () => {
         const supabase = createClient();
-        const { data: latest } = await supabase
+        const { data: latest, error: queryError } = await supabase
           .from("sessions")
           .select("*, templates(title)")
           .order("created_at", { ascending: false })
           .limit(50);
+
+        if (queryError) {
+          console.error("[Sessions] fetch error:", queryError);
+          throw new Error(queryError.message);
+        }
 
         return latest || [];
       },
@@ -51,14 +57,26 @@ export default function SessionsPage() {
   }
 
   useEffect(() => {
-    loadSessions().finally(() => setLoading(false));
+    loadSessions()
+      .catch((err) => {
+        console.error("[Sessions] initial load failed:", err);
+        setError(err instanceof Error ? err.message : "Failed to load sessions");
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   async function handleRefreshSessions() {
     if (refreshing) return;
     setRefreshing(true);
-    await loadSessions(true);
-    setRefreshing(false);
+    setError(null);
+    try {
+      await loadSessions(true);
+    } catch (err) {
+      console.error("[Sessions] refresh failed:", err);
+      setError(err instanceof Error ? err.message : "Failed to refresh sessions");
+    } finally {
+      setRefreshing(false);
+    }
   }
 
   async function toggleExpand(sessionId: string) {
@@ -206,7 +224,23 @@ export default function SessionsPage() {
         </div>
       </div>
 
-      {!sessions.length ? (
+      {error && (
+        <Card className="mb-4 border-rose-500/30 bg-rose-500/10">
+          <CardContent className="py-4">
+            <p className="text-rose-400 text-sm">Error: {error}</p>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleRefreshSessions}
+              className="mt-2 border-rose-500/30 text-rose-400 hover:bg-rose-500/10"
+            >
+              Retry
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
+      {!sessions.length && !error ? (
         <Card className="text-center py-12 glass border-border/60 bg-transparent">
           <CardContent>
             <p className="text-muted-foreground">
