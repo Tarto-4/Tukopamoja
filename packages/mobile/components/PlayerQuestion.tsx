@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// Tokupojomo Mobile — Player Question Screen
+// TUKOPAMOJA Mobile — Player Question Screen
 // Large touch-friendly answer buttons, timer, feedback.
 // ─────────────────────────────────────────────────────────────
 

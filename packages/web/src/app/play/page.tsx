@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// Tokupojomo — /play page
+// TUKOPAMOJA — /play page
 // Player game loop: lobby → question → leaderboard → game over
 // ─────────────────────────────────────────────────────────────
 

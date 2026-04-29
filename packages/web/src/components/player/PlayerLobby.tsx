@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// Tokupojomo — Player Lobby (waiting for host to start)
+// TUKOPAMOJA — Player Lobby (waiting for host to start)
 // ─────────────────────────────────────────────────────────────
 
 "use client";

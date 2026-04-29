@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// Tokupojomo Mobile — Realtime Hook for Player
+// TUKOPAMOJA Mobile — Realtime Hook for Player
 // Subscribes to session changes via Supabase Realtime.
 // ─────────────────────────────────────────────────────────────
 

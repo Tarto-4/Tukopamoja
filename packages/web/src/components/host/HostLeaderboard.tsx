@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// Tokupojomo — Host Leaderboard View
+// TUKOPAMOJA — Host Leaderboard View
 // ─────────────────────────────────────────────────────────────
 
 "use client";

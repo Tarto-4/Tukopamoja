@@ -75,7 +75,7 @@ function JoinPageContent() {
             <Gamepad2 className="w-7 h-7 mx-auto text-[#EEDC00]" />
           </div>
           <h1 className="text-3xl font-serif font-black gradient-ens bg-clip-text text-transparent">
-            Tokupojomo
+            TUKOPAMOJA
           </h1>
           <p className="text-white/70 text-sm">
             Join a live quiz game

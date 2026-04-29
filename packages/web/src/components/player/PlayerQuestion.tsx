@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// Tokupojomo — Player Question Screen
+// TUKOPAMOJA — Player Question Screen
 // Shows question + tappable answer options.
 // ─────────────────────────────────────────────────────────────
 

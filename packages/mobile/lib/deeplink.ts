@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// Tokupojomo Mobile — Deep Linking Configuration
+// TUKOPAMOJA Mobile — Deep Linking Configuration
 // Handles QR code deep links: quizarena://join?pin=123456
 // and universal links: https://quizarena.example.com/join?pin=123456
 // ─────────────────────────────────────────────────────────────

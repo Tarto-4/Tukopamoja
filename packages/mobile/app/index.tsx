@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// Tokupojomo Mobile — Home / Join Screen
+// TUKOPAMOJA Mobile — Home / Join Screen
 // Players enter a PIN or scan QR to join a game.
 // Dynamically applies company branding.
 // ─────────────────────────────────────────────────────────────
@@ -68,7 +68,7 @@ export default function JoinScreen() {
             />
           ) : null}
           <Text style={[styles.title, { color: theme.colors.primary }]}>
-            {branding?.name || "Tokupojomo"}
+            {branding?.name || "TUKOPAMOJA"}
           </Text>
           {branding?.tagline ? (
             <Text style={[styles.tagline, { color: theme.colors.textMuted }]}>

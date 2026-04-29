@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// Tokupojomo — Player Realtime Hook
+// TUKOPAMOJA — Player Realtime Hook
 // Subscribes to session changes for the player side.
 // ─────────────────────────────────────────────────────────────
 

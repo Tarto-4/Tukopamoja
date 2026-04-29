@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// Tokupojomo — Realtime Game Hook
+// TUKOPAMOJA — Realtime Game Hook
 // Subscribes to Supabase Realtime for live game state changes.
 // ─────────────────────────────────────────────────────────────
 

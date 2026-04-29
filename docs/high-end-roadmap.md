@@ -1,4 +1,4 @@
-# Tokupojomo High-End Roadmap
+# TUKOPAMOJA High-End Roadmap
 
 This roadmap turns the required outcomes into implementable workstreams.
 

@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// Tokupojomo Mobile — Game Screen
+// TUKOPAMOJA Mobile — Game Screen
 // Renders different views based on session status.
 // ─────────────────────────────────────────────────────────────
 

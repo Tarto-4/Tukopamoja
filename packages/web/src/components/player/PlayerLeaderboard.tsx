@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// Tokupojomo — Player Leaderboard (between rounds)
+// TUKOPAMOJA — Player Leaderboard (between rounds)
 // ─────────────────────────────────────────────────────────────
 
 "use client";

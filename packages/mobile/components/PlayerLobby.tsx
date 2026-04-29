@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// Tokupojomo Mobile — Player Lobby (waiting for host to start)
+// TUKOPAMOJA Mobile — Player Lobby (waiting for host to start)
 // ─────────────────────────────────────────────────────────────
 
 import { View, Text, StyleSheet, Image } from "react-native";
@@ -80,7 +80,7 @@ export default function PlayerLobby() {
           ]}
         >
           <Text style={[styles.brandText, { color: theme.colors.primary }]}> 
-            {branding?.name || "Tokupojomo"}
+            {branding?.name || "TUKOPAMOJA"}
           </Text>
         </View>
       </View>

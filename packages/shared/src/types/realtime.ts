@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// Tokupojomo — Real-Time Event Types
+// TUKOPAMOJA — Real-Time Event Types
 // Defines the WebSocket channel schema bridging
 // Next.js host ↔ Supabase Realtime ↔ React Native clients.
 // ─────────────────────────────────────────────────────────────

@@ -25,7 +25,7 @@ assert_contains() {
 }
 
 echo "╔══════════════════════════════════════════╗"
-echo "║   Tokupojomo RLS Policy Verification     ║"
+echo "║   TUKOPAMOJA RLS Policy Verification     ║"
 echo "╚══════════════════════════════════════════╝"
 
 echo ""

@@ -1,5 +1,5 @@
 -- ╔══════════════════════════════════════════════════════════════╗
--- ║  Tokupojomo — Row Level Security Policies                  ║
+-- ║  TUKOPAMOJA — Row Level Security Policies                  ║
 -- ║  Migration 00002                                           ║
 -- ╚══════════════════════════════════════════════════════════════╝
 

@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// Tokupojomo — Host Lobby (waiting room with QR + player list)
+// TUKOPAMOJA — Host Lobby (waiting room with QR + player list)
 // ─────────────────────────────────────────────────────────────
 
 "use client";
@@ -98,7 +98,7 @@ export default function HostLobby() {
             />
           )}
           <span className="font-serif font-bold text-lg text-white">
-            {branding?.name || "Tokupojomo"}
+            {branding?.name || "TUKOPAMOJA"}
           </span>
         </div>
       </div>

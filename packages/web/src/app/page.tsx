@@ -18,7 +18,7 @@ type GameMode = {
 const GAME_MODES: GameMode[] = [
   {
     id: "quiz",
-    name: "Tokupojomo",
+    name: "TUKOPAMOJA",
     description: "Live multiplayer quiz battles with presenter-led rounds.",
     icon: BrainCircuit,
     status: "available",
@@ -68,12 +68,12 @@ export default function HomePage() {
         <div className="space-y-3">
           <img
             src={withBasePath("/logo.svg")}
-            alt="Tokupojomo"
+            alt="TUKOPAMOJA"
             className="h-16 sm:h-20 w-auto mx-auto opacity-95"
           />
           <h1 className="text-5xl sm:text-7xl font-serif font-bold tracking-tight">
             <span className="text-black dark:gradient-ens dark:bg-clip-text dark:text-transparent text-glow">
-              Tokupojomo
+              TUKOPAMOJA
             </span>
           </h1>
           <p className="text-lg text-foreground/80 dark:text-white/70 tracking-wide">

@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// Tokupojomo Mobile — Player Leaderboard
+// TUKOPAMOJA Mobile — Player Leaderboard
 // ─────────────────────────────────────────────────────────────
 
 import { View, Text, FlatList, StyleSheet } from "react-native";

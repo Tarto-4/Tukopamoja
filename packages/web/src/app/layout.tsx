@@ -11,7 +11,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Tokupojomo — ENS Africa",
+  title: "TUKOPAMOJA — ENS Africa",
   description: "Premium real-time quiz platform. Create, host, and engage.",
   icons: {
     icon: withBasePath("/favicon.svg"),

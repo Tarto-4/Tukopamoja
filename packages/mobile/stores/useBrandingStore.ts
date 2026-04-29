@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// Tokupojomo Mobile — Branding Store (Zustand)
+// TUKOPAMOJA Mobile — Branding Store (Zustand)
 // Fetches company branding on session join, applies theme.
 // ─────────────────────────────────────────────────────────────
 

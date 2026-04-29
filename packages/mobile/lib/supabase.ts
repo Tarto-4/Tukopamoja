@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// Tokupojomo Mobile — Supabase Client
+// TUKOPAMOJA Mobile — Supabase Client
 // ─────────────────────────────────────────────────────────────
 
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";

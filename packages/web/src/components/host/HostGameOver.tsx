@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// Tokupojomo — Host Game Over Screen
+// TUKOPAMOJA — Host Game Over Screen
 // ─────────────────────────────────────────────────────────────
 
 "use client";

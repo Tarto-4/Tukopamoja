@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// Tokupojomo — Branding Store (Zustand)
+// TUKOPAMOJA — Branding Store (Zustand)
 // Fetches and caches company branding from Supabase.
 // ─────────────────────────────────────────────────────────────
 

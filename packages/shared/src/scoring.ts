@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// Tokupojomo — Scoring Engine
+// TUKOPAMOJA — Scoring Engine
 // Shared between web (evaluation) and mobile (optimistic UI).
 // Mirrors the PostgreSQL function `calculate_score`.
 // ─────────────────────────────────────────────────────────────

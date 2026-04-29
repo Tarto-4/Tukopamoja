@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// Tokupojomo — Host Question Screen
+// TUKOPAMOJA — Host Question Screen
 // Shows question, options, timer, answer count, and
 // presenter controls (end question / show leaderboard / skip).
 // ─────────────────────────────────────────────────────────────

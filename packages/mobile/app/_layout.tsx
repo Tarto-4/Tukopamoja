@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// Tokupojomo Mobile — Root Layout
+// TUKOPAMOJA Mobile — Root Layout
 // ─────────────────────────────────────────────────────────────
 
 import { Stack } from "expo-router";

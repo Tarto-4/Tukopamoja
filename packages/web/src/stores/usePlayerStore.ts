@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// Tokupojomo — Player Store (Zustand)
+// TUKOPAMOJA — Player Store (Zustand)
 // Central state for the live game session (player side).
 // ─────────────────────────────────────────────────────────────
 

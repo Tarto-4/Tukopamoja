@@ -61,7 +61,7 @@ export function validateEnv(): EnvConfig {
     const msg = [
       "",
       "╔══════════════════════════════════════════════════════╗",
-      "║       Tokupojomo — Environment Configuration        ║",
+      "║       TUKOPAMOJA — Environment Configuration        ║",
       "╚══════════════════════════════════════════════════════╝",
       "",
       "The following environment variables have problems:",
@@ -78,7 +78,7 @@ export function validateEnv(): EnvConfig {
   if (errors.length > 0 && !isProd) {
     console.warn(
       [
-        "[Tokupojomo] Missing/invalid env vars detected in development.",
+        "[TUKOPAMOJA] Missing/invalid env vars detected in development.",
         "Using safe local defaults for development mode.",
         ...errors,
       ].join("\n")

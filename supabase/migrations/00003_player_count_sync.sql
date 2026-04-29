@@ -1,5 +1,5 @@
 -- ╔══════════════════════════════════════════════════════════════╗
--- ║  Tokupojomo — Migration 00003                             ║
+-- ║  TUKOPAMOJA — Migration 00003                             ║
 -- ║  Milestone 3: player count sync + leaderboard helpers     ║
 -- ╚══════════════════════════════════════════════════════════════╝
 

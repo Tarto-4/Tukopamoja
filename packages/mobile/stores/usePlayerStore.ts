@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// Tokupojomo Mobile — Game Store (Zustand)
+// TUKOPAMOJA Mobile — Game Store (Zustand)
 // Player-side game state management.
 // ─────────────────────────────────────────────────────────────
 

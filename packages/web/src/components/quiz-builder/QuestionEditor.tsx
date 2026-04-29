@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// Tokupojomo — Question Editor Component
+// TUKOPAMOJA — Question Editor Component
 // Edits a single question: text, type, options, time, points.
 // ─────────────────────────────────────────────────────────────
 

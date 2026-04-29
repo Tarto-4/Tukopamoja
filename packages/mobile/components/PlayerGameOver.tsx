@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-// Tokupojomo Mobile — Player Game Over Screen
+// TUKOPAMOJA Mobile — Player Game Over Screen
 // ─────────────────────────────────────────────────────────────
 
 import { View, Text, Pressable, StyleSheet } from "react-native";
