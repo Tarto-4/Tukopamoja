@@ -7,7 +7,7 @@ import { clearCacheByPrefix, clearCacheKey, getOrLoadCached } from "@/lib/query-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Template } from "@quizarena/shared";
-import { Plus, FileText, RefreshCw } from "lucide-react";
+import { Plus, FileText, RefreshCw, Trash2 } from "lucide-react";
 
 const TEMPLATES_CACHE_KEY = "dashboard:templates:list";
 
@@ -15,6 +15,7 @@ export default function TemplatesPage() {
   const [templates, setTemplates] = useState<Template[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   async function fetchTemplatesWithComputedPlays() {
     const supabase = createClient();
@@ -96,6 +97,31 @@ export default function TemplatesPage() {
     }
   }
 
+  async function handleDeleteTemplate(templateId: string, title: string) {
+    const confirmed = window.confirm(
+      `Permanently delete template "${title}"?\n\nThis also removes all questions in the template. Sessions that used it will keep their snapshots.\n\nThis action cannot be undone.`
+    );
+    if (!confirmed) return;
+
+    setDeletingId(templateId);
+    try {
+      const supabase = createClient();
+      const { error } = await supabase
+        .from("templates")
+        .delete()
+        .eq("id", templateId);
+      if (error) throw new Error(error.message);
+
+      setTemplates((prev) => prev.filter((t) => t.id !== templateId));
+      clearCacheKey(TEMPLATES_CACHE_KEY);
+    } catch (err) {
+      console.error("[Templates] delete failed:", err);
+      window.alert(err instanceof Error ? err.message : "Failed to delete template");
+    } finally {
+      setDeletingId(null);
+    }
+  }
+
   if (loading) {
     return (
       <div className="page-container relative z-10">
@@ -152,35 +178,49 @@ export default function TemplatesPage() {
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {templates.map((template) => (
-            <Link
-              key={template.id}
-              href={`/dashboard/templates/edit?id=${template.id}`}
-            >
-              <Card className="glass border-border/60 bg-transparent hover:border-primary/50 transition-colors cursor-pointer h-full">
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div className="space-y-1">
-                      <CardTitle className="text-lg">{template.title}</CardTitle>
-                      <CardDescription className="line-clamp-2">
-                        {template.description || "No description"}
-                      </CardDescription>
+            <div key={template.id} className="relative group">
+              <Link href={`/dashboard/templates/edit?id=${template.id}`}>
+                <Card className="glass border-border/60 bg-transparent hover:border-primary/50 transition-colors cursor-pointer h-full">
+                  <CardHeader>
+                    <div className="flex items-start justify-between">
+                      <div className="space-y-1">
+                        <CardTitle className="text-lg">{template.title}</CardTitle>
+                        <CardDescription className="line-clamp-2">
+                          {template.description || "No description"}
+                        </CardDescription>
+                      </div>
+                      {template.is_published && (
+                        <span className="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full">
+                          Published
+                        </span>
+                      )}
                     </div>
-                    {template.is_published && (
-                      <span className="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full">
-                        Published
-                      </span>
-                    )}
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                    <span>{template.question_count} questions</span>
-                    <span>&bull;</span>
-                    <span>Played {template.play_count}x</span>
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                        <span>{template.question_count} questions</span>
+                        <span>&bull;</span>
+                        <span>Played {template.play_count}x</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handleDeleteTemplate(template.id, template.title);
+                }}
+                disabled={deletingId === template.id}
+                className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity p-2 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400 hover:bg-rose-500/20 hover:text-rose-300 disabled:opacity-50 z-10"
+                title={`Delete "${template.title}"`}
+                aria-label={`Delete template ${template.title}`}
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
+            </div>
           ))}
         </div>
       )}

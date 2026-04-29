@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { clearCacheKey, getOrLoadCached } from "@/lib/query-cache";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { RefreshCw, ChevronDown, ChevronUp, Download, Trophy, Users, Mail } from "lucide-react";
+import { RefreshCw, ChevronDown, ChevronUp, Download, Trophy, Users, Mail, Trash2, Archive, Eye } from "lucide-react";
 import { MEDALS } from "@quizarena/shared";
 
 const SESSIONS_CACHE_KEY = "dashboard:sessions:list";
@@ -13,6 +13,16 @@ const SESSIONS_CACHE_KEY = "dashboard:sessions:list";
 interface SessionDetail {
   players: any[];
   answers: any[];
+}
+
+interface ArchivedSession {
+  id: string;
+  archived_at: string;
+  template_title: string | null;
+  pin: string | null;
+  player_count: number;
+  created_at: string | null;
+  ended_at: string | null;
 }
 
 export default function SessionsPage() {
@@ -23,6 +33,16 @@ export default function SessionsPage() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [details, setDetails] = useState<Record<string, SessionDetail>>({});
   const [loadingDetail, setLoadingDetail] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  // Archived sessions state
+  const [showArchived, setShowArchived] = useState(false);
+  const [archivedSessions, setArchivedSessions] = useState<ArchivedSession[]>([]);
+  const [loadingArchived, setLoadingArchived] = useState(false);
+  const [archivedError, setArchivedError] = useState<string | null>(null);
+  const [archivedExpandedId, setArchivedExpandedId] = useState<string | null>(null);
+  const [archivedPayload, setArchivedPayload] = useState<Record<string, any>>({});
+  const [deletingArchivedId, setDeletingArchivedId] = useState<string | null>(null);
 
   async function loadSessions(forceRefresh = false) {
     if (forceRefresh) {
@@ -76,6 +96,98 @@ export default function SessionsPage() {
       setError(err instanceof Error ? err.message : "Failed to refresh sessions");
     } finally {
       setRefreshing(false);
+    }
+  }
+
+  async function handleDeleteSession(sessionId: string, title: string) {
+    const confirmed = window.confirm(
+      `Permanently delete session "${title}"?\n\nThis removes all player data and answers. This action cannot be undone.`
+    );
+    if (!confirmed) return;
+
+    setDeletingId(sessionId);
+    try {
+      const supabase = createClient();
+      const { error: rpcError } = await supabase.rpc("delete_single_session", {
+        p_session_id: sessionId,
+      });
+      if (rpcError) throw new Error(rpcError.message);
+
+      setSessions((prev) => prev.filter((s) => s.id !== sessionId));
+      setDetails((prev) => {
+        const next = { ...prev };
+        delete next[sessionId];
+        return next;
+      });
+      if (expandedId === sessionId) setExpandedId(null);
+      clearCacheKey(SESSIONS_CACHE_KEY);
+    } catch (err) {
+      console.error("[Sessions] delete failed:", err);
+      window.alert(err instanceof Error ? err.message : "Failed to delete session");
+    } finally {
+      setDeletingId(null);
+    }
+  }
+
+  async function loadArchivedSessions() {
+    setLoadingArchived(true);
+    setArchivedError(null);
+    try {
+      const supabase = createClient();
+      const { data, error: rpcError } = await supabase.rpc("list_my_archived_sessions", {
+        p_limit: 50,
+        p_offset: 0,
+      });
+      if (rpcError) throw new Error(rpcError.message);
+      setArchivedSessions((data as ArchivedSession[]) || []);
+    } catch (err) {
+      console.error("[Sessions] archived load failed:", err);
+      setArchivedError(err instanceof Error ? err.message : "Failed to load archived sessions");
+    } finally {
+      setLoadingArchived(false);
+    }
+  }
+
+  async function toggleArchivedExpand(archiveId: string) {
+    if (archivedExpandedId === archiveId) {
+      setArchivedExpandedId(null);
+      return;
+    }
+    setArchivedExpandedId(archiveId);
+    if (archivedPayload[archiveId]) return;
+
+    try {
+      const supabase = createClient();
+      const { data, error: rpcError } = await supabase.rpc("get_archived_session", {
+        p_archive_id: archiveId,
+      });
+      if (rpcError) throw new Error(rpcError.message);
+      setArchivedPayload((prev) => ({ ...prev, [archiveId]: data }));
+    } catch (err) {
+      console.error("[Sessions] archived detail failed:", err);
+    }
+  }
+
+  async function handleDeleteArchived(archiveId: string) {
+    const confirmed = window.confirm(
+      "Permanently delete this archived session?\n\nThis cannot be undone."
+    );
+    if (!confirmed) return;
+
+    setDeletingArchivedId(archiveId);
+    try {
+      const supabase = createClient();
+      const { error: rpcError } = await supabase.rpc("delete_archived_session", {
+        p_archive_id: archiveId,
+      });
+      if (rpcError) throw new Error(rpcError.message);
+      setArchivedSessions((prev) => prev.filter((a) => a.id !== archiveId));
+      if (archivedExpandedId === archiveId) setArchivedExpandedId(null);
+    } catch (err) {
+      console.error("[Sessions] archived delete failed:", err);
+      window.alert(err instanceof Error ? err.message : "Failed to delete archived session");
+    } finally {
+      setDeletingArchivedId(null);
     }
   }
 
@@ -312,8 +424,8 @@ export default function SessionsPage() {
                       <p className="text-muted-foreground animate-pulse text-sm">Loading session data...</p>
                     ) : detail ? (
                       <>
-                        {/* Export button */}
-                        <div className="flex justify-end">
+                        {/* Action buttons */}
+                        <div className="flex justify-end gap-2">
                           <Button
                             variant="outline"
                             size="sm"
@@ -326,6 +438,21 @@ export default function SessionsPage() {
                             <Download className="w-4 h-4 mr-2" />
                             Export CSV
                           </Button>
+                          {(session.status === "finished" || session.status === "lobby") && (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              disabled={deletingId === session.id}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteSession(session.id, session.templates?.title || "Untitled");
+                              }}
+                              className="border-rose-500/30 text-rose-400 hover:bg-rose-500/10"
+                            >
+                              <Trash2 className="w-4 h-4 mr-2" />
+                              {deletingId === session.id ? "Deleting..." : "Delete"}
+                            </Button>
+                          )}
                         </div>
 
                         {/* Attendees / Leaderboard */}
@@ -430,6 +557,165 @@ export default function SessionsPage() {
           })}
         </div>
       )}
+      {/* ─── Archived Sessions Section ─── */}
+      <div className="mt-10">
+        <button
+          onClick={() => {
+            setShowArchived((prev) => !prev);
+            if (!showArchived && archivedSessions.length === 0) {
+              loadArchivedSessions();
+            }
+          }}
+          className="flex items-center gap-2 mb-4 group"
+        >
+          <Archive className="w-5 h-5 text-[#EEDC00]" />
+          <h2 className="text-xl font-serif font-bold text-white/80 group-hover:text-white transition-colors">
+            Archived Sessions
+          </h2>
+          {showArchived ? (
+            <ChevronUp className="w-4 h-4 text-muted-foreground" />
+          ) : (
+            <ChevronDown className="w-4 h-4 text-muted-foreground" />
+          )}
+        </button>
+
+        {showArchived && (
+          <div className="space-y-3">
+            {loadingArchived && (
+              <p className="text-muted-foreground animate-pulse text-sm">Loading archived sessions...</p>
+            )}
+
+            {archivedError && (
+              <Card className="border-rose-500/30 bg-rose-500/10">
+                <CardContent className="py-4">
+                  <p className="text-rose-400 text-sm">Error: {archivedError}</p>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={loadArchivedSessions}
+                    className="mt-2 border-rose-500/30 text-rose-400 hover:bg-rose-500/10"
+                  >
+                    Retry
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
+
+            {!loadingArchived && !archivedError && archivedSessions.length === 0 && (
+              <Card className="glass border-border/60 bg-transparent">
+                <CardContent className="py-6 text-center">
+                  <p className="text-muted-foreground text-sm">
+                    No archived sessions. Finished sessions older than 14 days are automatically archived.
+                  </p>
+                </CardContent>
+              </Card>
+            )}
+
+            {archivedSessions.map((arc) => {
+              const isArcExpanded = archivedExpandedId === arc.id;
+              const payload = archivedPayload[arc.id];
+              const players = payload?.players || [];
+              const answers = payload?.answers || [];
+
+              return (
+                <Card key={arc.id} className="glass border-border/60 bg-transparent overflow-hidden opacity-80">
+                  <button
+                    onClick={() => toggleArchivedExpand(arc.id)}
+                    className="w-full text-left"
+                  >
+                    <CardContent className="flex items-center justify-between py-4">
+                      <div className="min-w-0">
+                        <p className="font-semibold truncate">
+                          {arc.template_title || "Untitled"}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          {arc.pin ? `PIN: ${arc.pin} \u2022 ` : ""}
+                          {arc.player_count} player{arc.player_count !== 1 ? "s" : ""}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="text-right text-sm text-muted-foreground">
+                          {arc.created_at && (
+                            <p>{new Date(arc.created_at).toLocaleDateString()}</p>
+                          )}
+                          <span className="text-xs px-2 py-1 rounded-full bg-white/10 text-white/50">
+                            archived
+                          </span>
+                        </div>
+                        {isArcExpanded ? (
+                          <ChevronUp className="w-5 h-5 text-muted-foreground shrink-0" />
+                        ) : (
+                          <ChevronDown className="w-5 h-5 text-muted-foreground shrink-0" />
+                        )}
+                      </div>
+                    </CardContent>
+                  </button>
+
+                  {isArcExpanded && (
+                    <div className="border-t border-white/10 px-6 pb-6 pt-4 space-y-4">
+                      {!payload ? (
+                        <p className="text-muted-foreground animate-pulse text-sm">Loading archive data...</p>
+                      ) : (
+                        <>
+                          {/* Archived players */}
+                          <div>
+                            <div className="flex items-center gap-2 mb-3">
+                              <Users className="w-4 h-4 text-[#EEDC00]" />
+                              <h3 className="text-sm font-semibold uppercase tracking-wider text-white/70">
+                                Players ({players.length})
+                              </h3>
+                            </div>
+                            <div className="space-y-1.5 max-h-48 overflow-y-auto">
+                              {players.map((p: any, idx: number) => {
+                                const displayName = `${p.first_name || ""} ${p.last_name || ""}`.trim() || p.nickname || "Player";
+                                return (
+                                  <div
+                                    key={p.id || idx}
+                                    className="flex items-center gap-3 rounded-xl px-3 py-2 bg-white/5 border border-white/10"
+                                  >
+                                    <span className="w-7 text-center text-sm shrink-0">
+                                      {idx < 3 ? MEDALS[idx] : `#${idx + 1}`}
+                                    </span>
+                                    <span className="text-lg shrink-0">{p.avatar || "🎮"}</span>
+                                    <div className="flex-1 min-w-0">
+                                      <p className="font-medium text-sm truncate">{displayName}</p>
+                                      <p className="text-xs text-muted-foreground truncate">{p.email || "—"}</p>
+                                    </div>
+                                    <p className="text-sm font-serif font-bold tabular-nums shrink-0">
+                                      {(p.score ?? 0).toLocaleString()}
+                                    </p>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+
+                          {/* Delete archived */}
+                          <div className="flex justify-end pt-2">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              disabled={deletingArchivedId === arc.id}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteArchived(arc.id);
+                              }}
+                              className="border-rose-500/30 text-rose-400 hover:bg-rose-500/10"
+                            >
+                              <Trash2 className="w-4 h-4 mr-2" />
+                              {deletingArchivedId === arc.id ? "Deleting..." : "Delete Permanently"}
+                            </Button>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  )}
+                </Card>
+              );
+            })}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
