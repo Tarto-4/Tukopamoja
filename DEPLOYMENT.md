@@ -126,7 +126,7 @@ npm run dev:web
 
 ## Docker Deployment
 
-### Option A: Quick Production Build
+### Option A: Quick Production Build (static / nginx)
 
 ```bash
 # Build the container with your production values
@@ -144,7 +144,36 @@ curl http://localhost:3000/healthz
 # → ok
 ```
 
-### Option B: Docker Compose (Production)
+### Option B: Server Mode (Next.js standalone — recommended for shipment)
+
+When deploying to another system that does **not** use static hosting, use the server Dockerfile. This runs Next.js as a full Node.js server with SSR capabilities.
+
+```bash
+# Build
+docker build -f Dockerfile.server \
+  --build-arg NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co \
+  --build-arg NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ... \
+  --build-arg NEXT_PUBLIC_APP_URL=https://yourdomain.com \
+  -t quizarena-web .
+
+# Run
+docker run -d -p 3000:3000 --name quizarena quizarena-web
+
+# Verify
+curl http://localhost:3000/
+```
+
+Or with Compose:
+
+```bash
+export NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
+export NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
+export NEXT_PUBLIC_APP_URL=https://yourdomain.com
+
+docker compose -f docker-compose.server.yml up -d --build
+```
+
+### Option C: Docker Compose — static/nginx (Production)
 
 ```bash
 # Set environment variables
@@ -159,7 +188,7 @@ docker compose -f docker-compose.prod.yml up -d --build
 docker compose -f docker-compose.prod.yml ps
 ```
 
-### Option C: Docker Compose (Development)
+### Option D: Docker Compose (Development)
 
 ```bash
 # Copy env template
@@ -173,16 +202,25 @@ docker compose up -d
 # → Postgres: localhost:54322
 ```
 
+### Build Modes
+
+The project supports two build modes controlled by `BUILD_MODE` env var in `next.config.js`:
+
+| Mode         | File                 | Output              | Use Case                   |
+|--------------|----------------------|----------------------|----------------------------|
+| `static`     | `Dockerfile`         | nginx + HTML files   | GitHub Pages, CDN, S3      |
+| `server`     | `Dockerfile.server`  | Node.js server       | Docker, cloud VMs, K8s     |
+
 ### Container Details
 
-| Property          | Value                              |
-|-------------------|------------------------------------|
-| Base image        | `nginx:1.27-alpine` (production)   |
-| Exposed port      | 80                                 |
-| Health endpoint   | `/healthz` → returns `ok`          |
-| Static files      | `/usr/share/nginx/html`            |
-| Memory limit      | 256 MB                             |
-| Runs as           | Non-root user (UID 1001)           |
+| Property          | Static (nginx)           | Server (standalone)          |
+|-------------------|--------------------------|------------------------------|
+| Base image        | `nginx:1.27-alpine`      | `node:20-alpine`             |
+| Exposed port      | 80                       | 3000                         |
+| Health endpoint   | `/healthz`               | `/`                          |
+| Memory limit      | 256 MB                   | 512 MB                       |
+| Runs as           | Non-root (UID 1001)      | Non-root (UID 1001)          |
+| SSR support       | No                       | Yes                          |
 
 ---
 
