@@ -1,0 +1,84 @@
+# ╔══════════════════════════════════════════════════════════════╗
+# ║  TUKOPAMOJA — Docker Compose (Development)                 ║
+# ╚══════════════════════════════════════════════════════════════╝
+#
+# Full local development stack:
+#   • Next.js dev server with hot-reload
+#   • Supabase (Postgres, Auth, Realtime, Studio)
+#
+# Usage:
+#   cp .env.docker.example .env.docker
+#   docker compose up -d
+#
+# Access:
+#   Web app:         http://localhost:3000
+#   Supabase Studio: http://localhost:54323
+#   Supabase API:    http://localhost:54321
+#   Postgres:        localhost:54322
+
+name: quizarena-dev
+
+services:
+  # ── Next.js dev server ─────────────────────────────────────
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./packages/web/src:/app/packages/web/src
+      - ./packages/shared/src:/app/packages/shared/src
+      - ./packages/web/public:/app/packages/web/public
+    env_file:
+      - .env.docker
+    environment:
+      - NODE_ENV=development
+      - WATCHPACK_POLLING=true
+    depends_on:
+      supabase-db:
+        condition: service_healthy
+    networks:
+      - quizarena
+
+  # ── PostgreSQL (Supabase-compatible) ───────────────────────
+  supabase-db:
+    image: supabase/postgres:15.6.1.139
+    ports:
+      - "54322:5432"
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: postgres
+    volumes:
+      - supabase-db-data:/var/lib/postgresql/data
+      - ./supabase/migrations:/docker-entrypoint-initdb.d/migrations
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - quizarena
+
+  # ── Supabase Studio (optional, for DB inspection) ──────────
+  supabase-studio:
+    image: supabase/studio:20240923-2e3e90c
+    ports:
+      - "54323:3000"
+    environment:
+      STUDIO_PG_META_URL: http://supabase-meta:8080
+      SUPABASE_URL: http://supabase-kong:8000
+      SUPABASE_REST_URL: http://supabase-kong:8000/rest/v1/
+    depends_on:
+      supabase-db:
+        condition: service_healthy
+    networks:
+      - quizarena
+
+volumes:
+  supabase-db-data:
+    driver: local
+
+networks:
+  quizarena:
+    driver: bridge

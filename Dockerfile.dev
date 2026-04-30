@@ -1,0 +1,27 @@
+# ╔══════════════════════════════════════════════════════════════╗
+# ║  TUKOPAMOJA — Development Dockerfile (hot-reload)          ║
+# ╚══════════════════════════════════════════════════════════════╝
+#
+# Used by docker-compose.yml for local development.
+# Source directories are mounted as volumes for live editing.
+
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Copy workspace root + package files
+COPY package.json package-lock.json* ./
+COPY packages/shared/package.json packages/shared/
+COPY packages/web/package.json packages/web/
+COPY packages/mobile/package.json packages/mobile/
+
+# Install dependencies
+RUN npm ci --ignore-scripts
+
+# Copy source code
+COPY packages/shared/ packages/shared/
+COPY packages/web/ packages/web/
+
+EXPOSE 3000
+
+CMD ["npm", "run", "dev:web"]

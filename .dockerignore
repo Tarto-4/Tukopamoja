@@ -1,0 +1,55 @@
+# ── Build artifacts ──
+node_modules
+packages/*/node_modules
+.next
+out
+dist
+packages/web/out
+packages/web/.next
+
+# ── Environment (secrets) ──
+.env
+.env.local
+.env.*.local
+packages/web/.env.local
+packages/web/.env.production
+
+# ── Version control ──
+.git
+.gitignore
+
+# ── IDE / OS ──
+.vscode
+.idea
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# ── Supabase local ──
+supabase/.temp
+
+# ── Docker ──
+docker-compose*.yml
+Dockerfile*
+
+# ── Logs ──
+*.log
+npm-debug.log*
+
+# ── Design assets (not needed in container) ──
+designs/backgrounds/
+designs/favicon/
+designs/logo/
+designs/uiux/
+designs/uploads/
+designs/guides/
+
+# ── Documentation ──
+docs/
+*.md
+LICENSE
+
+# ── Tests / Scripts ──
+scripts/
+*.sh

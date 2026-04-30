@@ -13,6 +13,7 @@ android/
 .env
 .env.local
 .env.*.local
+.env.docker
 packages/web/.env.production
 
 # Supabase
