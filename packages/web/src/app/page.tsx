@@ -57,7 +57,7 @@ export default function HomePage() {
   const isQuizMode = selectedMode.status === "available";
 
   return (
-    <div className="game-screen items-center justify-start md:justify-center gradient-dark relative overflow-y-auto">
+    <div className="game-screen items-center justify-start md:justify-center gradient-dark relative overflow-y-auto py-8">
       <div className="absolute top-0 left-0 right-0 accent-bar z-20" />
       <BrandedBackground
         imagePath="/designs/backgrounds/Public_One.avif"
@@ -87,9 +87,9 @@ export default function HomePage() {
                   type="button"
                   data-mode-id={mode.id}
                   onClick={() => setSelectedModeId(mode.id)}
-                  className={`home-mode-card rounded-2xl border p-4 transition-all duration-300 game-card ${
+                  className={`home-mode-card rounded-2xl border-2 p-4 transition-all duration-300 game-card ${
                     isSelected
-                      ? "border-[#eecd00]/60 bg-[#eecd00]/12 shadow-[0_0_0_1px_rgba(238,205,0,0.18)]"
+                      ? "border-[#eecd00] bg-[#eecd00]/15 shadow-[0_0_12px_rgba(238,205,0,0.3),0_0_0_1px_rgba(238,205,0,0.4)] ring-1 ring-[#eecd00]/30"
                       : "border-white/10 bg-white/5 hover:border-[#eecd00]/35 hover:bg-white/10"
                   }`}
                 >
