@@ -24,7 +24,7 @@ if (appUrl) {
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  transpilePackages: ["@quizarena/shared"],
+  transpilePackages: ["@tukopamoja/shared"],
 
   // ── Static export mode (GitHub Pages / nginx) ──
   ...(buildMode === "static" && {
