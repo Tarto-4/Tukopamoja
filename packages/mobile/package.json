@@ -1,5 +1,5 @@
 {
-  "name": "@quizarena/mobile",
+  "name": "@tukopamoja/mobile",
   "version": "0.1.0",
   "private": true,
   "main": "expo-router/entry",
@@ -11,7 +11,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@quizarena/shared": "*",
+    "@tukopamoja/shared": "*",
     "@supabase/supabase-js": "^2.49.1",
     "expo": "~52.0.0",
     "expo-constants": "~17.0.0",

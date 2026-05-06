@@ -6,7 +6,7 @@ import { View, Text, Pressable, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import { usePlayerStore } from "../stores/usePlayerStore";
 import { useBrandingStore, buildTheme, withAlpha } from "../stores/useBrandingStore";
-import { MEDALS } from "@quizarena/shared";
+import { MEDALS } from "@tukopamoja/shared";
 
 export default function PlayerGameOver() {
   const router = useRouter();

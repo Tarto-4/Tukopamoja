@@ -2,7 +2,7 @@
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-WORKTREE_DIR="/tmp/quizarena-pages"
+WORKTREE_DIR="/tmp/tukopamoja-pages"
 SOURCE_BRANCH="main"
 TARGET_BRANCH="gh-pages"
 TEMP_BRANCH="gh-pages-clean"

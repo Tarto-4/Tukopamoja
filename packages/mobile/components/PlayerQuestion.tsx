@@ -7,7 +7,7 @@ import { useState, useRef } from "react";
 import { View, Text, Pressable, StyleSheet, Dimensions } from "react-native";
 import { usePlayerStore } from "../stores/usePlayerStore";
 import { useBrandingStore, buildTheme, withAlpha } from "../stores/useBrandingStore";
-import { OPTION_COLORS } from "@quizarena/shared";
+import { OPTION_COLORS } from "@tukopamoja/shared";
 
 const { width: SCREEN_W } = Dimensions.get("window");
 const OPTION_SHAPES = ["▲", "◆", "●", "■"];

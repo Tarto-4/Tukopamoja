@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import QuizBuilder from "@/components/quiz-builder/QuizBuilder";
-import type { Template, Question } from "@quizarena/shared";
+import type { Template, Question } from "@tukopamoja/shared";
 
 export default function EditTemplatePage() {
   const searchParams = useSearchParams();

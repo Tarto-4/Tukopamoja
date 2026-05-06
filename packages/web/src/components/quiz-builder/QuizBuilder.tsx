@@ -8,8 +8,8 @@
 import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import type { Template, Question, QuestionOption } from "@quizarena/shared";
-import { QUESTION_DEFAULTS, OPTION_COLORS } from "@quizarena/shared";
+import type { Template, Question, QuestionOption } from "@tukopamoja/shared";
+import { QUESTION_DEFAULTS, OPTION_COLORS } from "@tukopamoja/shared";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";

@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import { usePlayerStore } from "@/stores/usePlayerStore";
 import { Button } from "@/components/ui/button";
 import WinnerCelebration from "@/components/ui/WinnerCelebration";
-import { MEDALS } from "@quizarena/shared";
+import { MEDALS } from "@tukopamoja/shared";
 import { Trophy, RotateCcw, House, Sparkles, Users, TimerReset } from "lucide-react";
 import BrandedBackground from "@/components/ui/BrandedBackground";
 

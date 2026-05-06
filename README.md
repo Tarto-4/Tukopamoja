@@ -326,7 +326,7 @@ Host Screen                    Player Phone
 │  Generates   │─────────────>│  Scans QR    │
 │  QR with URL:│              │              │
 │  https://    │              │  1. App installed?
-│  domain.com/ │              │     YES → quizarena://join?pin=123456
+│  domain.com/ │              │     YES → tukopamoja://join?pin=123456
 │  join?pin=   │              │     NO  → Opens web /join?pin=123456
 │  123456      │              │            (shows "Download App" + PIN)
 │              │              │              │
@@ -343,7 +343,7 @@ Host Screen                    Player Phone
 ## Project Structure
 
 ```
-quizarena/
+tukopamoja/
 ├── package.json                    # Workspace root
 ├── supabase/
 │   ├── config.toml
@@ -399,8 +399,8 @@ quizarena/
 ### Setup
 
 ```bash
-git clone https://ens.ghe.com/tmongwe/quizarena.git
-cd quizarena
+git clone https://ens.ghe.com/tmongwe/tukopamoja.git
+cd tukopamoja
 npm install
 
 # Start Supabase
@@ -547,18 +547,18 @@ This makes the scoring transparent, competitive, and easy for players to underst
 
 ```bash
 # Option A: Using GitHub CLI (recommended)
-gh repo create quizarena --private --source=. --push
+gh repo create tukopamoja --private --source=. --push
 
 # Option B: Manual
 # 1. Go to https://ens.ghe.com/new
-# 2. Create a new PRIVATE repository named "quizarena"
+# 2. Create a new PRIVATE repository named "tukopamoja"
 # 3. Do NOT add README, .gitignore, or license (we have those already)
 # 4. Then push:
 git init
 git add .
 git commit -m "Initial commit: TUKOPAMOJA monorepo"
 git branch -M main
-git remote add origin https://ens.ghe.com/tmongwe/quizarena.git
+git remote add origin https://ens.ghe.com/tmongwe/tukopamoja.git
 git push -u origin main
 ```
 
@@ -626,7 +626,7 @@ If your enterprise GitHub Pages domain requires authentication, external players
 Use a **public mirror repo** for static hosting:
 
 1. Keep source code in this private enterprise repo
-2. Create a public GitHub.com repo (for example: `tmongwe/quizarena-public`)
+2. Create a public GitHub.com repo (for example: `tmongwe/tukopamoja-public`)
 3. Enable GitHub Pages on the public repo from branch `gh-pages`
 4. Run workflow `.github/workflows/deploy-public-pages.yml` from this repo
 
@@ -655,7 +655,7 @@ PUBLIC_PAGES_REPO=owner/repo npm run deploy:public-pages
 
 ### Step 1 — Confirm repository and default branch
 
-1. Repository exists on enterprise GitHub: `https://ens.ghe.com/tmongwe/quizarena`
+1. Repository exists on enterprise GitHub: `https://ens.ghe.com/tmongwe/tukopamoja`
 2. Default branch is `main`
 3. Your latest local fixes are pushed to `main`
 
@@ -876,7 +876,7 @@ jobs:
 NEXT_PUBLIC_SUPABASE_URL=https://YOUR_PROJECT.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbG...
 NEXT_PUBLIC_APP_URL=https://your-domain.com
-NEXT_PUBLIC_MOBILE_SCHEME=quizarena
+NEXT_PUBLIC_MOBILE_SCHEME=tukopamoja
 ```
 
 ### packages/mobile (via EAS secrets or app.json extra)

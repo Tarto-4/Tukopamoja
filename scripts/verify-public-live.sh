@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-URL="${PUBLIC_LIVE_URL:-https://tarto-4.github.io/quizarena-gh-pages/}"
+URL="${PUBLIC_LIVE_URL:-https://tarto-4.github.io/Tukopamoja/}"
 EXPECTED_TEXT="${PUBLIC_LIVE_EXPECTED_TEXT:-TUKOPAMOJA}"
 FORBIDDEN_TEXT="${PUBLIC_LIVE_FORBIDDEN_TEXT:-QuizArena}"
 MAX_RETRIES="${PUBLIC_LIVE_MAX_RETRIES:-6}"
 SLEEP_SECONDS="${PUBLIC_LIVE_RETRY_SLEEP_SECONDS:-10}"
-TMP_FILE="/tmp/quizarena-public-live-check.html"
+TMP_FILE="/tmp/tukopamoja-public-live-check.html"
 
 if ! [[ "$MAX_RETRIES" =~ ^[0-9]+$ ]] || ! [[ "$SLEEP_SECONDS" =~ ^[0-9]+$ ]]; then
   echo "✗ PUBLIC_LIVE_MAX_RETRIES and PUBLIC_LIVE_RETRY_SLEEP_SECONDS must be integers"

@@ -6,7 +6,7 @@
 import { useEffect, useRef } from "react";
 import { supabase } from "../lib/supabase";
 import { usePlayerStore } from "../stores/usePlayerStore";
-import type { Session, BroadcastEvent } from "@quizarena/shared";
+import type { Session, BroadcastEvent } from "@tukopamoja/shared";
 
 export function usePlayerRealtime() {
   const {

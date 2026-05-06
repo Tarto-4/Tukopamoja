@@ -8,7 +8,7 @@
 import { useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { usePlayerStore } from "@/stores/usePlayerStore";
-import type { Session, SessionPlayer, BroadcastEvent } from "@quizarena/shared";
+import type { Session, SessionPlayer, BroadcastEvent } from "@tukopamoja/shared";
 
 export function usePlayerRealtime(sessionId: string | undefined) {
   const channelRef = useRef<ReturnType<ReturnType<typeof createClient>["channel"]> | null>(null);

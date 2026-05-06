@@ -6,7 +6,7 @@ import { clearCacheKey, getOrLoadCached } from "@/lib/query-cache";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { RefreshCw, ChevronDown, ChevronUp, Download, Trophy, Users, Mail, Trash2, Archive, Eye } from "lucide-react";
-import { MEDALS } from "@quizarena/shared";
+import { MEDALS } from "@tukopamoja/shared";
 
 const SESSIONS_CACHE_KEY = "dashboard:sessions:list";
 

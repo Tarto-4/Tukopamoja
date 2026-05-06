@@ -6,7 +6,7 @@
 
 import { motion } from "framer-motion";
 import { usePlayerStore } from "@/stores/usePlayerStore";
-import { MEDALS } from "@quizarena/shared";
+import { MEDALS } from "@tukopamoja/shared";
 
 export default function PlayerLeaderboard() {
   const { leaderboard, playerId, totalScore, rank } = usePlayerStore();
@@ -26,15 +26,15 @@ export default function PlayerLeaderboard() {
         </div>
 
         {/* My score card */}
-        <div className="glass border border-[#EEDC00]/30 rounded-xl p-4 text-center relative z-10">
-          <p className="text-sm text-muted-foreground">Your Score</p>
-          <p className="text-3xl font-serif font-black text-primary">
+        <div className="glass border border-primary/30 rounded-xl p-4 text-center relative z-10">
+          <p className="text-sm text-muted-foreground uppercase tracking-wider">Your Score</p>
+          <p className="text-4xl font-serif font-black text-primary text-glow-gold mt-1">
             {totalScore.toLocaleString()}
           </p>
         </div>
 
         {/* Rankings */}
-        <div className="space-y-2 relative z-10 rounded-2xl glass p-4 border border-white/15">
+        <div className="space-y-2 relative z-10 rounded-2xl glass p-4 border border-white/12">
           {leaderboard.map((entry, i) => {
             const isMe = entry.player_id === playerId;
             return (
@@ -43,23 +43,21 @@ export default function PlayerLeaderboard() {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: i * 0.05 }}
-                className={`flex items-center gap-3 p-3 rounded-xl ${
-                  isMe ? "bg-[#EEDC00]/10 border border-[#EEDC00]/30" : "bg-white/5 border border-white/10"
-                }`}
+                className={`lb-row ${isMe ? "lb-row--me" : ""}`}
               >
-                <span className="text-lg w-8 text-center font-serif font-black">
+                <span className="text-lg w-8 text-center font-serif font-black shrink-0">
                   {i < 3 ? MEDALS[i] : `#${i + 1}`}
                 </span>
-                <span className="text-xl">{entry.avatar}</span>
-                <span className={`flex-1 font-medium truncate ${isMe ? "text-primary" : ""}`}>
+                <span className="text-xl shrink-0">{entry.avatar}</span>
+                <span className={`flex-1 font-semibold truncate ${isMe ? "text-primary" : ""}`}>
                   {entry.nickname}
-                  {isMe && " (you)"}
+                  {isMe && <span className="text-xs text-muted-foreground ml-1">(you)</span>}
                 </span>
-                <span className="font-serif font-bold tabular-nums">
-                  {entry.score.toLocaleString()}
-                </span>
+                <span className="font-serif font-bold tabular-nums text-sm">{entry.score.toLocaleString()}</span>
                 {entry.streak > 1 && (
-                  <span className="text-xs text-quiz-yellow">🔥{entry.streak}</span>
+                  <span className="text-xs font-bold shrink-0 text-game-streak drop-shadow-[0_0_8px_rgba(255,159,0,0.5)]">
+                    🔥{entry.streak}
+                  </span>
                 )}
               </motion.div>
             );

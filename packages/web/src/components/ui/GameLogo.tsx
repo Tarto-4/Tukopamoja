@@ -70,6 +70,8 @@ export default function GameLogo({
   showSubtitle = false,
 }: GameLogoProps) {
   const config = SIZE_CONFIG[size];
+  const topRotate = ["-rotate-3", "-rotate-1", "rotate-1", "rotate-3"];
+  const bottomRotate = ["-rotate-1", "rotate-1", "-rotate-1", "rotate-1", "-rotate-1", "rotate-1"];
 
   const topLetters = "TUKO".split("");
   const bottomLetters = "PAMOJA".split("");
@@ -89,14 +91,10 @@ export default function GameLogo({
             <span
               key={`top-${i}`}
               className={`${config.topText} font-black tracking-[0.12em] leading-none inline-block
-                text-[#EEDC00] drop-shadow-[0_2px_8px_rgba(238,220,0,0.4)]
+                text-primary drop-shadow-[0_2px_8px_rgba(238,220,0,0.35)] ${topRotate[i] ?? ""}
                 transition-transform duration-300 ease-out
                 ${isStatic ? "" : "group-hover:animate-[letter-bounce_0.5s_ease-out]"}
               `}
-              style={{
-                animationDelay: isStatic ? undefined : `${i * 60}ms`,
-                transform: `rotate(${i === 0 ? -3 : i === 3 ? 3 : i === 1 ? -1 : 1}deg)`,
-              }}
             >
               {letter}
             </span>
@@ -109,12 +107,9 @@ export default function GameLogo({
             <span
               key={`bottom-${i}`}
               className={`${config.bottomText} font-black tracking-[0.18em] leading-none inline-block
-                text-white/90 drop-shadow-[0_1px_4px_rgba(255,255,255,0.15)]
+                text-foreground/85 ${bottomRotate[i] ?? ""}
                 transition-transform duration-300 ease-out
               `}
-              style={{
-                transform: `rotate(${i % 2 === 0 ? -1 : 1}deg)`,
-              }}
             >
               {letter}
             </span>
@@ -125,7 +120,7 @@ export default function GameLogo({
       {/* Subtitle */}
       {showSubtitle && (
         <span
-          className={`${config.subtitleText} uppercase tracking-[0.35em] text-white/40 mt-2 font-medium`}
+          className={`${config.subtitleText} uppercase tracking-[0.35em] text-muted-foreground mt-2 font-medium`}
         >
           ENS Future Edition
         </span>
@@ -149,10 +144,10 @@ export function GameLogoInline({
       role="img"
       aria-label="TUKOPAMOJA"
     >
-      <span className="text-[#EEDC00] drop-shadow-[0_1px_4px_rgba(238,220,0,0.3)]">
+      <span className="text-primary drop-shadow-[0_1px_4px_rgba(238,220,0,0.3)]">
         TUKO
       </span>
-      <span className="text-white/90">PAMOJA</span>
+      <span className="text-foreground/85">PAMOJA</span>
     </span>
   );
 }

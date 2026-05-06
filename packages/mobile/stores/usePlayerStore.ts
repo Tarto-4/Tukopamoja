@@ -5,14 +5,14 @@
 
 import { create } from "zustand";
 import { supabase } from "../lib/supabase";
-import { calculateScore, rankPlayers } from "@quizarena/shared";
+import { calculateScore, rankPlayers } from "@tukopamoja/shared";
 import type {
   Session,
   SessionPlayer,
   QuestionSnapshot,
   LeaderboardEntry,
   SessionStatus,
-} from "@quizarena/shared";
+} from "@tukopamoja/shared";
 
 interface PlayerGameState {
   // Connection

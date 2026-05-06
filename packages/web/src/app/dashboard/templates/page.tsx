@@ -6,7 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 import { clearCacheByPrefix, clearCacheKey, getOrLoadCached } from "@/lib/query-cache";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import type { Template } from "@quizarena/shared";
+import type { Template } from "@tukopamoja/shared";
 import { Plus, FileText, RefreshCw, Trash2 } from "lucide-react";
 
 const TEMPLATES_CACHE_KEY = "dashboard:templates:list";

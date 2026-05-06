@@ -10,7 +10,7 @@
     "noEmit": true,
     "paths": {
       "@/*": ["./*"],
-      "@quizarena/shared": ["../shared/src"]
+      "@tukopamoja/shared": ["../shared/src"]
     }
   },
   "include": ["**/*.ts", "**/*.tsx"],

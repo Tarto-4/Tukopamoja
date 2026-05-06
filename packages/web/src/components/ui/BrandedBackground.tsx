@@ -10,10 +10,10 @@ type BrandedBackgroundProps = {
 
 export default function BrandedBackground({
   className = "",
-  overlayClassName = "bg-black/45",
+  overlayClassName = "bg-black/50",
   imagePath = "/designs/backgrounds/login_background.webp",
   imageClassName = "absolute inset-0 h-full w-full object-cover opacity-100",
-  brandMarkClassName = "absolute inset-0 m-auto h-[420px] w-[420px] object-contain opacity-[0.14]",
+  brandMarkClassName = "absolute inset-0 m-auto h-[420px] w-[420px] object-contain opacity-[0.11]",
 }: BrandedBackgroundProps) {
   return (
     <div className={`absolute inset-0 pointer-events-none overflow-hidden ${className}`} aria-hidden="true">
@@ -23,14 +23,14 @@ export default function BrandedBackground({
         className={imageClassName}
       />
       <div className={`absolute inset-0 ${overlayClassName}`} />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(238,220,0,0.18),_transparent_40%),linear-gradient(180deg,rgba(10,10,10,0.22),rgba(10,10,10,0.68))]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(124,58,237,0.12),_transparent_38%),radial-gradient(circle_at_bottom_right,_rgba(238,220,0,0.10),_transparent_42%),linear-gradient(180deg,rgba(10,10,10,0.18),rgba(10,10,10,0.65))]" />
       <img
         src={withBasePath("/designs/backgrounds/brand-mark-overlay.svg")}
         alt=""
         className={brandMarkClassName}
       />
-      <div className="absolute left-1/2 top-1/3 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-ens-crimson/8 blur-[120px]" />
-      <div className="absolute bottom-[-8%] right-[8%] h-[320px] w-[320px] rounded-full bg-ens-gold/10 blur-[110px]" />
+      <div className="absolute left-1/2 top-1/3 h-[560px] w-[560px] -translate-x-1/2 rounded-full opacity-[0.07] blur-[130px] bg-[radial-gradient(circle,_#7c3aed,_transparent)]" />
+      <div className="absolute bottom-[-5%] right-[5%] h-[340px] w-[340px] rounded-full opacity-[0.09] blur-[115px] bg-[radial-gradient(circle,_#EEDC00,_transparent)]" />
     </div>
   );
 }

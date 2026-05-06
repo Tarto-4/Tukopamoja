@@ -8,7 +8,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useGameStore } from "@/stores/useGameStore";
 import { Button } from "@/components/ui/button";
-import { MEDALS } from "@quizarena/shared";
+import { MEDALS } from "@tukopamoja/shared";
 
 export default function HostLeaderboard() {
   const { session, leaderboard, nextQuestion } = useGameStore();
@@ -42,13 +42,13 @@ export default function HostLeaderboard() {
             initial={{ opacity: 0, x: -40 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: index * 0.08 }}
-            className="flex items-center gap-3 sm:gap-4 rounded-xl p-3 sm:p-4 bg-white/5 border border-white/10"
+            className="lb-row"
           >
             <div className="w-10 text-center">
               {entry.rank <= 3 ? (
                 <span className="text-2xl">{MEDALS[entry.rank - 1]}</span>
               ) : (
-                <span className="text-lg font-serif font-bold text-ens-slate-light">
+                <span className="text-lg font-serif font-bold text-muted-foreground">
                   #{entry.rank}
                 </span>
               )}
@@ -58,12 +58,12 @@ export default function HostLeaderboard() {
                 {entry.avatar} {entry.nickname}
               </p>
               {entry.streak > 1 && (
-                <p className="text-xs text-orange-400">
+                <p className="text-xs font-semibold text-game-streak drop-shadow-[0_0_8px_rgba(255,159,0,0.5)]">
                   🔥 {entry.streak} streak
                 </p>
               )}
             </div>
-            <span className="text-lg sm:text-xl font-serif font-black">
+            <span className="text-lg sm:text-xl font-serif font-black tabular-nums">
               {entry.score.toLocaleString()}
             </span>
           </motion.div>
@@ -85,7 +85,8 @@ export default function HostLeaderboard() {
             setLoading(false);
           }
         }}
-        className="gradient-primary border-0 btn-3d text-black font-semibold relative z-10"
+        variant="game"
+        className="relative z-10"
       >
         {loading
           ? "Loading..."
@@ -95,7 +96,7 @@ export default function HostLeaderboard() {
       </Button>
 
       {error && (
-        <p className="text-sm text-quiz-red text-center mt-3" role="alert">
+        <p className="text-sm text-destructive text-center mt-3 font-medium" role="alert">
           {error}
         </p>
       )}

@@ -42,12 +42,12 @@ export const CHANNELS = {
   PRESENCE: "presence",     // presence:{id}
 } as const;
 
-/** Answer option colors (Kahoot-style) */
+/** Answer option colors — vivid, WCAG-contrast-aware */
 export const OPTION_COLORS = [
-  { bg: "#E21B3C", name: "red", shape: "▲" },
-  { bg: "#1368CE", name: "blue", shape: "◆" },
-  { bg: "#D89E00", name: "yellow", shape: "●" },
-  { bg: "#26890C", name: "green", shape: "■" },
+  { bg: "#E8003E", text: "#ffffff", glow: "rgba(232,0,62,0.55)",  name: "red",    shape: "▲" },
+  { bg: "#0A62FF", text: "#ffffff", glow: "rgba(10,98,255,0.55)", name: "blue",   shape: "◆" },
+  { bg: "#FF9F00", text: "#1a1200", glow: "rgba(255,159,0,0.55)", name: "yellow", shape: "●" },
+  { bg: "#00A854", text: "#ffffff", glow: "rgba(0,168,84,0.55)",  name: "green",  shape: "■" },
 ] as const;
 
 /** Leaderboard medals */

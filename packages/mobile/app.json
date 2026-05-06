@@ -1,11 +1,11 @@
 {
   "expo": {
     "name": "TUKOPAMOJA",
-    "slug": "quizarena",
+    "slug": "tukopamoja",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "scheme": "quizarena",
+    "scheme": "tukopamoja",
     "userInterfaceStyle": "dark",
     "newArchEnabled": true,
     "splash": {
@@ -15,8 +15,8 @@
     },
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.quizarena.player",
-      "associatedDomains": ["applinks:quizarena.example.com"],
+      "bundleIdentifier": "com.tukopamoja.player",
+      "associatedDomains": ["applinks:tukopamoja.example.com"],
       "infoPlist": {
         "NSCameraUsageDescription": "TUKOPAMOJA uses the camera to scan QR codes"
       }
@@ -26,19 +26,19 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#0D1117"
       },
-      "package": "com.quizarena.player",
+      "package": "com.tukopamoja.player",
       "intentFilters": [
         {
           "action": "VIEW",
           "autoVerify": true,
           "data": [
             {
-              "scheme": "quizarena",
+              "scheme": "tukopamoja",
               "host": "*"
             },
             {
               "scheme": "https",
-              "host": "quizarena.example.com",
+              "host": "tukopamoja.example.com",
               "pathPrefix": "/join"
             }
           ],

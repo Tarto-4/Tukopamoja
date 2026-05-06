@@ -16,7 +16,7 @@
 #   Supabase API:    http://localhost:54321
 #   Postgres:        localhost:54322
 
-name: quizarena-dev
+name: tukopamoja-dev
 
 services:
   # ── Next.js dev server ─────────────────────────────────────
@@ -39,7 +39,7 @@ services:
       supabase-db:
         condition: service_healthy
     networks:
-      - quizarena
+      - tukopamoja
 
   # ── PostgreSQL (Supabase-compatible) ───────────────────────
   supabase-db:
@@ -58,7 +58,7 @@ services:
       timeout: 5s
       retries: 10
     networks:
-      - quizarena
+      - tukopamoja
 
   # ── Supabase Studio (optional, for DB inspection) ──────────
   supabase-studio:
@@ -73,12 +73,12 @@ services:
       supabase-db:
         condition: service_healthy
     networks:
-      - quizarena
+      - tukopamoja
 
 volumes:
   supabase-db-data:
     driver: local
 
 networks:
-  quizarena:
+  tukopamoja:
     driver: bridge

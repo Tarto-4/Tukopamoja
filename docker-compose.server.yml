@@ -12,18 +12,20 @@
 #
 #   docker compose -f docker-compose.server.yml up -d --build
 
-name: quizarena-server
+name: tukopamoja-server
 
 services:
   web:
+    image: ${IMAGE_NAME:-tukopamoja-web}:${IMAGE_TAG:-latest}
     build:
       context: .
       dockerfile: Dockerfile.server
+      target: production
       args:
         NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL}
         NEXT_PUBLIC_SUPABASE_ANON_KEY: ${NEXT_PUBLIC_SUPABASE_ANON_KEY}
         NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL}
-        NEXT_PUBLIC_MOBILE_SCHEME: ${NEXT_PUBLIC_MOBILE_SCHEME:-quizarena}
+        NEXT_PUBLIC_MOBILE_SCHEME: ${NEXT_PUBLIC_MOBILE_SCHEME:-tukopamoja}
     ports:
       - "${PORT:-3000}:3000"
     environment:

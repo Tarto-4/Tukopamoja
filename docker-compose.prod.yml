@@ -13,7 +13,7 @@
 #
 #   docker compose -f docker-compose.prod.yml up -d
 
-name: quizarena-prod
+name: tukopamoja-prod
 
 services:
   web:
@@ -24,7 +24,7 @@ services:
         NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL}
         NEXT_PUBLIC_SUPABASE_ANON_KEY: ${NEXT_PUBLIC_SUPABASE_ANON_KEY}
         NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL}
-        NEXT_PUBLIC_MOBILE_SCHEME: ${NEXT_PUBLIC_MOBILE_SCHEME:-quizarena}
+        NEXT_PUBLIC_MOBILE_SCHEME: ${NEXT_PUBLIC_MOBILE_SCHEME:-tukopamoja}
     ports:
       - "${PORT:-3000}:80"
     restart: unless-stopped

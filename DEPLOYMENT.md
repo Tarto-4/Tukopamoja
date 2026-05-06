@@ -74,7 +74,7 @@ All environment variables are injected at **build time** (since the app is a sta
 | `NEXT_PUBLIC_SUPABASE_URL`        | Yes      | Supabase project API URL           | `https://xxx.supabase.co`                  |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY`   | Yes      | Supabase anonymous (public) key    | `eyJhbGciOiJIUzI1NiIs...`                  |
 | `NEXT_PUBLIC_APP_URL`             | Yes      | Public URL of deployed app         | `https://yourdomain.com`                   |
-| `NEXT_PUBLIC_MOBILE_SCHEME`       | No       | Mobile deep-link scheme            | `quizarena` (default)                      |
+| `NEXT_PUBLIC_MOBILE_SCHEME`       | No       | Mobile deep-link scheme            | `tukopamoja` (default)                      |
 
 ### File Layout
 
@@ -134,17 +134,17 @@ docker build \
   --build-arg NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co \
   --build-arg NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ... \
   --build-arg NEXT_PUBLIC_APP_URL=https://yourdomain.com \
-  -t quizarena-web .
+  -t tukopamoja-web .
 
 # Run it
-docker run -d -p 3000:80 --name quizarena quizarena-web
+docker run -d -p 3000:80 --name tukopamoja tukopamoja-web
 
 # Verify
 curl http://localhost:3000/healthz
 # → ok
 ```
 
-### Option B: Server Mode (Next.js standalone — recommended for shipment)
+### Option B: Server Mode (recommended for production shipment)
 
 When deploying to another system that does **not** use static hosting, use the server Dockerfile. This runs Next.js as a full Node.js server with SSR capabilities.
 
@@ -154,23 +154,42 @@ docker build -f Dockerfile.server \
   --build-arg NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co \
   --build-arg NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ... \
   --build-arg NEXT_PUBLIC_APP_URL=https://yourdomain.com \
-  -t quizarena-web .
+  -t tukopamoja-web .
 
 # Run
-docker run -d -p 3000:3000 --name quizarena quizarena-web
+docker run -d -p 3000:3000 --name tukopamoja tukopamoja-web
 
 # Verify
 curl http://localhost:3000/
 ```
 
-Or with Compose:
+Or with Compose (recommended handoff flow):
 
 ```bash
-export NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
-export NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
-export NEXT_PUBLIC_APP_URL=https://yourdomain.com
+# 1) Prepare env file once
+cp .env.container.example .env.container
+# Edit .env.container values
+
+# 2) Load env and build/run tagged image
+set -a
+source .env.container
+set +a
 
 docker compose -f docker-compose.server.yml up -d --build
+
+# 3) Check health
+docker compose -f docker-compose.server.yml ps
+curl http://localhost:${PORT:-3000}/
+```
+
+Push to registry after build:
+
+```bash
+set -a
+source .env.container
+set +a
+
+docker push ${IMAGE_NAME}:${IMAGE_TAG}
 ```
 
 ### Option C: Docker Compose — static/nginx (Production)
@@ -213,7 +232,7 @@ The project supports two build modes controlled by `BUILD_MODE` env var in `next
 
 ### Container Details
 
-| Property          | Static (nginx)           | Server (standalone)          |
+| Property          | Static (nginx)           | Server (Next.js runtime)     |
 |-------------------|--------------------------|------------------------------|
 | Base image        | `nginx:1.27-alpine`      | `node:20-alpine`             |
 | Exposed port      | 80                       | 3000                         |
@@ -275,7 +294,7 @@ deploy-docker  → GitHub Container Registry (manual trigger)
 
 ```bash
 # Trigger from GitHub UI: Actions → Deploy → Run workflow → target: docker-registry
-# Image is pushed to: ghcr.io/<owner>/quizarena/web:latest
+# Image is pushed to: ghcr.io/<owner>/tukopamoja/web:latest
 ```
 
 ---
@@ -338,13 +357,13 @@ npm run db:types
 
 ```bash
 # Check container health
-docker inspect --format='{{.State.Health.Status}}' quizarena
+docker inspect --format='{{.State.Health.Status}}' tukopamoja
 
 # View logs
-docker logs quizarena --tail 50 -f
+docker logs tukopamoja --tail 50 -f
 
 # Resource usage
-docker stats quizarena --no-stream
+docker stats tukopamoja --no-stream
 ```
 
 ---
@@ -377,7 +396,7 @@ docker build --build-arg NEXT_PUBLIC_APP_URL=https://yourdomain.com ...
 
 ```bash
 # Change the host port mapping
-docker run -p 8080:80 quizarena-web
+docker run -p 8080:80 tukopamoja-web
 # Or set PORT in docker-compose.prod.yml
 PORT=8080 docker compose -f docker-compose.prod.yml up -d
 ```
@@ -395,3 +414,55 @@ Before shipping to another system:
 - [ ] Configure Supabase project (apply migrations)
 - [ ] Set GitHub Secrets for CI/CD
 - [ ] Test the deployed application end-to-end
+
+---
+
+## Quick Local Container Build
+
+Use the helper script to build (and optionally push) the production container:
+
+```bash
+# 1) Create env file
+cp .env.container.example .env.container
+# Edit .env.container with production values
+
+# 2) Build image locally
+./scripts/build-container.sh
+
+# 3) Build and load into local Docker
+./scripts/build-container.sh --load
+
+# 4) Build and push to registry
+./scripts/build-container.sh --push
+
+# 5) Run locally
+docker run -d -p 3000:3000 --name tukopamoja tukopamoja-web:latest
+curl http://localhost:3000/
+```
+
+### Transfer Without Registry (Tarball)
+
+```bash
+# Save image to file
+docker save tukopamoja-web:latest | gzip > tukopamoja-web.tar.gz
+
+# On target host
+docker load < tukopamoja-web.tar.gz
+docker run -d -p 3000:3000 --name tukopamoja tukopamoja-web:latest
+```
+
+---
+
+## Rollback
+
+```bash
+# List available image tags
+docker image ls tukopamoja-web
+
+# Roll back to a previous tag
+docker compose -f docker-compose.server.yml down
+IMAGE_TAG=<previous-tag> docker compose -f docker-compose.server.yml up -d
+
+# Or pull a specific SHA tag from registry
+docker pull ghcr.io/<owner>/tukopamoja/web:sha-<commit>
+```

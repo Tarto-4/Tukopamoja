@@ -5,7 +5,7 @@
 
 import { create } from "zustand";
 import { supabase } from "../lib/supabase";
-import type { Organization } from "@quizarena/shared";
+import type { Organization } from "@tukopamoja/shared";
 
 interface BrandingState {
   branding: Organization | null;

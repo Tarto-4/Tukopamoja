@@ -41,7 +41,7 @@ jobs:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
           NEXT_PUBLIC_APP_URL: ${{ vars.NEXT_PUBLIC_APP_URL }}
-          NEXT_PUBLIC_MOBILE_SCHEME: quizarena
+          NEXT_PUBLIC_MOBILE_SCHEME: tukopamoja
         run: node scripts/validate-env.mjs --production
 
       - name: Build static export
@@ -49,7 +49,7 @@ jobs:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
           NEXT_PUBLIC_APP_URL: ${{ vars.NEXT_PUBLIC_APP_URL }}
-          NEXT_PUBLIC_MOBILE_SCHEME: quizarena
+          NEXT_PUBLIC_MOBILE_SCHEME: tukopamoja
         run: npm -w packages/web run build
 
       - name: Add .nojekyll

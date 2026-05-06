@@ -117,7 +117,8 @@ function JoinPageContent() {
               value={pin}
               onChange={(e) => setPin(e.target.value.replace(/\D/g, ""))}
               className="w-full h-14 text-center text-3xl font-serif font-black tracking-[0.3em]
-                         rounded-xl border border-white/15 bg-white/5 px-4 text-white caret-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-[#EEDC00]/20 focus:border-[#EEDC00]/50"
+                         rounded-xl border border-border bg-input px-4 text-foreground caret-primary
+                         placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-ring/40 focus:border-primary/60 transition-colors"
               autoFocus={!initialPin}
             />
           </div>
@@ -135,7 +136,7 @@ function JoinPageContent() {
                 placeholder="First name"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
-                className="w-full h-12 rounded-xl border border-white/15 bg-white/5 px-4 text-base font-medium text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-[#EEDC00]/20 focus:border-[#EEDC00]/50"
+                className="w-full h-12 rounded-xl border border-border bg-input px-4 text-base font-medium text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-ring/40 focus:border-primary/60 transition-colors"
                 autoFocus={!!initialPin}
               />
             </div>
@@ -150,7 +151,7 @@ function JoinPageContent() {
                 placeholder="Surname"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
-                className="w-full h-12 rounded-xl border border-white/15 bg-white/5 px-4 text-base font-medium text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-[#EEDC00]/20 focus:border-[#EEDC00]/50"
+                className="w-full h-12 rounded-xl border border-border bg-input px-4 text-base font-medium text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-ring/40 focus:border-primary/60 transition-colors"
               />
             </div>
           </div>
@@ -167,14 +168,14 @@ function JoinPageContent() {
               placeholder="you@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full h-12 rounded-xl border border-white/15 bg-white/5 px-4 text-base font-medium text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-[#EEDC00]/20 focus:border-[#EEDC00]/50"
+              className="w-full h-12 rounded-xl border border-border bg-input px-4 text-base font-medium text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-ring/40 focus:border-primary/60 transition-colors"
               autoComplete="email"
             />
           </div>
 
           {/* Error */}
           {error && (
-            <p className="text-sm text-quiz-red text-center">{error}</p>
+            <p className="text-sm text-destructive text-center font-medium" role="alert">{error}</p>
           )}
 
           {/* Submit */}
@@ -182,7 +183,8 @@ function JoinPageContent() {
             type="submit"
             size="xl"
             disabled={joining}
-            className="w-full gradient-primary border-0 text-lg btn-3d text-black font-semibold"
+            variant="game"
+            className="w-full text-lg"
           >
             {joining ? (
               "Joining..."

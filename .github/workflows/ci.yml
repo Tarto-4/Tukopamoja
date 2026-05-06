@@ -54,7 +54,7 @@ jobs:
       NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'http://localhost:54321' }}
       NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'ci-test-key' }}
       NEXT_PUBLIC_APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL || 'http://localhost:3000' }}
-      NEXT_PUBLIC_MOBILE_SCHEME: quizarena
+      NEXT_PUBLIC_MOBILE_SCHEME: tukopamoja
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -93,12 +93,13 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build Docker image (test only)
+      - name: Build Docker image (test only — server mode)
         uses: docker/build-push-action@v5
         with:
           context: .
+          file: Dockerfile.server
           push: false
-          tags: quizarena-web:ci-${{ github.sha }}
+          tags: tukopamoja-web:ci-${{ github.sha }}
           build-args: |
             NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'http://localhost:54321' }}
             NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'ci-test-key' }}

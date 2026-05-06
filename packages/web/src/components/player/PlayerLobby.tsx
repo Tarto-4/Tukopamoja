@@ -47,16 +47,16 @@ export default function PlayerLobby() {
           <div className="flex flex-col items-center gap-3 pt-2">
             <Button
               size="lg"
+              variant={isReady ? "game" : "game-outline"}
               onClick={() => toggleReady(!isReady)}
-              className={isReady ? "gradient-primary border-0 btn-3d text-black font-semibold" : "w-full sm:w-auto border-[#EEDC00]/30 bg-[#EEDC00]/10 text-[#EEDC00] hover:bg-[#EEDC00]/20"}
-              variant={isReady ? "default" : "outline"}
+              className="w-full sm:w-auto"
             >
               {isReady ? (
                 <CheckCircle2 className="w-4 h-4 mr-2" />
               ) : (
                 <Circle className="w-4 h-4 mr-2" />
               )}
-              {isReady ? "Ready" : "Mark me ready"}
+              {isReady ? "Ready ✓" : "Mark me ready"}
             </Button>
             <p className="text-xs text-muted-foreground">
               Host start is blocked until all joined players are ready.
@@ -77,10 +77,10 @@ export default function PlayerLobby() {
               {players.map((p) => (
                 <span
                   key={p.id}
-                  className={`px-3 py-1.5 rounded-full text-sm font-medium ${
+                  className={`px-3 py-1.5 rounded-full text-sm font-semibold transition-colors ${
                     p.id === playerId
-                      ? "bg-[#EEDC00] text-black"
-                      : "bg-white/5 border border-white/10"
+                      ? "bg-primary text-primary-foreground shadow-md"
+                      : "bg-secondary text-secondary-foreground border border-border"
                   }`}
                 >
                   {p.avatar} {p.first_name} {p.last_name}{p.is_ready ? " ✓" : ""}

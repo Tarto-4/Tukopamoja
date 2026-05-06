@@ -5,7 +5,7 @@
 import { View, Text, FlatList, StyleSheet } from "react-native";
 import { usePlayerStore } from "../stores/usePlayerStore";
 import { useBrandingStore, buildTheme, withAlpha } from "../stores/useBrandingStore";
-import { MEDALS } from "@quizarena/shared";
+import { MEDALS } from "@tukopamoja/shared";
 
 export default function PlayerLeaderboard() {
   const { leaderboard, myRank, myScore, playerId } = usePlayerStore();

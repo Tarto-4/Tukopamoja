@@ -38,7 +38,7 @@ jobs:
       NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
       NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
       NEXT_PUBLIC_APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL }}
-      NEXT_PUBLIC_MOBILE_SCHEME: quizarena
+      NEXT_PUBLIC_MOBILE_SCHEME: tukopamoja
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
@@ -65,7 +65,10 @@ jobs:
   deploy-docker:
     name: Build & Push Docker Image
     runs-on: ubuntu-latest
-    if: github.event.inputs.target == 'docker-registry' || github.event.inputs.target == 'both'
+    if: |
+      github.event_name == 'push' ||
+      github.event.inputs.target == 'docker-registry' ||
+      github.event.inputs.target == 'both'
     permissions:
       packages: write
       contents: read
@@ -92,6 +95,7 @@ jobs:
             type=sha
             type=ref,event=branch
             type=raw,value=latest
+            type=semver,pattern={{version}}
 
       - name: Build and push
         uses: docker/build-push-action@v5
@@ -107,3 +111,6 @@ jobs:
             NEXT_PUBLIC_APP_URL=${{ secrets.NEXT_PUBLIC_APP_URL }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: Print image digest
+        run: echo "Image pushed with digest ${{ steps.meta.outputs.digest }}"

@@ -1,4 +1,4 @@
-project_id = "quizarena"
+project_id = "tukopamoja"
 
 [api]
 port = 54321
@@ -13,13 +13,13 @@ major_version = 15
 port = 54323
 
 [auth]
-site_url = "https://tarto-4.github.io/quizarena-public"
+site_url = "https://tarto-4.github.io/Tukopamoja"
 additional_redirect_urls = [
-	"https://tarto-4.github.io/quizarena-public",
-	"https://tarto-4.github.io/quizarena-public/**",
+	"https://tarto-4.github.io/Tukopamoja",
+	"https://tarto-4.github.io/Tukopamoja/**",
 	"http://localhost:3000",
 	"http://localhost:3000/auth/callback",
-	"quizarena://auth/callback"
+	"tukopamoja://auth/callback"
 ]
 
 [auth.email]

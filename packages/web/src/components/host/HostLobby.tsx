@@ -207,7 +207,8 @@ export default function HostLobby() {
           size="xl"
           onClick={handleStart}
           disabled={loading}
-          className="gradient-primary border-0 text-xl btn-3d text-black font-semibold"
+          variant="game"
+          className="text-xl w-full max-w-xs"
         >
           <Play className="w-5 h-5 mr-2" />
           {loading
@@ -216,7 +217,7 @@ export default function HostLobby() {
         </Button>
 
         {error && (
-          <p className="text-sm text-quiz-red text-center" role="alert">
+          <p className="text-sm text-destructive text-center font-medium" role="alert">
             {error}
           </p>
         )}

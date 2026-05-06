@@ -10,7 +10,7 @@ import type {
   SessionPlayer,
   QuestionSnapshot,
   LeaderboardEntry,
-} from "@quizarena/shared";
+} from "@tukopamoja/shared";
 
 interface GameState {
   session: Session | null;

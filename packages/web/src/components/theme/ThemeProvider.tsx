@@ -13,7 +13,7 @@ type ThemeContextValue = {
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
-const THEME_STORAGE_KEY = "quizarena_theme";
+const THEME_STORAGE_KEY = "tukopamoja_theme";
 
 function applyTheme(theme: Theme) {
   const html = document.documentElement;

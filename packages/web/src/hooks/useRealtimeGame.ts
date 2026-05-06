@@ -8,7 +8,7 @@
 import { useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useGameStore } from "@/stores/useGameStore";
-import type { Session, SessionPlayer, BroadcastEvent } from "@quizarena/shared";
+import type { Session, SessionPlayer, BroadcastEvent } from "@tukopamoja/shared";
 
 type Role = "host" | "player";
 

@@ -1,7 +1,7 @@
 // ─────────────────────────────────────────────────────────────
 // TUKOPAMOJA Mobile — Deep Linking Configuration
-// Handles QR code deep links: quizarena://join?pin=123456
-// and universal links: https://quizarena.example.com/join?pin=123456
+// Handles QR code deep links: tukopamoja://join?pin=123456
+// and universal links: https://tukopamoja.example.com/join?pin=123456
 // ─────────────────────────────────────────────────────────────
 
 import * as Linking from "expo-linking";
@@ -9,8 +9,8 @@ import * as Linking from "expo-linking";
 /**
  * Parse a deep link URL and extract the game PIN.
  * Supports:
- *  - quizarena://join?pin=123456
- *  - https://quizarena.example.com/join?pin=123456
+ *  - tukopamoja://join?pin=123456
+ *  - https://tukopamoja.example.com/join?pin=123456
  *  - https://host.example.com/join?pin=123456 (web fallback)
  */
 export function extractPinFromUrl(url: string): string | null {
@@ -47,5 +47,5 @@ export function buildJoinUrl(pin: string, webHost: string): string {
  * Build the native app deep link (for QR code target).
  */
 export function buildAppDeepLink(pin: string): string {
-  return `quizarena://join?pin=${pin}`;
+  return `tukopamoja://join?pin=${pin}`;
 }

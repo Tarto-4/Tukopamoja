@@ -8,17 +8,17 @@
 import { create } from "zustand";
 import { createClient } from "@/lib/supabase/client";
 import { clearSessionQueryCache } from "@/lib/query-cache";
-import { calculateScore } from "@quizarena/shared";
+import { calculateScore } from "@tukopamoja/shared";
 import type {
   Session,
   SessionPlayer,
   QuestionSnapshot,
   LeaderboardEntry,
-} from "@quizarena/shared";
+} from "@tukopamoja/shared";
 
 // ─── Persisted player identity ──────────────────────────────
 
-const STORAGE_KEY = "quizarena_player";
+const STORAGE_KEY = "tukopamoja_player";
 
 interface StoredPlayer {
   playerId: string;

@@ -7,17 +7,25 @@
 
 import { motion } from "framer-motion";
 import { usePlayerStore } from "@/stores/usePlayerStore";
-import { OPTION_COLORS } from "@quizarena/shared";
+import { OPTION_COLORS } from "@tukopamoja/shared";
 import { CheckCircle, XCircle, Clock } from "lucide-react";
 import BrandedBackground from "@/components/ui/BrandedBackground";
 
 const BAR_WIDTH_CLASSES = ["w-[4%]", "w-[12%]", "w-[24%]", "w-[36%]", "w-[48%]", "w-[60%]", "w-[72%]", "w-[84%]", "w-full"];
+const ANSWER_BG_CLASSES = ["bg-quiz-red", "bg-quiz-blue", "bg-quiz-yellow", "bg-quiz-green"];
+const ANSWER_SELECTED_SHADOW_CLASSES = [
+  "shadow-[0_0_0_3px_rgba(255,255,255,0.85),0_6px_0_rgba(0,0,0,0.38),0_0_24px_rgba(232,0,62,0.55)]",
+  "shadow-[0_0_0_3px_rgba(255,255,255,0.85),0_6px_0_rgba(0,0,0,0.38),0_0_24px_rgba(10,98,255,0.55)]",
+  "shadow-[0_0_0_3px_rgba(255,255,255,0.85),0_6px_0_rgba(0,0,0,0.38),0_0_24px_rgba(255,159,0,0.55)]",
+  "shadow-[0_0_0_3px_rgba(255,255,255,0.85),0_6px_0_rgba(0,0,0,0.38),0_0_24px_rgba(0,168,84,0.55)]",
+];
 
 function bucketBarWidth(percent: number) {
   if (percent <= 0) return BAR_WIDTH_CLASSES[0];
   const bucket = Math.min(BAR_WIDTH_CLASSES.length - 1, Math.floor(percent / 12.5));
   return BAR_WIDTH_CLASSES[bucket];
 }
+
 
 export default function PlayerQuestion() {
   const {
@@ -47,43 +55,48 @@ export default function PlayerQuestion() {
         <div className="absolute top-0 left-0 right-0 accent-bar z-20" />
         <BrandedBackground imagePath="/designs/backgrounds/Sessions.avif" className="z-0" />
         <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
+          initial={{ scale: 0.75, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
+          transition={{ type: "spring", stiffness: 280, damping: 22 }}
           className="text-center space-y-6 max-w-md w-full relative z-10"
         >
           {answerResult.isCorrect ? (
             <>
-              <CheckCircle className="w-20 h-20 mx-auto text-quiz-green" />
-              <h2 className="text-3xl font-serif font-black text-quiz-green">
-                Correct!
+              <div className="relative inline-block">
+                <CheckCircle className="w-[88px] h-[88px] mx-auto text-game-correct drop-shadow-[0_0_28px_rgba(0,201,110,0.7)]" />
+              </div>
+              <h2 className="text-4xl font-serif font-black text-game-correct drop-shadow-[0_0_28px_rgba(0,201,110,0.5)]">
+                Correct! ✓
               </h2>
             </>
           ) : (
             <>
-              <XCircle className="w-20 h-20 mx-auto text-quiz-red" />
-              <h2 className="text-3xl font-serif font-black text-quiz-red">
-                Wrong
+              <XCircle className="w-20 h-20 mx-auto text-game-wrong drop-shadow-[0_0_24px_rgba(255,36,83,0.65)]" />
+              <h2 className="text-4xl font-serif font-black text-game-wrong drop-shadow-[0_0_24px_rgba(255,36,83,0.5)]">
+                Wrong ✗
               </h2>
             </>
           )}
 
-          <div className="glass rounded-2xl p-6 space-y-3 border border-white/15">
-            <p className="text-sm text-white/70">Points earned</p>
-            <p className="text-4xl font-serif font-black">
-              +{answerResult.pointsAwarded}
+          <div className="glass rounded-2xl p-6 space-y-4 border border-white/15">
+            <p className="text-sm text-muted-foreground uppercase tracking-wider">Points earned</p>
+            <p className="text-5xl font-serif font-black text-primary text-glow-gold">
+              +{answerResult.pointsAwarded.toLocaleString()}
             </p>
-            <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground">
-              <span>Total: {answerResult.totalScore}</span>
+            <div className="flex items-center justify-center gap-5 text-sm">
+              <span className="text-muted-foreground">
+                Total: <span className="font-bold text-foreground">{answerResult.totalScore.toLocaleString()}</span>
+              </span>
               {answerResult.streak > 1 && (
-                <span className="text-quiz-yellow">
-                  🔥 {answerResult.streak} streak
+                <span className="font-bold text-game-streak drop-shadow-[0_0_12px_rgba(255,159,0,0.6)]">
+                  🔥 {answerResult.streak}× streak
                 </span>
               )}
             </div>
           </div>
 
-          <p className="text-muted-foreground text-sm animate-pulse">
-            Waiting for presenter...
+          <p className="text-muted-foreground text-sm game-pulse">
+            Waiting for presenter…
           </p>
         </motion.div>
       </div>
@@ -104,8 +117,8 @@ export default function PlayerQuestion() {
           <Clock className="w-20 h-20 mx-auto text-muted-foreground" />
           <h2 className="text-3xl font-serif font-black">Time&apos;s Up!</h2>
           <p className="text-muted-foreground">You didn&apos;t answer in time</p>
-          <p className="text-muted-foreground text-sm animate-pulse">
-            Waiting for presenter...
+          <p className="text-muted-foreground text-sm game-pulse">
+            Waiting for presenter…
           </p>
         </motion.div>
       </div>
@@ -114,18 +127,29 @@ export default function PlayerQuestion() {
 
   // Show question + options
   return (
-    <div className="game-screen p-4 gradient-dark relative overflow-hidden">
+    <div className="game-screen p-3 gradient-dark relative overflow-hidden">
       <div className="absolute top-0 left-0 right-0 accent-bar z-20" />
       <BrandedBackground imagePath="/designs/backgrounds/Sessions.avif" className="z-0" />
-      <div className="relative z-10 mb-3 rounded-2xl glass px-4 py-3 border border-white/15">
-        <div className="flex items-center justify-between">
-          <span className="text-xs uppercase tracking-wider text-white/60">Question {qIndex + 1} of {totalQuestions}</span>
-          <div className={`text-2xl sm:text-3xl font-serif font-black ${timeLeft <= 5 ? "text-quiz-red animate-pulse" : "text-white"}`}>
+
+      {/* Progress / timer header */}
+      <div className="relative z-10 mb-3 rounded-2xl glass px-4 py-3 border border-white/12">
+        <div className="flex items-center justify-between mb-2.5">
+          <span className="text-xs uppercase tracking-widest text-muted-foreground">
+            Q {qIndex + 1} / {totalQuestions}
+          </span>
+          <span
+            className={`text-2xl sm:text-3xl font-serif font-black tabular-nums ${
+              timeLeft <= 5 ? "animate-[timer-critical_0.6s_ease-in-out_infinite]" : "text-foreground"
+            }`}
+          >
             {smoothTimerLabel}
-          </div>
+          </span>
         </div>
-        <div className="mt-3 h-2 rounded-full bg-white/10 overflow-hidden">
-          <div className={`h-full gradient-primary transition-all duration-300 ${bucketBarWidth(progress)}`} />
+        {/* Timer progress bar */}
+        <div className="timer-bar-track">
+          <div
+            className={`timer-bar-fill ${timeLeft <= 5 ? "timer-bar-fill--critical" : ""} ${bucketBarWidth(progress)}`}
+          />
         </div>
       </div>
 
@@ -134,45 +158,44 @@ export default function PlayerQuestion() {
         key={qIndex}
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="glass rounded-2xl p-5 text-center mb-4 border border-white/15 relative z-10"
+        className="glass rounded-2xl p-5 text-center mb-3 border border-white/12 relative z-10"
       >
-        <h2 className="text-lg sm:text-xl font-serif font-bold leading-tight">
+        <h2 className="text-lg sm:text-xl font-serif font-bold leading-snug">
           {currentQuestion.question_text}
         </h2>
         {currentQuestion.image_url && (
           <img
             src={currentQuestion.image_url}
             alt=""
-            className="max-h-32 mx-auto mt-3 rounded-lg object-contain"
+            className="max-h-36 mx-auto mt-3 rounded-xl object-contain"
           />
         )}
       </motion.div>
 
-      {/* Options — compact tappable buttons */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 flex-1 relative z-10">
+      {/* Answer tiles */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 flex-1 relative z-10">
         {currentQuestion.options.map((opt, i) => {
           const color = OPTION_COLORS[i];
           const isSelected = selectedOption === i;
+          const isYellow = color.name === "yellow";
+          const bgClass = ANSWER_BG_CLASSES[i] ?? "bg-primary";
+          const selectedShadowClass = ANSWER_SELECTED_SHADOW_CLASSES[i] ?? "";
           return (
             <motion.button
               key={i}
-              initial={{ opacity: 0, y: 12 }}
+              initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.04 }}
+              transition={{ delay: i * 0.05 }}
               onClick={() => submitAnswer(i)}
               disabled={hasAnswered}
-              style={{ backgroundColor: color.bg }}
-              className={`rounded-xl px-4 py-3 text-left text-white
-                        font-sans font-semibold text-base shadow-md active:scale-[0.97] border border-white/10
-                        transition-transform disabled:opacity-50 ${isSelected ? "ring-2 ring-white/80" : ""}`}
+              className={`answer-btn ${bgClass} ${isYellow ? "answer-btn--yellow" : ""} ${isSelected ? `answer-btn--selected ${selectedShadowClass}` : "shadow-[0_4px_0_rgba(0,0,0,0.38)]"}`}
+              aria-pressed={isSelected}
             >
-              <div className="flex items-center justify-between gap-2 w-full">
-                <div className="flex items-center gap-2 min-w-0">
-                  <span className="opacity-80 text-lg shrink-0">{color.shape}</span>
-                  <span className="line-clamp-2 text-sm sm:text-base leading-snug">{opt.text}</span>
-                </div>
-                {isSelected && <span className="text-xs text-white/90 shrink-0">✓</span>}
-              </div>
+              <span className="answer-btn__shape" aria-hidden="true">{color.shape}</span>
+              <span className="answer-btn__text">{opt.text}</span>
+              {isSelected && (
+                <span className="ml-1 text-base shrink-0" aria-hidden="true">✓</span>
+              )}
             </motion.button>
           );
         })}

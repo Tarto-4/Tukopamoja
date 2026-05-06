@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { animate, remove, stagger } from "animejs";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { withBasePath } from "@/lib/base-path";
@@ -49,6 +50,7 @@ const GAME_MODES: GameMode[] = [
 
 export default function HomePage() {
   const [selectedModeId, setSelectedModeId] = useState<GameMode["id"]>("quiz");
+  const rootRef = useRef<HTMLDivElement | null>(null);
 
   const selectedMode = useMemo(
     () => GAME_MODES.find((mode) => mode.id === selectedModeId) ?? GAME_MODES[0],
@@ -57,8 +59,41 @@ export default function HomePage() {
 
   const isQuizMode = selectedMode.status === "available";
 
+  useEffect(() => {
+    if (!rootRef.current) return;
+    animate(rootRef.current.querySelectorAll(".home-mode-card"), {
+      opacity: [0, 1],
+      translateY: [18, 0],
+      scale: [0.98, 1],
+      delay: stagger(70),
+      duration: 460,
+      ease: "outCubic",
+    });
+
+    animate(rootRef.current.querySelectorAll(".home-cta"), {
+      opacity: [0, 1],
+      translateY: [10, 0],
+      delay: stagger(80, { start: 180 }),
+      duration: 380,
+      ease: "outQuad",
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!rootRef.current) return;
+    const activeCard = rootRef.current.querySelector(`[data-mode-id=\"${selectedModeId}\"]`);
+    if (!activeCard) return;
+
+    remove(activeCard);
+    animate(activeCard, {
+      scale: [1, 1.03, 1],
+      duration: 260,
+      ease: "outQuad",
+    });
+  }, [selectedModeId]);
+
   return (
-    <div className="game-screen items-center justify-center gradient-dark relative overflow-hidden">
+    <div ref={rootRef} className="game-screen items-center justify-center gradient-dark relative overflow-hidden">
       <div className="absolute top-0 left-0 right-0 accent-bar z-20" />
       <BrandedBackground
         imagePath="/designs/backgrounds/Public_One.avif"
@@ -86,8 +121,9 @@ export default function HomePage() {
                 <button
                   key={mode.id}
                   type="button"
+                  data-mode-id={mode.id}
                   onClick={() => setSelectedModeId(mode.id)}
-                  className={`rounded-2xl border p-4 transition-all duration-300 game-card ${
+                  className={`home-mode-card rounded-2xl border p-4 transition-all duration-300 game-card ${
                     isSelected
                       ? "border-[#EEDC00]/60 bg-[#EEDC00]/12 shadow-[0_0_0_1px_rgba(238,220,0,0.18)]"
                       : "border-white/10 bg-white/5 hover:border-[#EEDC00]/35 hover:bg-white/10"
@@ -108,10 +144,10 @@ export default function HomePage() {
                     </span>
                   </div>
                   <div className="mt-4 space-y-2">
-                    <h2 className="text-lg font-serif font-bold text-foreground dark:text-white">
+                    <h2 className="text-lg font-serif font-bold text-foreground">
                       {mode.name}
                     </h2>
-                    <p className="text-sm text-foreground/70 dark:text-white/70 leading-relaxed">
+                    <p className="text-sm text-muted-foreground leading-relaxed">
                       {mode.description}
                     </p>
                   </div>
@@ -122,8 +158,8 @@ export default function HomePage() {
         </div>
 
         <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 max-w-3xl mx-auto">
-          <p className="text-sm font-semibold text-foreground dark:text-white">Selected mode: {selectedMode.name}</p>
-          <p className="text-sm text-foreground/70 dark:text-white/70 mt-1">
+          <p className="text-sm font-semibold text-foreground">Selected mode: {selectedMode.name}</p>
+          <p className="text-sm text-muted-foreground mt-1">
             {isQuizMode
               ? "Quiz mode is fully available right now with multiplayer host and player flows."
               : `${selectedMode.name} is planned as a multiplayer mode and is marked coming soon for now.`}
@@ -136,7 +172,8 @@ export default function HomePage() {
               <Link href="/auth/login">
                 <Button
                   size="xl"
-                  className="w-full sm:w-auto gradient-primary border-0 btn-3d text-black font-semibold tracking-wide hover:opacity-90"
+                  variant="game"
+                  className="home-cta w-full sm:w-auto tracking-wide"
                 >
                   Host Quiz Game
                 </Button>
@@ -144,8 +181,8 @@ export default function HomePage() {
               <Link href="/join">
                 <Button
                   size="xl"
-                  variant="outline"
-                  className="w-full sm:w-auto border-[#EEDC00]/30 text-foreground dark:text-white hover:border-[#EEDC00]/50 hover:bg-black/5 dark:hover:bg-[#EEDC00]/10 transition-all duration-300"
+                  variant="game-outline"
+                  className="home-cta w-full sm:w-auto"
                 >
                   Join as Player
                 </Button>
@@ -155,16 +192,17 @@ export default function HomePage() {
             <>
               <Button
                 size="xl"
+                variant="game"
                 disabled
-                className="w-full sm:w-auto gradient-primary border-0 btn-3d text-black font-semibold tracking-wide opacity-70"
+                className="home-cta w-full sm:w-auto tracking-wide opacity-60"
               >
                 {selectedMode.name} Coming Soon
               </Button>
               <Button
                 size="xl"
-                variant="outline"
+                variant="game-outline"
                 disabled
-                className="w-full sm:w-auto border-[#EEDC00]/30 text-foreground dark:text-white opacity-70"
+                className="home-cta w-full sm:w-auto opacity-60"
               >
                 Multiplayer setup coming soon
               </Button>
@@ -173,10 +211,10 @@ export default function HomePage() {
         </div>
 
         <div className="pt-4 space-y-2">
-          <p className="text-xs text-foreground/55 dark:text-ens-slate-light/60 uppercase tracking-[0.2em]">
+          <p className="text-xs text-muted-foreground uppercase tracking-[0.2em]">
             Powered by ENS Africa
           </p>
-          <div className="w-12 h-[1px] mx-auto bg-gradient-to-r from-transparent via-ens-crimson/40 to-transparent" />
+          <div className="w-12 h-[1px] mx-auto bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
         </div>
       </div>
     </div>

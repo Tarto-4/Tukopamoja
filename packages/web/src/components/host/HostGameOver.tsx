@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { useGameStore } from "@/stores/useGameStore";
 import { Button } from "@/components/ui/button";
 import WinnerCelebration from "@/components/ui/WinnerCelebration";
-import { MEDALS } from "@quizarena/shared";
+import { MEDALS } from "@tukopamoja/shared";
 
 export default function HostGameOver() {
   const router = useRouter();

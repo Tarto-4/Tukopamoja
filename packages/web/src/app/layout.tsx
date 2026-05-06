@@ -28,7 +28,12 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="min-h-[100dvh] font-sans antialiased bg-background text-foreground">
-        <ThemeProvider>{children}</ThemeProvider>
+        <a href="#main-content" className="skip-to-main">
+          Skip to main content
+        </a>
+        <ThemeProvider>
+          <main id="main-content">{children}</main>
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -116,7 +116,7 @@ export function validateEnv(): EnvConfig {
     rawEnv.NEXT_PUBLIC_MOBILE_SCHEME &&
     rawEnv.NEXT_PUBLIC_MOBILE_SCHEME !== "placeholder"
       ? rawEnv.NEXT_PUBLIC_MOBILE_SCHEME
-      : "quizarena";
+      : "tukopamoja";
 
   return {
     NEXT_PUBLIC_SUPABASE_URL: resolvedSupabaseUrl,

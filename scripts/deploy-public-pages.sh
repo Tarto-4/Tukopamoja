@@ -4,7 +4,7 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 TARGET_REPO="${PUBLIC_PAGES_REPO:-}"
 TARGET_BRANCH="gh-pages"
-WORKTREE_DIR="/tmp/quizarena-public-pages"
+WORKTREE_DIR="/tmp/tukopamoja-public-pages"
 
 if [[ -z "$TARGET_REPO" ]]; then
   echo "✗ PUBLIC_PAGES_REPO is not set. Expected owner/repo."

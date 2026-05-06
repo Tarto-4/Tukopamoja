@@ -31,19 +31,21 @@ supabase/.temp
 
 # ── Docker ──
 docker-compose*.yml
-Dockerfile*
 
 # ── Logs ──
 *.log
 npm-debug.log*
 
 # ── Design assets (not needed in container) ──
-designs/backgrounds/
-designs/favicon/
-designs/logo/
-designs/uiux/
-designs/uploads/
-designs/guides/
+designs/
+
+# ── Mobile package (source not needed, but package.json needed for workspace resolution) ──
+packages/mobile/app/
+packages/mobile/components/
+packages/mobile/hooks/
+packages/mobile/lib/
+packages/mobile/stores/
+packages/mobile/node_modules/
 
 # ── Documentation ──
 docs/
@@ -53,3 +55,8 @@ LICENSE
 # ── Tests / Scripts ──
 scripts/
 *.sh
+
+# ── Temporary / CI artifacts ──
+/tmp
+coverage/
+.env.container
