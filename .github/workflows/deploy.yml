@@ -30,10 +30,15 @@ env:
 
 jobs:
   # ── Deploy to GitHub Pages ───────────────────────────────────
+  # NOTE: Primary Pages deployment is handled by deploy-pages.yml
+  # (uses actions/deploy-pages@v4). This job is only for manual
+  # cross-repo deploys when PUBLIC_PAGES_REPO/PAT are configured.
   deploy-pages:
     name: Deploy to GitHub Pages
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' || github.event.inputs.target != 'docker-registry'
+    if: |
+      github.event_name == 'workflow_dispatch' &&
+      (github.event.inputs.target == 'github-pages' || github.event.inputs.target == 'both')
     env:
       NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
       NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
