@@ -23,7 +23,7 @@ export default function BrandedBackground({
         className={imageClassName}
       />
       <div className={`absolute inset-0 ${overlayClassName}`} />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(124,58,237,0.12),_transparent_38%),radial-gradient(circle_at_bottom_right,_rgba(238,220,0,0.10),_transparent_42%),linear-gradient(180deg,rgba(10,10,10,0.18),rgba(10,10,10,0.65))]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(135,50,135,0.12),_transparent_38%),radial-gradient(circle_at_bottom_right,_rgba(238,205,0,0.10),_transparent_42%),linear-gradient(180deg,rgba(10,10,10,0.18),rgba(10,10,10,0.65))]" />
       <img
         src={withBasePath("/designs/backgrounds/brand-mark-overlay.svg")}
         alt=""

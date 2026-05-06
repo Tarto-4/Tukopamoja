@@ -89,7 +89,7 @@ export default function GameLogo({
             <span
               key={`top-${i}`}
               className={`${config.topText} font-black tracking-[0.12em] leading-none inline-block
-                text-primary drop-shadow-[0_2px_8px_rgba(238,220,0,0.35)] ${TOP_ROTATIONS[i] ?? ""}
+                text-primary drop-shadow-[0_2px_8px_rgba(238,205,0,0.35)] ${TOP_ROTATIONS[i] ?? ""}
                 transition-transform duration-300 ease-out
                 ${isStatic ? "" : "group-hover:animate-[letter-bounce_0.5s_ease-out]"}
               `}
@@ -142,7 +142,7 @@ export function GameLogoInline({
       role="img"
       aria-label="TUKOPAMOJA"
     >
-      <span className="text-primary drop-shadow-[0_1px_4px_rgba(238,220,0,0.3)]">
+      <span className="text-primary drop-shadow-[0_1px_4px_rgba(238,205,0,0.3)]">
         TUKO
       </span>
       <span className="text-foreground/85">PAMOJA</span>

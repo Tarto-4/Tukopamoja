@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import { animate, remove, stagger } from "animejs";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import BrandedBackground from "@/components/ui/BrandedBackground";
@@ -49,7 +48,6 @@ const GAME_MODES: GameMode[] = [
 
 export default function HomePage() {
   const [selectedModeId, setSelectedModeId] = useState<GameMode["id"]>("quiz");
-  const rootRef = useRef<HTMLDivElement | null>(null);
 
   const selectedMode = useMemo(
     () => GAME_MODES.find((mode) => mode.id === selectedModeId) ?? GAME_MODES[0],
@@ -58,41 +56,8 @@ export default function HomePage() {
 
   const isQuizMode = selectedMode.status === "available";
 
-  useEffect(() => {
-    if (!rootRef.current) return;
-    animate(rootRef.current.querySelectorAll(".home-mode-card"), {
-      opacity: [0, 1],
-      translateY: [18, 0],
-      scale: [0.98, 1],
-      delay: stagger(70),
-      duration: 460,
-      ease: "outCubic",
-    });
-
-    animate(rootRef.current.querySelectorAll(".home-cta"), {
-      opacity: [0, 1],
-      translateY: [10, 0],
-      delay: stagger(80, { start: 180 }),
-      duration: 380,
-      ease: "outQuad",
-    });
-  }, []);
-
-  useEffect(() => {
-    if (!rootRef.current) return;
-    const activeCard = rootRef.current.querySelector(`[data-mode-id=\"${selectedModeId}\"]`);
-    if (!activeCard) return;
-
-    remove(activeCard);
-    animate(activeCard, {
-      scale: [1, 1.03, 1],
-      duration: 260,
-      ease: "outQuad",
-    });
-  }, [selectedModeId]);
-
   return (
-    <div ref={rootRef} className="game-screen items-center justify-center gradient-dark relative overflow-hidden">
+    <div className="game-screen items-center justify-center gradient-dark relative overflow-hidden">
       <div className="absolute top-0 left-0 right-0 accent-bar z-20" />
       <BrandedBackground
         imagePath="/designs/backgrounds/Public_One.avif"

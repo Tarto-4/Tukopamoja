@@ -38,16 +38,16 @@ const COLOR_PRESETS = [
 
 const COLOR_CLASS_MAP: Record<string, string> = {
   "#eecd00": "bg-[#eecd00]",
-  "#f5e500": "bg-[#f5e500]",
-  "#d4c500": "bg-[#d4c500]",
-  "#D5B35B": "bg-[#D5B35B]",
-  "#1F2A44": "bg-[#1F2A44]",
-  "#184E45": "bg-[#184E45]",
-  "#D8C27A": "bg-[#D8C27A]",
-  "#4C2A3D": "bg-[#4C2A3D]",
-  "#D4A85F": "bg-[#D4A85F]",
-  "#2A2A2E": "bg-[#2A2A2E]",
-  "#8F9399": "bg-[#8F9399]",
+  "#f7a800": "bg-[#f7a800]",
+  "#873287": "bg-[#873287]",
+  "#42738d": "bg-[#42738d]",
+  "#82bc00": "bg-[#82bc00]",
+  "#4c4d4e": "bg-[#4c4d4e]",
+  "#050405": "bg-[#050405]",
+  "#f42535": "bg-[#f42535]",
+  "#65513c": "bg-[#65513c]",
+  "#5c6670": "bg-[#5c6670]",
+  "#d8d2c4": "bg-[#d8d2c4]",
 };
 
 export default function BrandingPage() {
@@ -66,7 +66,7 @@ export default function BrandingPage() {
         <defs>
           <linearGradient id="brandGradient" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stop-color="${org.primary_color || "#eecd00"}" />
-            <stop offset="100%" stop-color="${org.secondary_color || "#f5e500"}" />
+            <stop offset="100%" stop-color="${org.secondary_color || "#f7a800"}" />
           </linearGradient>
         </defs>
         <rect width="720" height="220" rx="28" fill="url(#brandGradient)" />
@@ -75,7 +75,7 @@ export default function BrandingPage() {
           ${org.name || "TUKOPAMOJA"} — Live Preview
         </text>
         <text x="360" y="142" text-anchor="middle" fill="rgba(17,17,17,0.72)" font-size="16" font-family="Inter, Arial, sans-serif">
-          ${(org.primary_color || "#eecd00")} / ${(org.secondary_color || "#f5e500")}
+          ${(org.primary_color || "#eecd00")} / ${(org.secondary_color || "#f7a800")}
         </text>
       </svg>
     `;
