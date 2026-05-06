@@ -52,7 +52,6 @@ export default function PlayerQuestion() {
   if (hasAnswered && answerResult) {
     return (
       <div className="game-screen items-center justify-center gradient-dark px-4 relative overflow-hidden">
-        <div className="absolute top-0 left-0 right-0 accent-bar z-20" />
         <BrandedBackground imagePath="/designs/backgrounds/dt-wallpaper.png" className="z-0" />
         <motion.div
           initial={{ scale: 0.75, opacity: 0 }}
@@ -63,39 +62,39 @@ export default function PlayerQuestion() {
           {answerResult.isCorrect ? (
             <>
               <div className="relative inline-block">
-                <CheckCircle className="w-[88px] h-[88px] mx-auto text-game-correct drop-shadow-[0_0_28px_rgba(0,201,110,0.7)]" />
+                <CheckCircle className="w-20 h-20 sm:w-[88px] sm:h-[88px] mx-auto text-game-correct drop-shadow-[0_0_28px_rgba(0,201,110,0.7)]" />
               </div>
-              <h2 className="text-4xl font-serif font-black text-game-correct drop-shadow-[0_0_28px_rgba(0,201,110,0.5)]">
+              <h2 className="text-3xl sm:text-4xl font-bold text-game-correct">
                 Correct! ✓
               </h2>
             </>
           ) : (
             <>
-              <XCircle className="w-20 h-20 mx-auto text-game-wrong drop-shadow-[0_0_24px_rgba(255,36,83,0.65)]" />
-              <h2 className="text-4xl font-serif font-black text-game-wrong drop-shadow-[0_0_24px_rgba(255,36,83,0.5)]">
+              <XCircle className="w-16 h-16 sm:w-20 sm:h-20 mx-auto text-game-wrong drop-shadow-[0_0_24px_rgba(255,36,83,0.65)]" />
+              <h2 className="text-3xl sm:text-4xl font-bold text-game-wrong">
                 Wrong ✗
               </h2>
             </>
           )}
 
-          <div className="glass rounded-2xl p-6 space-y-4 border border-white/15">
-            <p className="text-sm text-muted-foreground uppercase tracking-wider">Points earned</p>
-            <p className="text-5xl font-serif font-black text-primary text-glow-gold">
+          <div className="rounded-2xl p-6 space-y-4 bg-card border border-border shadow-[0px_2px_8px_rgba(0,0,0,0.06)]">
+            <p className="text-sm text-muted-foreground uppercase tracking-wider font-medium">Points earned</p>
+            <p className="text-5xl font-bold text-primary">
               +{answerResult.pointsAwarded.toLocaleString()}
             </p>
             <div className="flex items-center justify-center gap-5 text-sm">
               <span className="text-muted-foreground">
-                Total: <span className="font-bold text-foreground">{answerResult.totalScore.toLocaleString()}</span>
+                Total: <span className="font-medium text-foreground">{answerResult.totalScore.toLocaleString()}</span>
               </span>
               {answerResult.streak > 1 && (
-                <span className="font-bold text-game-streak drop-shadow-[0_0_12px_rgba(255,159,0,0.6)]">
+                <span className="font-bold text-game-streak">
                   🔥 {answerResult.streak}× streak
                 </span>
               )}
             </div>
           </div>
 
-          <p className="text-muted-foreground text-sm game-pulse">
+          <p className="text-muted-foreground text-sm">
             Waiting for presenter…
           </p>
         </motion.div>
@@ -107,17 +106,16 @@ export default function PlayerQuestion() {
   if (timeLeft <= 0 && !hasAnswered) {
     return (
       <div className="game-screen items-center justify-center gradient-dark px-4 relative overflow-hidden">
-        <div className="absolute top-0 left-0 right-0 accent-bar z-20" />
         <BrandedBackground imagePath="/designs/backgrounds/dt-wallpaper.png" className="z-0" />
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           className="text-center space-y-6 relative z-10"
         >
-          <Clock className="w-20 h-20 mx-auto text-muted-foreground" />
-          <h2 className="text-3xl font-serif font-black">Time&apos;s Up!</h2>
+          <Clock className="w-16 h-16 sm:w-20 sm:h-20 mx-auto text-muted-foreground" />
+          <h2 className="text-2xl sm:text-3xl font-bold">Time&apos;s Up!</h2>
           <p className="text-muted-foreground">You didn&apos;t answer in time</p>
-          <p className="text-muted-foreground text-sm game-pulse">
+          <p className="text-muted-foreground text-sm">
             Waiting for presenter…
           </p>
         </motion.div>
@@ -127,18 +125,17 @@ export default function PlayerQuestion() {
 
   // Show question + options
   return (
-    <div className="game-screen p-3 gradient-dark relative overflow-hidden">
-      <div className="absolute top-0 left-0 right-0 accent-bar z-20" />
+    <div className="game-screen p-4 gradient-dark relative overflow-hidden">
       <BrandedBackground imagePath="/designs/backgrounds/dt-wallpaper.png" className="z-0" />
 
       {/* Progress / timer header */}
-      <div className="relative z-10 mb-3 rounded-2xl glass px-4 py-3 border border-white/12">
-        <div className="flex items-center justify-between mb-2.5">
-          <span className="text-xs uppercase tracking-widest text-muted-foreground">
+      <div className="relative z-10 mb-4 rounded-2xl bg-card px-5 py-4 border border-border shadow-[0px_2px_8px_rgba(0,0,0,0.06)]">
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-xs uppercase tracking-widest text-muted-foreground font-medium">
             Q {qIndex + 1} / {totalQuestions}
           </span>
           <span
-            className={`text-2xl sm:text-3xl font-serif font-black tabular-nums ${
+            className={`text-2xl sm:text-3xl font-bold tabular-nums ${
               timeLeft <= 5 ? "animate-[timer-critical_0.6s_ease-in-out_infinite]" : "text-foreground"
             }`}
           >
@@ -158,22 +155,22 @@ export default function PlayerQuestion() {
         key={qIndex}
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="glass rounded-2xl p-5 text-center mb-3 border border-white/12 relative z-10"
+        className="rounded-2xl p-5 sm:p-6 text-center mb-4 bg-card border border-border shadow-[0px_2px_8px_rgba(0,0,0,0.06)] relative z-10"
       >
-        <h2 className="text-lg sm:text-xl font-serif font-bold leading-snug">
+        <h2 className="text-lg sm:text-xl font-medium leading-snug text-foreground">
           {currentQuestion.question_text}
         </h2>
         {currentQuestion.image_url && (
           <img
             src={currentQuestion.image_url}
             alt=""
-            className="max-h-36 mx-auto mt-3 rounded-xl object-contain"
+            className="max-h-36 mx-auto mt-4 rounded-xl object-contain"
           />
         )}
       </motion.div>
 
-      {/* Answer tiles */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 flex-1 relative z-10">
+      {/* Answer tiles — min-h-[48px] per DESIGN.md touch targets */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 flex-1 relative z-10">
         {currentQuestion.options.map((opt, i) => {
           const color = OPTION_COLORS[i];
           const isSelected = selectedOption === i;
@@ -188,7 +185,7 @@ export default function PlayerQuestion() {
               transition={{ delay: i * 0.05 }}
               onClick={() => submitAnswer(i)}
               disabled={hasAnswered}
-              className={`answer-btn ${bgClass} ${isYellow ? "answer-btn--yellow" : ""} ${isSelected ? `answer-btn--selected ${selectedShadowClass}` : "shadow-[0_4px_0_rgba(0,0,0,0.38)]"}`}
+              className={`answer-btn min-h-[48px] ${bgClass} ${isYellow ? "answer-btn--yellow" : ""} ${isSelected ? `answer-btn--selected ${selectedShadowClass}` : "shadow-[0_4px_0_rgba(0,0,0,0.38)]"}`}
               aria-pressed={isSelected}
             >
               <span className="answer-btn__shape" aria-hidden="true">{color.shape}</span>

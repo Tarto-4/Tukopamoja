@@ -30,6 +30,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;400;500;700&display=swap"
+        />
+      </head>
       <body className="min-h-[100dvh] font-sans antialiased bg-background text-foreground">
         <a href="#main-content" className="skip-to-main">
           Skip to main content

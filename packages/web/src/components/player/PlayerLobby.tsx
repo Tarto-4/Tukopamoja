@@ -8,7 +8,7 @@ import { usePlayerStore } from "@/stores/usePlayerStore";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2, Circle, Users } from "lucide-react";
 import HamsterLoader from "@/components/ui/HamsterLoader";
-import { withBasePath } from "@/lib/base-path";
+import BrandedBackground from "@/components/ui/BrandedBackground";
 
 export default function PlayerLobby() {
   const { session, players, nickname, avatar, playerId, toggleReady } = usePlayerStore();
@@ -20,25 +20,19 @@ export default function PlayerLobby() {
 
   return (
     <div className="game-screen items-center justify-center gradient-dark px-4 relative overflow-hidden">
-      <div className="absolute top-0 left-0 right-0 accent-bar z-20" />
-      <img
-        src={withBasePath("/designs/tuko-pamoja.png")}
-        alt=""
-        aria-hidden="true"
-        className="absolute inset-0 m-auto w-[420px] h-[420px] object-contain opacity-[0.18] pointer-events-none"
-      />
-      <div className="text-center space-y-8 max-w-md w-full relative z-10">
+      <BrandedBackground className="z-0" />
+      <div className="text-center space-y-6 max-w-md w-full relative z-10">
         {/* Player identity */}
-        <div className="space-y-2 rounded-2xl glass p-6 border border-white/15">
-          <div className="text-6xl">{avatar}</div>
-          <h2 className="text-2xl font-serif font-bold">{nickname}</h2>
+        <div className="space-y-3 rounded-2xl bg-card p-6 border border-border shadow-[0px_2px_8px_rgba(0,0,0,0.06)]">
+          <div className="text-5xl sm:text-6xl">{avatar}</div>
+          <h2 className="text-xl sm:text-2xl font-bold text-foreground">{nickname}</h2>
           <p className="text-muted-foreground text-sm">You&apos;re in!</p>
         </div>
 
         {/* Waiting indicator */}
-        <div className="glass rounded-2xl p-6 space-y-4 border border-white/15">
+        <div className="rounded-2xl bg-card p-6 space-y-4 border border-border shadow-[0px_2px_8px_rgba(0,0,0,0.06)]">
           <HamsterLoader label="Waiting for host to start" className="scale-75" />
-          <p className="text-lg font-serif">
+          <p className="text-base sm:text-lg font-medium text-foreground">
             {isReady ? "Waiting for host to start..." : "Tap ready so the host can start"}
           </p>
           <p className="text-muted-foreground text-sm">
@@ -49,7 +43,7 @@ export default function PlayerLobby() {
               size="lg"
               variant={isReady ? "game" : "game-outline"}
               onClick={() => toggleReady(!isReady)}
-              className="w-full sm:w-auto"
+              className="w-full sm:w-auto min-h-[48px]"
             >
               {isReady ? (
                 <CheckCircle2 className="w-4 h-4 mr-2" />

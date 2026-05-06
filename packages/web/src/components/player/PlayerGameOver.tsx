@@ -58,7 +58,6 @@ export default function PlayerGameOver() {
 
   return (
     <div className="game-screen items-center justify-center gradient-dark px-4 py-6 relative overflow-hidden">
-      <div className="absolute top-0 left-0 right-0 accent-bar z-20" />
       <BrandedBackground className="z-0" />
       <WinnerCelebration active={isWinner} winnerLabel="Champion" />
       <div className="w-full max-w-2xl space-y-6 text-center relative z-10">
@@ -70,12 +69,12 @@ export default function PlayerGameOver() {
           className="space-y-3"
         >
           {isTop3 ? (
-            <span className="text-7xl block">{MEDALS[(rank ?? 1) - 1]}</span>
+            <span className="text-6xl sm:text-7xl block">{MEDALS[(rank ?? 1) - 1]}</span>
           ) : (
-            <Trophy className="w-16 h-16 mx-auto text-quiz-yellow" />
+            <Trophy className="w-14 h-14 sm:w-16 sm:h-16 mx-auto text-primary" />
           )}
-          <h1 className="text-3xl sm:text-4xl font-serif font-black">Game Complete</h1>
-          <p className="text-foreground/75 dark:text-white/70 max-w-xl mx-auto">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground">Game Complete</h1>
+          <p className="text-muted-foreground max-w-xl mx-auto text-sm sm:text-base">
             Great run, {nickname}. Your results are locked in and you will return to the player home screen automatically.
           </p>
         </motion.div>
@@ -85,37 +84,37 @@ export default function PlayerGameOver() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="glass rounded-3xl p-6 sm:p-8 space-y-5 border border-white/15"
+          className="rounded-2xl bg-card p-6 sm:p-8 space-y-5 border border-border shadow-[0px_2px_8px_rgba(0,0,0,0.06)]"
         >
           <div className="flex items-center justify-center gap-3">
             <span className="text-5xl">{avatar}</span>
             <div className="text-left">
-              <p className="text-xs uppercase tracking-[0.2em] text-foreground/60 dark:text-white/55">Player Summary</p>
-              <p className="font-serif font-bold text-xl">{nickname}</p>
+              <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Player Summary</p>
+              <p className="font-bold text-xl text-foreground">{nickname}</p>
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
-              <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-4">
+              <div className="rounded-2xl border border-border bg-muted px-4 py-4">
                 <p className="text-xs text-muted-foreground">Final Score</p>
-                <p className="text-2xl font-serif font-black text-primary mt-1">
+                <p className="text-2xl font-bold text-primary mt-1">
                   {totalScore.toLocaleString()}
                 </p>
               </div>
             </div>
             <div>
-              <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-4">
+              <div className="rounded-2xl border border-border bg-muted px-4 py-4">
                 <p className="text-xs text-muted-foreground">Rank</p>
-                <p className="text-2xl font-serif font-black mt-1">
+                <p className="text-2xl font-bold mt-1 text-foreground">
                   {rank ? `#${rank}` : "—"}
                 </p>
               </div>
             </div>
             <div>
-              <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-4">
+              <div className="rounded-2xl border border-border bg-muted px-4 py-4">
                 <p className="text-xs text-muted-foreground">Players</p>
-                <p className="text-2xl font-serif font-black mt-1">
+                <p className="text-2xl font-bold mt-1 text-foreground">
                   {playerCount}
                 </p>
               </div>
@@ -154,11 +153,11 @@ export default function PlayerGameOver() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
-            className="space-y-3 rounded-3xl glass p-5 border border-white/15"
+            className="space-y-3 rounded-2xl bg-card p-5 border border-border shadow-[0px_2px_8px_rgba(0,0,0,0.06)]"
           >
-            <div className="flex items-center justify-center gap-2 text-foreground/70 dark:text-white/70">
+            <div className="flex items-center justify-center gap-2 text-muted-foreground">
               <Users className="w-4 h-4" />
-              <h3 className="text-sm font-serif uppercase tracking-[0.2em]">
+              <h3 className="text-sm uppercase tracking-[0.2em] font-medium">
                 Final Standings
               </h3>
             </div>
@@ -169,8 +168,8 @@ export default function PlayerGameOver() {
                   key={entry.player_id}
                   className={`flex items-center gap-3 p-3 rounded-xl ${
                     isMe
-                      ? "bg-[#eecd00]/10 border border-[#eecd00]/30"
-                      : "bg-white/5 border border-white/10"
+                      ? "bg-primary/10 border border-primary/30"
+                      : "bg-muted border border-border"
                   }`}
                 >
                   <span className="text-lg w-8 text-center">
@@ -183,7 +182,7 @@ export default function PlayerGameOver() {
                     {entry.nickname}
                     {isMe && " (you)"}
                   </span>
-                  <span className="text-sm font-serif font-bold tabular-nums">
+                  <span className="text-sm font-bold tabular-nums text-foreground">
                     {entry.score.toLocaleString()}
                   </span>
                 </div>
