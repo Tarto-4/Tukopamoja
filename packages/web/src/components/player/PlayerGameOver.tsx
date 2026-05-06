@@ -4,7 +4,7 @@
 
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { usePlayerStore } from "@/stores/usePlayerStore";
@@ -25,13 +25,21 @@ export default function PlayerGameOver() {
   const isTop3 = rank !== null && rank <= 3;
   const isWinner = rank === 1;
   const playerCount = session?.player_count ?? leaderboard.length;
+  const sessionPin = session?.pin;
 
-  function handleReturnHome() {
+  const handleReturnHome = useCallback(() => {
     if (hasRedirected.current) return;
     hasRedirected.current = true;
     reset();
     router.push("/join");
-  }
+  }, [reset, router]);
+
+  const handlePlayAgain = useCallback(() => {
+    if (hasRedirected.current) return;
+    hasRedirected.current = true;
+    reset();
+    router.push(sessionPin ? `/join/?pin=${sessionPin}` : "/join");
+  }, [reset, router, sessionPin]);
 
   useEffect(() => {
     const interval = window.setInterval(() => {
@@ -46,7 +54,7 @@ export default function PlayerGameOver() {
     }, 1000);
 
     return () => window.clearInterval(interval);
-  }, []);
+  }, [handleReturnHome]);
 
   return (
     <div className="game-screen items-center justify-center gradient-dark px-4 py-6 relative overflow-hidden">
@@ -197,7 +205,7 @@ export default function PlayerGameOver() {
           <Button
             variant="outline"
             size="lg"
-            onClick={handleReturnHome}
+            onClick={handlePlayAgain}
             className="w-full border-[#EEDC00]/30 bg-[#EEDC00]/10 text-[#B18A00] dark:text-[#EEDC00] hover:bg-[#EEDC00]/20"
           >
             <RotateCcw className="w-4 h-4 mr-2" />

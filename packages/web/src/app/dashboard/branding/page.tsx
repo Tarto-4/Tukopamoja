@@ -51,7 +51,7 @@ const COLOR_CLASS_MAP: Record<string, string> = {
 };
 
 export default function BrandingPage() {
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
   const [org, setOrg] = useState<Organization | null>(null);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);

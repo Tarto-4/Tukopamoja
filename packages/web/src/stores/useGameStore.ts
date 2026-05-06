@@ -51,12 +51,16 @@ interface GameState {
 }
 
 async function logHostAction(sessionId: string, action: string, metadata: Record<string, unknown> = {}) {
-  const supabase = createClient();
-  await supabase.rpc("log_host_action", {
-    p_session_id: sessionId,
-    p_action: action,
-    p_metadata: metadata,
-  });
+  try {
+    const supabase = createClient();
+    await supabase.rpc("log_host_action", {
+      p_session_id: sessionId,
+      p_action: action,
+      p_metadata: metadata,
+    });
+  } catch (err) {
+    console.warn("[TUKOPAMOJA] Failed to log host action:", action, err);
+  }
 }
 
 export const useGameStore = create<GameState>((set, get) => ({
@@ -168,7 +172,18 @@ export const useGameStore = create<GameState>((set, get) => ({
       p_offset: 0,
     });
 
-    const rankings: LeaderboardEntry[] = (leaderboardPage || []).map((p: any) => ({
+    interface LeaderboardRow {
+      player_id: string;
+      first_name?: string;
+      last_name?: string;
+      nickname?: string;
+      avatar: string;
+      score?: number;
+      streak?: number;
+      rank?: number;
+    }
+
+    const rankings: LeaderboardEntry[] = (leaderboardPage || []).map((p: LeaderboardRow) => ({
       player_id: p.player_id,
       first_name: p.first_name || "",
       last_name: p.last_name || "",
@@ -188,9 +203,11 @@ export const useGameStore = create<GameState>((set, get) => ({
 
     set({ leaderboard: rankings, players: (players as SessionPlayer[]) || [] });
 
-    const channel = supabase.channel(`session:${session.id}`);
-    await channel.subscribe();
-    await channel.send({
+    // Use a unique ephemeral channel to avoid conflicting with the main
+    // realtime subscription managed by useRealtimeGame hook.
+    const broadcastChannel = supabase.channel(`broadcast:${session.id}:${Date.now()}`);
+    await broadcastChannel.subscribe();
+    await broadcastChannel.send({
       type: "broadcast",
       event: "game_event",
       payload:
@@ -198,7 +215,7 @@ export const useGameStore = create<GameState>((set, get) => ({
           ? { type: "GAME_OVER", payload: { final_rankings: rankings } }
           : { type: "LEADERBOARD", payload: { rankings } },
     });
-    channel.unsubscribe();
+    await broadcastChannel.unsubscribe();
   },
 
   startGame: async () => {
@@ -494,7 +511,8 @@ export const useGameStore = create<GameState>((set, get) => ({
     }));
   },
 
-  reset: () =>
+  reset: () => {
+    get().stopTimer();
     set({
       session: null,
       players: [],
@@ -504,5 +522,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       answerDistribution: [],
       timeLeft: 0,
       realtimeStatus: "disconnected",
-    }),
+      _timerInterval: null,
+    });
+  },
 }));

@@ -65,7 +65,10 @@ export function validateEnv(): EnvConfig {
     const isBuildTime = typeof window === "undefined";
     if (isBuildTime) {
       console.warn(
-        "[TUKOPAMOJA] Env validation skipped during static build — vars will be checked at runtime."
+        [
+          "[TUKOPAMOJA] Env validation skipped during static build — vars will be checked at runtime.",
+          ...errors,
+        ].join("\n")
       );
     } else if (isProd) {
       // In production browser context, log the error prominently but do NOT

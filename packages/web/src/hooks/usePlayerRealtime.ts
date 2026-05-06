@@ -29,12 +29,21 @@ export function usePlayerRealtime(sessionId: string | undefined) {
 
     let cancelled = false;
     let retryTimer: ReturnType<typeof setTimeout> | null = null;
+    let activeChannel: ReturnType<ReturnType<typeof createClient>["channel"]> | null = null;
 
     const subscribe = (attempt: number) => {
       if (cancelled) return;
+
+      // Clean up any previous failed channel before creating a new one
+      if (activeChannel) {
+        activeChannel.unsubscribe();
+        activeChannel = null;
+      }
+
       setRealtimeStatus(attempt > 0 ? "reconnecting" : "connecting");
 
       const channel = createClient().channel(`session:${sessionId}`);
+      activeChannel = channel;
 
       channel.on(
         "postgres_changes",
@@ -91,7 +100,21 @@ export function usePlayerRealtime(sessionId: string | undefined) {
             if (updatedPlayer.id === playerId) {
               setRealtimeStatus("disconnected");
             }
+            return;
           }
+
+          // Update player in-place (handles ready state, score, etc.)
+          const currentPlayers = usePlayerStore.getState().players;
+          const exists = currentPlayers.some((p) => p.id === updatedPlayer.id);
+          if (!exists) {
+            addPlayer(updatedPlayer);
+            return;
+          }
+          usePlayerStore.setState({
+            players: currentPlayers.map((p) =>
+              p.id === updatedPlayer.id ? updatedPlayer : p
+            ),
+          });
         }
       );
 
@@ -125,7 +148,12 @@ export function usePlayerRealtime(sessionId: string | undefined) {
       stopTimer();
       setRealtimeStatus("disconnected");
       if (retryTimer) clearTimeout(retryTimer);
+      if (activeChannel) {
+        activeChannel.unsubscribe();
+        activeChannel = null;
+      }
       channelRef.current?.unsubscribe();
+      channelRef.current = null;
     };
   }, [sessionId, playerId, setSession, addPlayer, removePlayer, setLeaderboard, setRealtimeStatus, startTimer, stopTimer]);
 }

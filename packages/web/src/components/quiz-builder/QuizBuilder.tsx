@@ -9,7 +9,7 @@ import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import type { Template, Question, QuestionOption } from "@tukopamoja/shared";
-import { QUESTION_DEFAULTS, OPTION_COLORS } from "@tukopamoja/shared";
+import { QUESTION_DEFAULTS } from "@tukopamoja/shared";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -232,8 +232,8 @@ export default function QuizBuilder({
       if (qErr) throw qErr;
 
       router.push("/dashboard/templates");
-    } catch (err: any) {
-      setError(err.message || "Failed to save");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Failed to save");
     } finally {
       setSaving(false);
     }
@@ -252,7 +252,6 @@ export default function QuizBuilder({
 
     setSaving(true);
     try {
-      const supabase = createClient();
       const {
         data: { user },
         error: userError,
@@ -268,11 +267,13 @@ export default function QuizBuilder({
       });
 
       if (fnErr) throw fnErr;
-      const sessionId = (data as any)?.id ?? data;
+      const sessionId = typeof data === "object" && data !== null && "id" in data
+        ? (data as { id: string }).id
+        : data;
       if (!sessionId) throw new Error("Session creation returned no id");
       router.push(`/host/?sessionId=${sessionId}`);
-    } catch (err: any) {
-      setError(err.message || "Failed to create session");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Failed to create session");
     } finally {
       setSaving(false);
     }

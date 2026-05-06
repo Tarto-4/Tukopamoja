@@ -371,8 +371,12 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
   // ─── Submit Answer ─────────────────────────────────────────
 
   submitAnswer: async (optionIndex) => {
-    const { session, playerId, questionStartTime, streak, players } = get();
+    const { session, playerId, questionStartTime, streak, players, hasAnswered } = get();
     if (!session || !playerId) return;
+    if (hasAnswered) return; // Prevent double-submit
+
+    // Mark as answered immediately to prevent concurrent submissions
+    set({ hasAnswered: true, selectedOption: optionIndex });
 
     const me = players.find((p) => p.id === playerId);
     if (me?.kicked_at) throw new Error("You were removed from this session.");
@@ -410,17 +414,17 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
       currentStreak: streak,
     });
 
+    const newTotalScore = get().totalScore + result.points;
+
     set({
-      selectedOption: optionIndex,
-      hasAnswered: true,
       answerResult: {
         isCorrect,
         correctIndex,
         pointsAwarded: result.points,
-        totalScore: get().totalScore + result.points,
+        totalScore: newTotalScore,
         streak: result.newStreak,
       },
-      totalScore: get().totalScore + result.points,
+      totalScore: newTotalScore,
       streak: result.newStreak,
     });
 
@@ -520,7 +524,9 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
   },
 
   addPlayer: (player) =>
-    set((s) => ({ players: [...s.players, player] })),
+    set((s) => ({
+      players: s.players.some((p) => p.id === player.id) ? s.players : [...s.players, player],
+    })),
 
   removePlayer: (playerId) =>
     set((s) => ({
@@ -530,6 +536,7 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
   setPlayers: (players) => set({ players }),
 
   reset: () => {
+    get().stopTimer();
     localStorage.removeItem(STORAGE_KEY);
     clearSessionQueryCache();
     set({
@@ -552,6 +559,7 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
       streak: 0,
       rank: null,
       realtimeStatus: "disconnected",
+      _timerInterval: null,
       _timerEndsAt: null,
     });
   },

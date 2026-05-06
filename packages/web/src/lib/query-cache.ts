@@ -14,7 +14,7 @@ type CacheOptions = {
 const DEFAULT_TTL_MS = 12_000;
 const DEFAULT_EARLY_REFRESH_RATIO = 0.7;
 const DEFAULT_MAX_INFLIGHT_LOADS = 8;
-const SESSION_PREFIX = "qa:query-cache:";
+const SESSION_PREFIX = "tp:query-cache:";
 
 const memoryCache = new Map<string, CacheEnvelope<unknown>>();
 const inflightLoads = new Map<string, Promise<unknown>>();

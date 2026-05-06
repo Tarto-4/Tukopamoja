@@ -10,8 +10,6 @@
  * Sizes:  sm (nav), md (cards/join), lg (hero), xl (splash)
  */
 
-import { useMemo } from "react";
-
 type LogoSize = "sm" | "md" | "lg" | "xl";
 
 interface GameLogoProps {
@@ -63,6 +61,11 @@ const SIZE_CONFIG: Record<
   },
 };
 
+const TOP_ROTATIONS = ["-rotate-3", "-rotate-1", "rotate-1", "rotate-3"];
+const BOTTOM_ROTATIONS = ["-rotate-1", "rotate-1", "-rotate-1", "rotate-1", "-rotate-1", "rotate-1"];
+const TOP_LETTERS = "TUKO".split("");
+const BOTTOM_LETTERS = "PAMOJA".split("");
+
 export default function GameLogo({
   size = "lg",
   className = "",
@@ -70,11 +73,6 @@ export default function GameLogo({
   showSubtitle = false,
 }: GameLogoProps) {
   const config = SIZE_CONFIG[size];
-  const topRotate = ["-rotate-3", "-rotate-1", "rotate-1", "rotate-3"];
-  const bottomRotate = ["-rotate-1", "rotate-1", "-rotate-1", "rotate-1", "-rotate-1", "rotate-1"];
-
-  const topLetters = "TUKO".split("");
-  const bottomLetters = "PAMOJA".split("");
 
   return (
     <div
@@ -87,11 +85,11 @@ export default function GameLogo({
       <div className={`flex flex-col items-center ${config.gap}`}>
         {/* T U K O */}
         <div className="flex items-baseline justify-center">
-          {topLetters.map((letter, i) => (
+          {TOP_LETTERS.map((letter, i) => (
             <span
               key={`top-${i}`}
               className={`${config.topText} font-black tracking-[0.12em] leading-none inline-block
-                text-primary drop-shadow-[0_2px_8px_rgba(238,220,0,0.35)] ${topRotate[i] ?? ""}
+                text-primary drop-shadow-[0_2px_8px_rgba(238,220,0,0.35)] ${TOP_ROTATIONS[i] ?? ""}
                 transition-transform duration-300 ease-out
                 ${isStatic ? "" : "group-hover:animate-[letter-bounce_0.5s_ease-out]"}
               `}
@@ -103,11 +101,11 @@ export default function GameLogo({
 
         {/* P A M O J A */}
         <div className="flex items-baseline justify-center">
-          {bottomLetters.map((letter, i) => (
+          {BOTTOM_LETTERS.map((letter, i) => (
             <span
               key={`bottom-${i}`}
               className={`${config.bottomText} font-black tracking-[0.18em] leading-none inline-block
-                text-foreground/85 ${bottomRotate[i] ?? ""}
+                text-foreground/85 ${BOTTOM_ROTATIONS[i] ?? ""}
                 transition-transform duration-300 ease-out
               `}
             >

@@ -6,7 +6,7 @@
 "use client";
 
 import type { QuestionOption } from "@tukopamoja/shared";
-import { OPTION_COLORS, QUESTION_DEFAULTS } from "@tukopamoja/shared";
+import { OPTION_COLORS } from "@tukopamoja/shared";
 import type { DraftQuestion } from "./QuizBuilder";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";

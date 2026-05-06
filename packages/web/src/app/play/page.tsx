@@ -5,7 +5,7 @@
 
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { usePlayerStore } from "@/stores/usePlayerStore";
 import { usePlayerRealtime } from "@/hooks/usePlayerRealtime";
@@ -30,18 +30,18 @@ function PlayPageContent() {
       if (!session) {
         const ok = await rejoinSession();
         if (!ok) {
-          router.replace(sessionId ? `/join/?pin=` : "/join/");
+          router.replace("/join/");
           return;
         }
       }
       setLoading(false);
     }
     init();
-  }, [sessionId]);
+  }, [sessionId, session, rejoinSession, router]);
 
   // Subscribe to realtime
-  const activeSessionId = session?.id || sessionId;
-  usePlayerRealtime(activeSessionId || undefined);
+  const activeSessionId = useMemo(() => session?.id || sessionId || undefined, [session?.id, sessionId]);
+  usePlayerRealtime(activeSessionId);
 
   if (loading || !session) {
     return (

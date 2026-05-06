@@ -4,7 +4,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { animate, remove, stagger } from "animejs";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { withBasePath } from "@/lib/base-path";
 import BrandedBackground from "@/components/ui/BrandedBackground";
 import GameLogo from "@/components/ui/GameLogo";
 import { BrainCircuit, Puzzle, Swords, Sparkles } from "lucide-react";

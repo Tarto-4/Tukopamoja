@@ -32,15 +32,23 @@ export function useRealtimeGame(sessionId: string | undefined, role: Role) {
 
     let cancelled = false;
     let retryTimer: ReturnType<typeof setTimeout> | null = null;
+    let activeChannel: ReturnType<ReturnType<typeof createClient>["channel"]> | null = null;
 
     const subscribe = (attempt: number) => {
       if (cancelled) return;
+
+      // Clean up any previous failed channel before creating a new one
+      if (activeChannel) {
+        activeChannel.unsubscribe();
+        activeChannel = null;
+      }
 
       setRealtimeStatus(attempt > 0 ? "reconnecting" : "connecting");
 
       let channel: ReturnType<ReturnType<typeof createClient>["channel"]> | null = null;
       try {
         channel = createClient().channel(`session:${sessionId}`);
+        activeChannel = channel;
       } catch (error) {
         console.error("[Realtime] Failed to initialize Supabase client:", error);
         return;
@@ -162,7 +170,12 @@ export function useRealtimeGame(sessionId: string | undefined, role: Role) {
       stopTimer();
       setRealtimeStatus("disconnected");
       if (retryTimer) clearTimeout(retryTimer);
+      if (activeChannel) {
+        activeChannel.unsubscribe();
+        activeChannel = null;
+      }
       channelRef.current?.unsubscribe();
+      channelRef.current = null;
     };
   }, [sessionId, role, setSession, addPlayer, removePlayer, setPlayers, incrementAnswered, setLeaderboard, setRealtimeStatus, startTimer, stopTimer]);
 }

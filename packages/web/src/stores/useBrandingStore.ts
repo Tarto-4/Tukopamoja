@@ -13,18 +13,25 @@ interface BrandingState {
   fetchBranding: () => Promise<void>;
 }
 
-export const useBrandingStore = create<BrandingState>((set) => ({
+export const useBrandingStore = create<BrandingState>((set, get) => ({
   branding: null,
   loading: false,
 
   fetchBranding: async () => {
+    if (get().loading) return; // Prevent duplicate concurrent fetches
     set({ loading: true });
     const supabase = createClient();
 
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("organization")
       .select("*")
       .single();
+
+    if (error) {
+      console.warn("[TUKOPAMOJA] Failed to fetch branding:", error.message);
+      set({ loading: false });
+      return;
+    }
 
     if (data) {
       const org = data as Organization;
