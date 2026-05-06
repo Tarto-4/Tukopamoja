@@ -25,7 +25,7 @@ const buttonVariants = cva(
           "text-primary underline-offset-4 hover:underline",
         /** Primary CTA — vivid gold, 3-D press effect */
         game:
-          "bg-primary text-primary-foreground font-bold tracking-wide shadow-[0_4px_0_rgba(139,106,0,1),0_6px_16px_rgba(0,0,0,0.4)] hover:shadow-[0_6px_0_rgba(139,106,0,1),0_10px_22px_rgba(0,0,0,0.5)] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-[0_2px_0_rgba(139,106,0,1)] transition-all duration-100",
+          "bg-primary text-primary-foreground font-bold tracking-wide shadow-[0_4px_0_rgba(139,106,0,1),0_6px_16px_rgba(0,0,0,0.4)] hover:shadow-[0_6px_0_rgba(139,106,0,1),0_10px_22px_rgba(0,0,0,0.5)] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-[0_2px_0_rgba(139,106,0,1)] transition-[transform,box-shadow] duration-100",
         /** Outlined game button — subtle gold tint */
         "game-outline":
           "border-2 border-primary/50 bg-primary/10 text-primary font-semibold hover:bg-primary/20 hover:border-primary/75 active:scale-[0.97]",
@@ -92,6 +92,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     const animateButton = (params: Parameters<typeof animate>[1]) => {
       if (prefersReducedMotion || disabled || !localRef.current) return;
+      // Skip Anime.js scale for game variants — they use CSS-based
+      // hover/active transforms that conflict with JS inline styles.
+      if (variant === "game" || variant === "game-danger" || variant === "game-outline") return;
       remove(localRef.current);
       animate(localRef.current, params);
     };

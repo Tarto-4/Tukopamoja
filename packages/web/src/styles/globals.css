@@ -442,9 +442,11 @@
      Uses transition so the glow appears smoothly when the
      class is first applied (via the variant toggle).        */
   .ready-glow {
-    box-shadow: 0 0 22px rgba(238,220,0,0.45),
-                0 0 44px rgba(238,220,0,0.18) !important;
-    transition: box-shadow 0.6s ease;
+    box-shadow:
+      0 4px 0 rgba(139,106,0,1),
+      0 6px 16px rgba(0,0,0,0.4),
+      0 0 22px rgba(238,220,0,0.45),
+      0 0 44px rgba(238,220,0,0.18) !important;
   }
 
   /* ─── Timer Bar ────────────────────────────────────────── */
