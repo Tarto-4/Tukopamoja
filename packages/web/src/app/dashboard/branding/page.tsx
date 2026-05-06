@@ -28,16 +28,16 @@ const FONT_OPTIONS = [
 ];
 
 const COLOR_PRESETS = [
-  { primary: "#EEDC00", secondary: "#f5e500", name: "ENS Future Gold" },
-  { primary: "#d4c500", secondary: "#EEDC00", name: "Executive Gold" },
-  { primary: "#1F2A44", secondary: "#EEDC00", name: "Midnight Gold" },
-  { primary: "#184E45", secondary: "#D8C27A", name: "Emerald Brass" },
-  { primary: "#4C2A3D", secondary: "#D4A85F", name: "Aubergine Copper" },
-  { primary: "#2A2A2E", secondary: "#8F9399", name: "Carbon Slate" },
+  { primary: "#eecd00", secondary: "#f7a800", name: "Tukopamoja Gold" },
+  { primary: "#873287", secondary: "#eecd00", name: "Purple & Gold" },
+  { primary: "#42738d", secondary: "#eecd00", name: "Ocean Gold" },
+  { primary: "#82bc00", secondary: "#eecd00", name: "Lime Gold" },
+  { primary: "#4c4d4e", secondary: "#eecd00", name: "Slate Gold" },
+  { primary: "#050405", secondary: "#f42535", name: "Dark Crimson" },
 ];
 
 const COLOR_CLASS_MAP: Record<string, string> = {
-  "#EEDC00": "bg-[#EEDC00]",
+  "#eecd00": "bg-[#eecd00]",
   "#f5e500": "bg-[#f5e500]",
   "#d4c500": "bg-[#d4c500]",
   "#D5B35B": "bg-[#D5B35B]",
@@ -65,7 +65,7 @@ export default function BrandingPage() {
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 220" role="img" aria-label="Brand preview">
         <defs>
           <linearGradient id="brandGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="${org.primary_color || "#EEDC00"}" />
+            <stop offset="0%" stop-color="${org.primary_color || "#eecd00"}" />
             <stop offset="100%" stop-color="${org.secondary_color || "#f5e500"}" />
           </linearGradient>
         </defs>
@@ -75,7 +75,7 @@ export default function BrandingPage() {
           ${org.name || "TUKOPAMOJA"} — Live Preview
         </text>
         <text x="360" y="142" text-anchor="middle" fill="rgba(17,17,17,0.72)" font-size="16" font-family="Inter, Arial, sans-serif">
-          ${(org.primary_color || "#EEDC00")} / ${(org.secondary_color || "#f5e500")}
+          ${(org.primary_color || "#eecd00")} / ${(org.secondary_color || "#f5e500")}
         </text>
       </svg>
     `;
@@ -177,7 +177,7 @@ export default function BrandingPage() {
 
   return (
     <div className="page-container max-w-2xl relative z-10">
-      <div className="mb-8 rounded-2xl glass p-6 border border-[#EEDC00]/20 relative overflow-hidden">
+      <div className="mb-8 rounded-2xl glass p-6 border border-[#eecd00]/20 relative overflow-hidden">
         <div className="absolute top-0 left-0 right-0 accent-bar" />
         <h1 className="text-3xl font-serif font-black text-foreground dark:text-white">Company Branding</h1>
         <p className="text-muted-foreground mt-1">
@@ -225,7 +225,7 @@ export default function BrandingPage() {
                 <div>
                   <Label
                     htmlFor="logo-upload"
-                    className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 border border-[#EEDC00]/30 rounded-md bg-[#EEDC00]/10 text-[#EEDC00] hover:bg-[#EEDC00]/20 transition-colors"
+                    className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 border border-[#eecd00]/30 rounded-md bg-[#eecd00]/10 text-[#eecd00] hover:bg-[#eecd00]/20 transition-colors"
                   >
                     <Upload className="w-4 h-4" />
                     Upload Logo
@@ -269,7 +269,7 @@ export default function BrandingPage() {
                       secondary_color: preset.secondary,
                     })
                   }
-                  className="flex flex-col items-center p-2 rounded-lg border border-white/10 bg-white/5 hover:border-[#EEDC00]/40 hover:bg-[#EEDC00]/10 transition-colors"
+                  className="flex flex-col items-center p-2 rounded-lg border border-white/10 bg-white/5 hover:border-[#eecd00]/40 hover:bg-[#eecd00]/10 transition-colors"
                   title={preset.name}
                 >
                   <div className="flex gap-1">

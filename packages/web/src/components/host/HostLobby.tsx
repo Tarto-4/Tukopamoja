@@ -98,7 +98,7 @@ export default function HostLobby() {
             />
           )}
           <span className="font-serif font-bold text-lg text-white">
-            {branding?.name || (<><span className="text-[#EEDC00]">TUKO</span><span className="text-white/90">PAMOJA</span></>)}
+            {branding?.name || (<><span className="text-[#eecd00]">TUKO</span><span className="text-white/90">PAMOJA</span></>)}
           </span>
         </div>
       </div>
@@ -138,7 +138,7 @@ export default function HostLobby() {
             <span className="text-muted-foreground">
               {players.length} player{players.length !== 1 ? "s" : ""} joined
             </span>
-            <span className="text-xs rounded-full px-2 py-1 bg-[#EEDC00]/15 border border-[#EEDC00]/30 text-[#EEDC00]">
+            <span className="text-xs rounded-full px-2 py-1 bg-[#eecd00]/15 border border-[#eecd00]/30 text-[#eecd00]">
               {players.filter((p) => p.is_ready).length} ready
             </span>
           </div>

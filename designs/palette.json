@@ -1,15 +1,20 @@
 {
   "brand": {
-    "ensCrimson": "#8E191E",
-    "carbonBlack": "#111111",
-    "slateDeep": "#3A3A3C",
-    "slateLight": "#636366",
-    "prestigeGold": "#C9A84C",
-    "offWhite": "#F5F5F3"
+    "yellow": "#eecd00",
+    "darkGrey": "#4c4d4e",
+    "black": "#050405",
+    "purple": "#873287",
+    "green": "#82bc00",
+    "blue": "#42738d",
+    "orange": "#f7a800",
+    "red": "#f42535",
+    "brown": "#65513c",
+    "lightGrey": "#5c6670",
+    "beige": "#d8d2c4"
   },
   "gradients": {
-    "primary": ["#8E191E", "#B22229"],
-    "ensFuture": ["#8E191E", "#C9A84C"],
-    "surface": ["#0A0A0A", "#151515", "#1A1012"]
+    "primary": ["#eecd00", "#f7a800"],
+    "warm": ["#f7a800", "#f42535"],
+    "surface": ["#050405", "#131318", "#16101a"]
   }
 }

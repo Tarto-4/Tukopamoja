@@ -18,9 +18,9 @@
     --popover:          234 16% 8%;
     --popover-foreground: 220 14% 94%;
 
-    /* Brand gold as primary */
-    --primary:          48 100% 47%;
-    --primary-foreground: 234 18% 6%;
+    /* Brand yellow as primary */
+    --primary:          52 100% 47%;
+    --primary-foreground: 0 11% 2%;
 
     /* Subtle containers */
     --secondary:        234 14% 13%;
@@ -31,33 +31,33 @@
     --accent-foreground: 220 12% 90%;
 
     /* Semantic */
-    --destructive:      348 100% 56%;
+    --destructive:      355 90% 55%;
     --destructive-foreground: 0 0% 98%;
-    --success:          152 72% 42%;
+    --success:          79 100% 37%;
     --success-foreground: 0 0% 98%;
 
     /* Chrome */
     --border:           220 10% 100% / 0.12;
     --input:            220 10% 100% / 0.09;
-    --ring:             48 100% 47%;
+    --ring:             52 100% 47%;
     --radius:           0.75rem;
 
-    /* ─── ENS Brand Tokens ───────────────────────────────── */
-    --ens-gold:         #EEDC00;
-    --ens-gold-dim:     #C9A84C;
-    --ens-gold-dark:    #8B6A00;
-    --ens-crimson:      #f6d653;
-    --ens-crimson-dark: #c8a92d;
-    --ens-carbon:       #0d0d14;
-    --ens-slate:        #1c1c28;
-    --ens-slate-light:  #8f8fa8;
+    /* ─── Tukopamoja Brand Tokens ────────────────────────── */
+    --ens-gold:         #eecd00;
+    --ens-gold-dim:     #f7a800;
+    --ens-gold-dark:    #65513c;
+    --ens-crimson:      #f7a800;
+    --ens-crimson-dark: #65513c;
+    --ens-carbon:       #050405;
+    --ens-slate:        #42738d;
+    --ens-slate-light:  #5c6670;
 
     /* ─── Depth Shadows ──────────────────────────────────── */
     --shadow-sm: 0 1px 2px rgba(0,0,0,0.5),  0 1px 3px rgba(0,0,0,0.3);
     --shadow-md: 0 4px 8px rgba(0,0,0,0.55), 0 2px 4px rgba(0,0,0,0.35);
     --shadow-lg: 0 10px 28px rgba(0,0,0,0.65), 0 4px 12px rgba(0,0,0,0.4);
     --shadow-xl: 0 22px 54px rgba(0,0,0,0.75), 0 8px 22px rgba(0,0,0,0.5);
-    --shadow-glow: 0 0 24px rgba(238,220,0,0.45), 0 0 48px rgba(238,220,0,0.18);
+    --shadow-glow: 0 0 24px rgba(238,205,0,0.45), 0 0 48px rgba(238,205,0,0.18);
 
     /* ─── Quiz answer glow stops ─────────────────────────── */
     --glow-red:    rgba(232,0,62,0.55);
@@ -99,7 +99,7 @@
 
     --border:              220 14% 82%;
     --input:               220 16% 90%;
-    --ring:                44 100% 36%;
+    --ring:                52 100% 36%;
   }
 
   /* ── Explicit dark selector ──────────────────────────────── */
@@ -110,21 +110,21 @@
     --card-foreground:  220 14% 94%;
     --popover:          234 16% 8%;
     --popover-foreground: 220 14% 94%;
-    --primary:          48 100% 47%;
-    --primary-foreground: 234 18% 6%;
+    --primary:          52 100% 47%;
+    --primary-foreground: 0 11% 2%;
     --secondary:        234 14% 13%;
     --secondary-foreground: 220 12% 88%;
     --muted:            234 14% 13%;
     --muted-foreground: 220 10% 52%;
     --accent:           234 18% 16%;
     --accent-foreground: 220 12% 90%;
-    --destructive:      348 100% 56%;
+    --destructive:      355 90% 55%;
     --destructive-foreground: 0 0% 98%;
-    --success:          152 72% 42%;
+    --success:          79 100% 37%;
     --success-foreground: 0 0% 98%;
     --border:           220 10% 100% / 0.12;
     --input:            220 10% 100% / 0.09;
-    --ring:             48 100% 47%;
+    --ring:             52 100% 47%;
   }
 }
 
@@ -144,12 +144,12 @@
   ::-webkit-scrollbar       { width: 6px; height: 6px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb {
-    background: rgba(238,220,0,0.3);
+    background: rgba(238,205,0,0.3);
     border-radius: 3px;
   }
-  ::-webkit-scrollbar-thumb:hover { background: rgba(238,220,0,0.55); }
-  .light ::-webkit-scrollbar-thumb { background: rgba(139,106,0,0.28); }
-  .light ::-webkit-scrollbar-thumb:hover { background: rgba(139,106,0,0.5); }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(238,205,0,0.55); }
+  .light ::-webkit-scrollbar-thumb { background: rgba(101,81,60,0.28); }
+  .light ::-webkit-scrollbar-thumb:hover { background: rgba(101,81,60,0.5); }
 
   /* Accessible focus ring — gold in dark, deep-amber in light */
   :focus-visible {
@@ -166,8 +166,8 @@
   .dark body,
   :root body {
     background-image:
-      radial-gradient(ellipse 70% 50% at 50% 0%, rgba(124,58,237,0.08) 0%, transparent 60%),
-      radial-gradient(ellipse 50% 40% at 80% 100%, rgba(238,220,0,0.06) 0%, transparent 55%);
+      radial-gradient(ellipse 70% 50% at 50% 0%, rgba(135,50,135,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 40% at 80% 100%, rgba(238,205,0,0.06) 0%, transparent 55%);
   }
 
   /* Light-mode body */
@@ -203,18 +203,18 @@
 
   /* ─── Gradient Backgrounds ─────────────────────────────── */
   .gradient-primary {
-    background: linear-gradient(135deg, #EEDC00, #C9A84C);
+    background: linear-gradient(135deg, #eecd00, #f7a800);
   }
 
   .gradient-dark {
-    background: linear-gradient(160deg, #0d0d14 0%, #13131f 50%, #16101a 100%);
+    background: linear-gradient(160deg, #050405 0%, #131318 50%, #16101a 100%);
   }
   .light .gradient-dark {
     background: linear-gradient(160deg, #f8f8fc 0%, #f2f0fb 55%, #eeeef8 100%);
   }
 
   .gradient-ens {
-    background: linear-gradient(135deg, #EEDC00, #C9A84C);
+    background: linear-gradient(135deg, #eecd00, #f7a800);
   }
 
   /* ─── Glass Surfaces ───────────────────────────────────── */
@@ -249,7 +249,7 @@
   }
 
   .accent-bar {
-    background: linear-gradient(90deg, var(--ens-gold), rgba(238,220,0,0.45), transparent);
+    background: linear-gradient(90deg, var(--ens-gold), rgba(238,205,0,0.45), transparent);
     height: 4px;
   }
 
@@ -407,21 +407,21 @@
 @layer components {
   /* ─── Glow Effects ─────────────────────────────────────── */
   .glow-gold {
-    box-shadow: 0 0 24px rgba(238,220,0,0.45), 0 0 48px rgba(238,220,0,0.18);
+    box-shadow: 0 0 24px rgba(238,205,0,0.45), 0 0 48px rgba(238,205,0,0.18);
   }
   .glow-crimson {
-    box-shadow: 0 0 24px rgba(232,0,62,0.4), 0 0 48px rgba(232,0,62,0.15);
+    box-shadow: 0 0 24px rgba(244,37,53,0.4), 0 0 48px rgba(244,37,53,0.15);
   }
 
   .text-glow {
-    text-shadow: 0 0 18px rgba(238,220,0,0.55), 0 0 38px rgba(238,220,0,0.22);
+    text-shadow: 0 0 18px rgba(238,205,0,0.55), 0 0 38px rgba(238,205,0,0.22);
   }
   .light .text-glow {
-    text-shadow: 0 1px 3px rgba(139,106,0,0.25);
+    text-shadow: 0 1px 3px rgba(101,81,60,0.25);
   }
 
   .text-glow-gold {
-    text-shadow: 0 0 18px rgba(238,220,0,0.5), 0 0 36px rgba(238,220,0,0.2);
+    text-shadow: 0 0 18px rgba(238,205,0,0.5), 0 0 36px rgba(238,205,0,0.2);
   }
 
   /* ─── Game Cards ───────────────────────────────────────── */
@@ -433,7 +433,7 @@
   }
   .game-card:hover {
     transform: translateY(-4px) scale(1.012);
-    box-shadow: 0 14px 36px rgba(0,0,0,0.55), 0 0 0 1px rgba(238,220,0,0.15);
+    box-shadow: 0 14px 36px rgba(0,0,0,0.55), 0 0 0 1px rgba(238,205,0,0.15);
   }
   .game-card:active { transform: translateY(0) scale(0.99); }
 
@@ -443,10 +443,10 @@
      class is first applied (via the variant toggle).        */
   .ready-glow {
     box-shadow:
-      0 4px 0 rgba(139,106,0,1),
+      0 4px 0 rgba(101,81,60,1),
       0 6px 16px rgba(0,0,0,0.4),
-      0 0 22px rgba(238,220,0,0.45),
-      0 0 44px rgba(238,220,0,0.18) !important;
+      0 0 22px rgba(238,205,0,0.45),
+      0 0 44px rgba(238,205,0,0.18) !important;
   }
 
   /* ─── Timer Bar ────────────────────────────────────────── */
@@ -459,11 +459,11 @@
   .timer-bar-fill {
     height: 100%;
     border-radius: 9999px;
-    background: linear-gradient(90deg, #EEDC00, #FFB800);
+    background: linear-gradient(90deg, #eecd00, #f7a800);
     transition: width 0.95s linear, background 0.5s ease;
   }
   .timer-bar-fill--critical {
-    background: linear-gradient(90deg, #FF2453, #FF6B87);
+    background: linear-gradient(90deg, #f42535, #FF6B87);
     animation: glow-pulse 2s ease-in-out infinite;
   }
 
@@ -496,16 +496,16 @@
     transition: background 0.2s, border-color 0.2s;
   }
   .lb-row--me {
-    background: rgba(238,220,0,0.10) !important;
-    border-color: rgba(238,220,0,0.32) !important;
+    background: rgba(238,205,0,0.10) !important;
+    border-color: rgba(238,205,0,0.32) !important;
   }
   .light .lb-row {
     background: rgba(255,255,255,0.78);
     border-color: rgba(100,100,160,0.10);
   }
   .light .lb-row--me {
-    background: rgba(238,180,0,0.12) !important;
-    border-color: rgba(139,106,0,0.28) !important;
+    background: rgba(238,205,0,0.12) !important;
+    border-color: rgba(101,81,60,0.28) !important;
   }
 
   /* ─── Score pop animation overlay ─────────────────────── */
@@ -514,8 +514,8 @@
     pointer-events: none;
     font-size: 1.5rem;
     font-weight: 900;
-    color: #EEDC00;
-    text-shadow: 0 0 14px rgba(238,220,0,0.8);
+    color: #eecd00;
+    text-shadow: 0 0 14px rgba(238,205,0,0.8);
     animation: score-pop 0.9s ease-out both;
   }
 

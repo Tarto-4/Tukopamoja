@@ -23,15 +23,15 @@ const buttonVariants = cva(
           "hover:bg-accent hover:text-accent-foreground active:scale-[0.98]",
         link:
           "text-primary underline-offset-4 hover:underline",
-        /** Primary CTA — vivid gold, 3-D press effect */
+        /** Primary CTA — vivid yellow, 3-D press effect */
         game:
-          "bg-primary text-primary-foreground font-bold tracking-wide shadow-[0_4px_0_rgba(139,106,0,1),0_6px_16px_rgba(0,0,0,0.4)] hover:shadow-[0_6px_0_rgba(139,106,0,1),0_10px_22px_rgba(0,0,0,0.5)] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-[0_2px_0_rgba(139,106,0,1)] transition-[transform,box-shadow] duration-100",
-        /** Outlined game button — subtle gold tint */
+          "bg-primary text-primary-foreground font-bold tracking-wide shadow-[0_4px_0_rgba(101,81,60,1),0_6px_16px_rgba(0,0,0,0.4)] hover:shadow-[0_6px_0_rgba(101,81,60,1),0_10px_22px_rgba(0,0,0,0.5)] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-[0_2px_0_rgba(101,81,60,1)] transition-[transform,box-shadow] duration-100",
+        /** Outlined game button — subtle yellow tint */
         "game-outline":
           "border-2 border-primary/50 bg-primary/10 text-primary font-semibold hover:bg-primary/20 hover:border-primary/75 active:scale-[0.97]",
         /** Danger game action */
         "game-danger":
-          "bg-destructive text-destructive-foreground font-bold shadow-[0_4px_0_rgba(140,0,30,1)] hover:shadow-[0_6px_0_rgba(140,0,30,1)] hover:-translate-y-0.5 active:translate-y-0.5 duration-100",
+          "bg-destructive text-destructive-foreground font-bold shadow-[0_4px_0_rgba(122,18,26,1)] hover:shadow-[0_6px_0_rgba(122,18,26,1)] hover:-translate-y-0.5 active:translate-y-0.5 duration-100",
       },
       size: {
         default: "h-10 px-4 py-2",

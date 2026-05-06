@@ -87,7 +87,7 @@ export default function HostGameOver() {
             reset();
             router.push("/dashboard");
           }}
-          className="border-[#EEDC00]/30 bg-[#EEDC00]/10 text-[#EEDC00] hover:bg-[#EEDC00]/20"
+          className="border-[#eecd00]/30 bg-[#eecd00]/10 text-[#eecd00] hover:bg-[#eecd00]/20"
         >
           Back to Dashboard
         </Button>

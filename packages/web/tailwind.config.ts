@@ -44,18 +44,32 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // ENS-Future brand colors
+        // Tukopamoja brand palette
         ens: {
-          crimson: "#8E191E",
-          "crimson-light": "#B22229",
-          "crimson-dark": "#6B1216",
-          carbon: "#0d0d0d",
-          "carbon-2": "#111118",
-          slate: "#3A3A3C",
-          "slate-light": "#636366",
-          gold: "#EEDC00",
-          "gold-dim": "#C9A84C",
-          electric: "#7C3AED",
+          crimson: "#f42535",
+          "crimson-light": "#f7a800",
+          "crimson-dark": "#65513c",
+          carbon: "#050405",
+          "carbon-2": "#4c4d4e",
+          slate: "#42738d",
+          "slate-light": "#5c6670",
+          gold: "#eecd00",
+          "gold-dim": "#d8d2c4",
+          electric: "#873287",
+        },
+        // Explicit palette tokens
+        palette: {
+          yellow: "#eecd00",
+          "dark-grey": "#4c4d4e",
+          black: "#050405",
+          purple: "#873287",
+          green: "#82bc00",
+          blue: "#42738d",
+          orange: "#f7a800",
+          red: "#f42535",
+          brown: "#65513c",
+          "light-grey": "#5c6670",
+          beige: "#d8d2c4",
         },
         // Quiz answer colours — vibrant, WCAG AA on white text
         "quiz-red":    "#E8003E",
@@ -91,8 +105,8 @@ const config: Config = {
         "ens-md":   "0 4px 6px rgba(0,0,0,0.5), 0 2px 4px rgba(0,0,0,0.3)",
         "ens-lg":   "0 10px 25px rgba(0,0,0,0.6), 0 4px 10px rgba(0,0,0,0.4)",
         "ens-xl":   "0 20px 50px rgba(0,0,0,0.7), 0 8px 20px rgba(0,0,0,0.5)",
-        "ens-glow":      "0 0 20px rgba(142,25,30,0.3), 0 0 40px rgba(142,25,30,0.1)",
-        "ens-gold-glow": "0 0 24px rgba(238,220,0,0.45), 0 0 48px rgba(238,220,0,0.18)",
+        "ens-glow":      "0 0 20px rgba(135,50,135,0.3), 0 0 40px rgba(135,50,135,0.1)",
+        "ens-gold-glow": "0 0 24px rgba(238,205,0,0.45), 0 0 48px rgba(238,205,0,0.18)",
         // Answer button glows
         "quiz-red-glow":    "0 0 18px rgba(232,0,62,0.55),  0 4px 0 rgba(140,0,28,1)",
         "quiz-blue-glow":   "0 0 18px rgba(10,98,255,0.55), 0 4px 0 rgba(0,50,160,1)",
@@ -112,8 +126,8 @@ const config: Config = {
           to: { height: "0" },
         },
         "pulse-glow": {
-          "0%, 100%": { boxShadow: "0 0 20px rgba(238,220,0,0.35)" },
-          "50%":       { boxShadow: "0 0 42px rgba(238,220,0,0.75)" },
+          "0%, 100%": { boxShadow: "0 0 20px rgba(238,205,0,0.35)" },
+          "50%":       { boxShadow: "0 0 42px rgba(238,205,0,0.75)" },
         },
         shimmer: {
           "0%":   { backgroundPosition: "-200% 0" },
@@ -142,7 +156,7 @@ const config: Config = {
           "80%":     { transform: "translateX(5px)" },
         },
         "timer-critical": {
-          "0%,100%": { color: "#FF2453", transform: "scale(1)" },
+          "0%,100%": { color: "#f42535", transform: "scale(1)" },
           "50%":     { color: "#ff6b87", transform: "scale(1.12)" },
         },
         "rank-slide": {

@@ -123,8 +123,8 @@ export default function PlayerGameOver() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-left">
-            <div className="rounded-2xl border border-[#EEDC00]/20 bg-[#EEDC00]/10 px-4 py-4">
-              <div className="flex items-center gap-2 text-[#B18A00] dark:text-[#EEDC00] mb-2">
+            <div className="rounded-2xl border border-[#eecd00]/20 bg-[#eecd00]/10 px-4 py-4">
+              <div className="flex items-center gap-2 text-[#65513c] dark:text-[#eecd00] mb-2">
                 <Sparkles className="w-4 h-4" />
                 <span className="text-sm font-semibold">Finish highlight</span>
               </div>
@@ -169,7 +169,7 @@ export default function PlayerGameOver() {
                   key={entry.player_id}
                   className={`flex items-center gap-3 p-3 rounded-xl ${
                     isMe
-                      ? "bg-[#EEDC00]/10 border border-[#EEDC00]/30"
+                      ? "bg-[#eecd00]/10 border border-[#eecd00]/30"
                       : "bg-white/5 border border-white/10"
                   }`}
                 >
@@ -206,7 +206,7 @@ export default function PlayerGameOver() {
             variant="outline"
             size="lg"
             onClick={handlePlayAgain}
-            className="w-full border-[#EEDC00]/30 bg-[#EEDC00]/10 text-[#B18A00] dark:text-[#EEDC00] hover:bg-[#EEDC00]/20"
+            className="w-full border-[#eecd00]/30 bg-[#eecd00]/10 text-[#65513c] dark:text-[#eecd00] hover:bg-[#eecd00]/20"
           >
             <RotateCcw className="w-4 h-4 mr-2" />
             Play Again

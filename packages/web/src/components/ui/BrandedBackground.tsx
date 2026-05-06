@@ -29,8 +29,8 @@ export default function BrandedBackground({
         alt=""
         className={brandMarkClassName}
       />
-      <div className="absolute left-1/2 top-1/3 h-[560px] w-[560px] -translate-x-1/2 rounded-full opacity-[0.07] blur-[130px] bg-[radial-gradient(circle,_#7c3aed,_transparent)]" />
-      <div className="absolute bottom-[-5%] right-[5%] h-[340px] w-[340px] rounded-full opacity-[0.09] blur-[115px] bg-[radial-gradient(circle,_#EEDC00,_transparent)]" />
+      <div className="absolute left-1/2 top-1/3 h-[560px] w-[560px] -translate-x-1/2 rounded-full opacity-[0.07] blur-[130px] bg-[radial-gradient(circle,_#873287,_transparent)]" />
+      <div className="absolute bottom-[-5%] right-[5%] h-[340px] w-[340px] rounded-full opacity-[0.09] blur-[115px] bg-[radial-gradient(circle,_#eecd00,_transparent)]" />
     </div>
   );
 }

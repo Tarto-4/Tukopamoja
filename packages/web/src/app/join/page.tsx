@@ -73,13 +73,13 @@ function JoinPageContent() {
     <div className="game-screen items-center justify-center gradient-dark px-4 relative overflow-hidden">
       <div className="absolute top-0 left-0 right-0 accent-bar z-20" />
       {/* Ambient glow */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[400px] h-[400px] rounded-full bg-[#EEDC00]/10 blur-[100px] pointer-events-none" />
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[400px] h-[400px] rounded-full bg-[#eecd00]/10 blur-[100px] pointer-events-none" />
 
       <div className="w-full max-w-sm space-y-6 relative z-10">
         {/* Header */}
-        <div className="text-center space-y-3 rounded-2xl glass p-6 border border-[#EEDC00]/20">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#EEDC00]/15 border border-[#EEDC00]/30">
-            <Gamepad2 className="w-7 h-7 mx-auto text-[#EEDC00]" />
+        <div className="text-center space-y-3 rounded-2xl glass p-6 border border-[#eecd00]/20">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#eecd00]/15 border border-[#eecd00]/30">
+            <Gamepad2 className="w-7 h-7 mx-auto text-[#eecd00]" />
           </div>
           <GameLogo size="md" static />
           <p className="text-white/70 text-sm">
@@ -95,7 +95,7 @@ function JoinPageContent() {
             <button
               type="button"
               onClick={refreshAvatar}
-              className="p-2 rounded-full bg-white/5 border border-white/15 hover:bg-[#EEDC00]/10 hover:border-[#EEDC00]/30 transition-colors"
+              className="p-2 rounded-full bg-white/5 border border-white/15 hover:bg-[#eecd00]/10 hover:border-[#eecd00]/30 transition-colors"
               title="Change avatar"
             >
               <RefreshCw className="w-4 h-4" />

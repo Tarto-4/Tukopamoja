@@ -99,7 +99,7 @@ export default function HomePage() {
         brandMarkClassName="absolute inset-0 m-auto h-[520px] w-[520px] object-contain opacity-[0.18]"
       />
 
-      <div className="text-center space-y-8 px-4 relative z-10 rounded-2xl glass p-8 sm:p-10 border border-[#EEDC00]/20 max-w-6xl w-full mx-4">
+      <div className="text-center space-y-8 px-4 relative z-10 rounded-2xl glass p-8 sm:p-10 border border-[#eecd00]/20 max-w-6xl w-full mx-4">
         <div className="space-y-3">
           <GameLogo size="xl" showSubtitle className="animate-float-in" />
           <p className="text-lg text-foreground/80 dark:text-white/70 tracking-wide">
@@ -124,13 +124,13 @@ export default function HomePage() {
                   onClick={() => setSelectedModeId(mode.id)}
                   className={`home-mode-card rounded-2xl border p-4 transition-all duration-300 game-card ${
                     isSelected
-                      ? "border-[#EEDC00]/60 bg-[#EEDC00]/12 shadow-[0_0_0_1px_rgba(238,220,0,0.18)]"
-                      : "border-white/10 bg-white/5 hover:border-[#EEDC00]/35 hover:bg-white/10"
+                      ? "border-[#eecd00]/60 bg-[#eecd00]/12 shadow-[0_0_0_1px_rgba(238,205,0,0.18)]"
+                      : "border-white/10 bg-white/5 hover:border-[#eecd00]/35 hover:bg-white/10"
                   }`}
                 >
                   <div className="flex items-start justify-between gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#EEDC00]/30 bg-[#EEDC00]/12">
-                      <Icon className="h-5 w-5 text-[#B18A00] dark:text-[#EEDC00]" />
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#eecd00]/30 bg-[#eecd00]/12">
+                      <Icon className="h-5 w-5 text-[#65513c] dark:text-[#eecd00]" />
                     </div>
                     <span
                       className={`rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] ${

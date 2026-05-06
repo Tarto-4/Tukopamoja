@@ -145,7 +145,7 @@ export default function TemplatesPage() {
             variant="outline"
             onClick={handleRefreshStats}
             disabled={refreshing}
-            className="border-[#EEDC00]/30 text-foreground dark:text-white hover:bg-black/5 dark:hover:bg-white/10"
+            className="border-[#eecd00]/30 text-foreground dark:text-white hover:bg-black/5 dark:hover:bg-white/10"
           >
             <RefreshCw className={`w-4 h-4 mr-2 ${refreshing ? "animate-spin" : ""}`} />
             {refreshing ? "Refreshing..." : "Refresh Plays"}
