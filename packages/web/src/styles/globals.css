@@ -213,10 +213,6 @@
     background: #F8F9FA;
   }
 
-  .gradient-ens {
-    background: linear-gradient(135deg, #eecd00, #f7a800);
-  }
-
   /* ─── Glass Surfaces ───────────────────────────────────── */
   .glass {
     -webkit-backdrop-filter: blur(40px) saturate(180%);
@@ -231,13 +227,6 @@
     box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.06);
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
-  }
-
-  .glass-light {
-    -webkit-backdrop-filter: blur(40px) saturate(180%);
-    backdrop-filter: blur(40px) saturate(180%);
-    background: linear-gradient(135deg, rgba(255,255,255,0.84) 0%, rgba(255,255,255,0.76) 100%);
-    border: 1px solid rgba(0,0,0,0.07);
   }
 
   .glass-header {
@@ -258,20 +247,7 @@
     height: 4px;
   }
 
-  /* ─── 3-D Glass Cards ──────────────────────────────────── */
-  .glass-card {
-    background: rgba(255,255,255,0.03);
-    -webkit-backdrop-filter: blur(14px);
-    backdrop-filter: blur(14px);
-    border: 1px solid rgba(255,255,255,0.07);
-    box-shadow: var(--shadow-lg);
-  }
-  .light .glass-card {
-    background: #FFFFFF;
-    border: 1px solid #DEE2E6;
-    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.06);
-  }
-
+  /* ─── Elevated Glass Card ────────────────────────────── */
   .glass-card-elevated {
     background: rgba(255,255,255,0.055);
     -webkit-backdrop-filter: blur(18px);

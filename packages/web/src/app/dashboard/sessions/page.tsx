@@ -319,7 +319,7 @@ export default function SessionsPage() {
         <div className="absolute top-0 left-0 right-0 accent-bar" />
         <div className="flex items-start justify-between gap-3">
           <div>
-            <h1 className="text-3xl font-serif font-black">Game Sessions</h1>
+            <h1 className="text-3xl font-bold">Game Sessions</h1>
             <p className="text-muted-foreground mt-1">
               History of all hosted game sessions with player data and results
             </p>
@@ -419,7 +419,7 @@ export default function SessionsPage() {
 
                 {/* Expanded detail */}
                 {isExpanded && (
-                  <div className="border-t border-white/10 px-6 pb-6 pt-4 space-y-5">
+                  <div className="border-t border-border px-6 pb-6 pt-4 space-y-5">
                     {isDetailLoading ? (
                       <p className="text-muted-foreground animate-pulse text-sm">Loading session data...</p>
                     ) : detail ? (
@@ -459,7 +459,7 @@ export default function SessionsPage() {
                         <div>
                           <div className="flex items-center gap-2 mb-3">
                             <Users className="w-4 h-4 text-primary" />
-                            <h3 className="text-sm font-semibold uppercase tracking-wider text-white/70">
+                            <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
                               Attendees &amp; Standings ({detail.players.length})
                             </h3>
                           </div>
@@ -499,7 +499,7 @@ export default function SessionsPage() {
                         {/* Per-question answer breakdown */}
                         {totalQuestions > 0 && (
                           <div>
-                            <h3 className="text-sm font-semibold uppercase tracking-wider text-white/70 mb-3">
+                            <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-3">
                               Question-by-Question Breakdown
                             </h3>
                             <div className="space-y-3">
@@ -507,10 +507,10 @@ export default function SessionsPage() {
                                 const qAnswers = detail.answers.filter((a: any) => a.question_index === qi);
                                 const correctCount = qAnswers.filter((a: any) => a.is_correct).length;
                                 return (
-                                  <div key={qi} className="rounded-xl bg-white/5 border border-white/10 p-3">
+                                  <div key={qi} className="rounded-xl bg-muted/50 border border-border p-3">
                                     <div className="flex items-start justify-between gap-2 mb-2">
                                       <p className="text-sm font-medium">
-                                        <span className="text-white/50 mr-2">Q{qi + 1}.</span>
+                                        <span className="text-muted-foreground mr-2">Q{qi + 1}.</span>
                                         {q.question_text}
                                       </p>
                                       <span className="text-xs text-muted-foreground shrink-0">
@@ -638,7 +638,7 @@ export default function SessionsPage() {
                           {arc.created_at && (
                             <p>{new Date(arc.created_at).toLocaleDateString()}</p>
                           )}
-                          <span className="text-xs px-2 py-1 rounded-full bg-white/10 text-white/50">
+                          <span className="text-xs px-2 py-1 rounded-full bg-muted text-muted-foreground">
                             archived
                           </span>
                         </div>
@@ -652,7 +652,7 @@ export default function SessionsPage() {
                   </button>
 
                   {isArcExpanded && (
-                    <div className="border-t border-white/10 px-6 pb-6 pt-4 space-y-4">
+                    <div className="border-t border-border px-6 pb-6 pt-4 space-y-4">
                       {!payload ? (
                         <p className="text-muted-foreground animate-pulse text-sm">Loading archive data...</p>
                       ) : (

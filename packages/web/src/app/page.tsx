@@ -87,7 +87,7 @@ export default function HomePage() {
                   type="button"
                   data-mode-id={mode.id}
                   onClick={() => setSelectedModeId(mode.id)}
-                  className={`home-mode-card relative rounded-2xl p-5 transition-all duration-300 game-card backdrop-blur-xl ${
+                  className={`relative rounded-2xl p-5 transition-all duration-300 game-card backdrop-blur-xl ${
                     isSelected
                       ? "bg-gradient-to-br from-[rgba(0,0,0,0.75)] to-[rgba(0,0,0,0.7)] border-2 border-[#EEDC00] shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_16px_rgba(238,220,0,0.25),inset_0_1px_0_rgba(255,255,255,0.1)]"
                       : "bg-gradient-to-br from-[rgba(0,0,0,0.6)] to-[rgba(0,0,0,0.55)] border border-white/15 shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_0_0_1px_rgba(255,255,255,0.05)] hover:border-[#EEDC00]/40 hover:shadow-[0_8px_32px_rgba(0,0,0,0.5),0_0_8px_rgba(238,220,0,0.1)]"
@@ -144,7 +144,7 @@ export default function HomePage() {
                 <Button
                   size="xl"
                   variant="game"
-                  className="home-cta w-full sm:w-auto tracking-wide"
+                  className="w-full sm:w-auto tracking-wide"
                 >
                   Host Quiz Game
                 </Button>
@@ -153,7 +153,7 @@ export default function HomePage() {
                 <Button
                   size="xl"
                   variant="game-outline"
-                  className="home-cta w-full sm:w-auto"
+                  className="w-full sm:w-auto"
                 >
                   Join as Player
                 </Button>
@@ -165,7 +165,7 @@ export default function HomePage() {
                 size="xl"
                 variant="game"
                 disabled
-                className="home-cta w-full sm:w-auto tracking-wide opacity-60"
+                className="w-full sm:w-auto tracking-wide opacity-60"
               >
                 {selectedMode.name} Coming Soon
               </Button>
@@ -173,7 +173,7 @@ export default function HomePage() {
                 size="xl"
                 variant="game-outline"
                 disabled
-                className="home-cta w-full sm:w-auto opacity-60"
+                className="w-full sm:w-auto opacity-60"
               >
                 Multiplayer setup coming soon
               </Button>

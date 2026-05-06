@@ -135,7 +135,7 @@ export default function TemplatesPage() {
       <div className="flex items-center justify-between mb-8 rounded-2xl glass p-6 border border-border/60 relative overflow-hidden">
         <div className="absolute top-0 left-0 right-0 accent-bar" />
         <div>
-          <h1 className="text-3xl font-serif font-black">Templates</h1>
+          <h1 className="text-3xl font-bold">Templates</h1>
           <p className="text-muted-foreground mt-1">
             Create and manage your quiz templates
           </p>
