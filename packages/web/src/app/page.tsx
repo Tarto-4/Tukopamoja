@@ -57,7 +57,7 @@ export default function HomePage() {
   const isQuizMode = selectedMode.status === "available";
 
   return (
-    <div className="game-screen items-center justify-center gradient-dark relative overflow-hidden">
+    <div className="game-screen items-center justify-start md:justify-center gradient-dark relative overflow-y-auto">
       <div className="absolute top-0 left-0 right-0 accent-bar z-20" />
       <BrandedBackground
         imagePath="/designs/backgrounds/Public_One.avif"
