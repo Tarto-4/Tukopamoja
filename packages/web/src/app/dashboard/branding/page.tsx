@@ -103,18 +103,19 @@ export default function BrandingPage() {
       }
     }
     load();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [supabase]);
 
   if (loadError) {
     return (
       <div className="page-container relative z-10">
-        <div className="rounded-2xl glass p-6 border border-rose-500/30 bg-rose-500/10">
-          <h1 className="text-xl font-bold text-rose-400 mb-2">Failed to load branding</h1>
-          <p className="text-rose-300 text-sm mb-4">{loadError}</p>
+        <div className="rounded-2xl glass p-6 border border-rose-200 bg-rose-50">
+          <h1 className="text-xl font-bold text-rose-700 mb-2">Failed to load branding</h1>
+          <p className="text-rose-600 text-sm mb-4">{loadError}</p>
           <Button
             onClick={() => { setLoadError(null); window.location.reload(); }}
             variant="outline"
-            className="border-rose-500/30 text-rose-400 hover:bg-rose-500/10"
+            className="border-rose-300 text-rose-700 hover:bg-rose-100"
           >
             Retry
           </Button>
@@ -177,9 +178,9 @@ export default function BrandingPage() {
 
   return (
     <div className="page-container max-w-2xl relative z-10">
-      <div className="mb-8 rounded-2xl glass p-6 border border-[#eecd00]/20 relative overflow-hidden">
+      <div className="mb-8 rounded-2xl glass p-6 border border-border relative overflow-hidden">
         <div className="absolute top-0 left-0 right-0 accent-bar" />
-        <h1 className="text-3xl font-serif font-black text-foreground dark:text-white">Company Branding</h1>
+        <h1 className="text-3xl font-bold text-foreground">Company Branding</h1>
         <p className="text-muted-foreground mt-1">
           Customize how your brand appears to players
         </p>
@@ -187,7 +188,7 @@ export default function BrandingPage() {
 
       <div className="space-y-6">
         {/* Identity */}
-        <Card className="glass border-white/15">
+        <Card className="glass border-border">
           <CardHeader>
             <CardTitle>Brand Identity</CardTitle>
             <CardDescription>
@@ -219,13 +220,13 @@ export default function BrandingPage() {
                   <img
                     src={org.logo_url}
                     alt="Logo"
-                    className="w-16 h-16 rounded-lg object-contain bg-white/5 p-2"
+                    className="w-16 h-16 rounded-lg object-contain bg-gray-50 border border-border p-2"
                   />
                 )}
                 <div>
                   <Label
                     htmlFor="logo-upload"
-                    className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 border border-[#eecd00]/30 rounded-md bg-[#eecd00]/10 text-[#eecd00] hover:bg-[#eecd00]/20 transition-colors"
+                    className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 border border-border rounded-md bg-[#eecd00]/10 text-foreground hover:bg-[#eecd00]/20 transition-colors"
                   >
                     <Upload className="w-4 h-4" />
                     Upload Logo
@@ -246,7 +247,7 @@ export default function BrandingPage() {
         </Card>
 
         {/* Colors */}
-        <Card className="glass border-white/15">
+        <Card className="glass border-border">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Palette className="w-5 h-5" />
@@ -269,7 +270,7 @@ export default function BrandingPage() {
                       secondary_color: preset.secondary,
                     })
                   }
-                  className="flex flex-col items-center p-2 rounded-lg border border-white/10 bg-white/5 hover:border-[#eecd00]/40 hover:bg-[#eecd00]/10 transition-colors"
+                  className="flex flex-col items-center p-2 rounded-lg border border-border bg-gray-50 hover:border-[#eecd00] hover:bg-[#eecd00]/10 transition-colors"
                   title={preset.name}
                 >
                   <div className="flex gap-1">
@@ -332,7 +333,7 @@ export default function BrandingPage() {
             </div>
 
             {/* Live preview */}
-            <div className="rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-white/5">
+            <div className="rounded-2xl overflow-hidden border border-border shadow-sm bg-gray-50">
               <img
                 src={livePreviewSvg}
                 alt="Brand preview"
@@ -343,7 +344,7 @@ export default function BrandingPage() {
         </Card>
 
         {/* Font */}
-        <Card className="glass border-white/15">
+        <Card className="glass border-border">
           <CardHeader>
             <CardTitle>Typography</CardTitle>
           </CardHeader>
@@ -383,12 +384,12 @@ export default function BrandingPage() {
             {saving ? "Saving..." : "Save Branding"}
           </Button>
           {saved && (
-            <span className="text-sm text-green-400">
+            <span className="text-sm text-green-600 font-medium">
               ✓ Branding saved successfully
             </span>
           )}
           {saveError && (
-            <span className="text-sm text-rose-400">
+            <span className="text-sm text-rose-600 font-medium">
               ✗ {saveError}
             </span>
           )}

@@ -341,6 +341,12 @@ npm run db:types
 - [x] **`.env.production`** gitignored — never committed to source control
 - [x] **Email confirmation** enabled for auth
 - [x] **Input validation** on all user-facing forms (PIN, names, email)
+- [x] **Server-side middleware** (`src/middleware.ts`) — blocks `/dashboard/*` for unauthenticated users at the edge (server mode only). Sets `X-Robots-Tag: noindex` and `Cache-Control: no-store` on protected routes.
+- [x] **Client-side AuthGuard** — secondary defense for static export mode and token expiry handling
+
+> **Note:** In static export mode (GitHub Pages), middleware does not execute.
+> Route protection relies on the client-side `AuthGuard` + Supabase RLS.
+> For full server-side protection, deploy with `BUILD_MODE=server` using `Dockerfile.server`.
 
 ---
 

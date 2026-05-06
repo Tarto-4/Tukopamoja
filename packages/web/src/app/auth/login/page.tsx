@@ -107,8 +107,18 @@ export default function LoginPage() {
       return;
     }
 
-    router.push("/dashboard");
+    router.push(getRedirectPath());
     setLoading(false);
+  }
+
+  // Resolve post-login redirect destination (middleware may set ?redirect=/dashboard/templates)
+  function getRedirectPath(): string {
+    if (typeof window === "undefined") return "/dashboard";
+    const params = new URLSearchParams(window.location.search);
+    const redirect = params.get("redirect");
+    // Only allow internal /dashboard paths to prevent open redirect
+    if (redirect && redirect.startsWith("/dashboard")) return redirect;
+    return "/dashboard";
   }
 
   async function handleResendConfirmation() {
