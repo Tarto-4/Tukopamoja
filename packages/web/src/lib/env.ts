@@ -57,7 +57,7 @@ export function validateEnv(): EnvConfig {
     errors.push(`  ✗ NEXT_PUBLIC_APP_URL is not a valid URL: "${appUrl}"`);
   }
 
-  if (errors.length > 0 && isProd) {
+  if (errors.length > 0) {
     // During static export (next build), pages are prerendered on the server
     // where some NEXT_PUBLIC_ vars may not be present. The vars ARE baked into
     // the JS bundles and will be available at runtime in the browser, so we
@@ -67,33 +67,37 @@ export function validateEnv(): EnvConfig {
       console.warn(
         "[TUKOPAMOJA] Env validation skipped during static build — vars will be checked at runtime."
       );
+    } else if (isProd) {
+      // In production browser context, log the error prominently but do NOT
+      // throw — this lets the error boundary render a friendly UI instead of
+      // a blank white page.  Supabase calls will fail at the API level with
+      // clear 401/network errors, which is easier to debug than a hard crash.
+      console.error(
+        [
+          "",
+          "╔══════════════════════════════════════════════════════╗",
+          "║       TUKOPAMOJA — Environment Configuration        ║",
+          "╚══════════════════════════════════════════════════════╝",
+          "",
+          "The following environment variables have problems:",
+          "",
+          ...errors,
+          "",
+          "The app was built with placeholder Supabase values.",
+          "Rebuild with real NEXT_PUBLIC_SUPABASE_URL and",
+          "NEXT_PUBLIC_SUPABASE_ANON_KEY before deploying.",
+          "",
+        ].join("\n")
+      );
     } else {
-      const msg = [
-        "",
-        "╔══════════════════════════════════════════════════════╗",
-        "║       TUKOPAMOJA — Environment Configuration        ║",
-        "╚══════════════════════════════════════════════════════╝",
-        "",
-        "The following environment variables have problems:",
-        "",
-        ...errors,
-        "",
-        "Copy .env.local.example → .env.local and fill in real values.",
-        "",
-      ].join("\n");
-
-      throw new Error(msg);
+      console.warn(
+        [
+          "[TUKOPAMOJA] Missing/invalid env vars detected in development.",
+          "Using safe local defaults for development mode.",
+          ...errors,
+        ].join("\n")
+      );
     }
-  }
-
-  if (errors.length > 0 && !isProd) {
-    console.warn(
-      [
-        "[TUKOPAMOJA] Missing/invalid env vars detected in development.",
-        "Using safe local defaults for development mode.",
-        ...errors,
-      ].join("\n")
-    );
   }
 
   const resolvedSupabaseUrl =
