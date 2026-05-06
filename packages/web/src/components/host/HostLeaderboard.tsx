@@ -8,6 +8,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useGameStore } from "@/stores/useGameStore";
 import { Button } from "@/components/ui/button";
+import DancingCharacters from "@/components/ui/DancingCharacters";
 import { MEDALS } from "@tukopamoja/shared";
 
 export default function HostLeaderboard() {
@@ -69,6 +70,13 @@ export default function HostLeaderboard() {
           </motion.div>
         ))}
       </div>
+
+      {/* Dancing characters beneath the leaderboard */}
+      <DancingCharacters
+        count={5}
+        seed={session.current_q_index}
+        className="relative z-10 mb-4"
+      />
 
       <Button
         size="xl"

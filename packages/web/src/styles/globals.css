@@ -437,6 +437,33 @@
   }
   .game-card:active { transform: translateY(0) scale(0.99); }
 
+  /* ─── Ready Glow (replaces strobe-prone pulse-glow) ──── */
+  /* A steady glow + gentle scale to draw attention without
+     strobing or triggering photosensitive seizures.         */
+  .ready-glow {
+    box-shadow: 0 0 24px rgba(238,220,0,0.5),
+                0 0 48px rgba(238,220,0,0.2);
+    animation: ready-breathe 3s ease-in-out infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ready-glow {
+      animation: none;
+      box-shadow: 0 0 18px rgba(238,220,0,0.4);
+    }
+  }
+  @keyframes ready-breathe {
+    0%, 100% {
+      box-shadow: 0 0 24px rgba(238,220,0,0.5),
+                  0 0 48px rgba(238,220,0,0.2);
+      transform: scale(1);
+    }
+    50% {
+      box-shadow: 0 0 30px rgba(238,220,0,0.6),
+                  0 0 56px rgba(238,220,0,0.28);
+      transform: scale(1.03);
+    }
+  }
+
   /* ─── Timer Bar ────────────────────────────────────────── */
   .timer-bar-track {
     @apply h-2.5 rounded-full overflow-hidden;
@@ -452,7 +479,7 @@
   }
   .timer-bar-fill--critical {
     background: linear-gradient(90deg, #FF2453, #FF6B87);
-    animation: glow-pulse 0.6s ease-in-out infinite;
+    animation: glow-pulse 2s ease-in-out infinite;
   }
 
   /* ─── Stat Tiles (question/timer/response counts) ──────── */
@@ -751,6 +778,85 @@
   @keyframes qa-hamsterBody {
     from,25%,50%,75%,to { transform: rotate(0); }
     12.5%,37.5%,62.5%,87.5% { transform: rotate(-2deg); }
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     Dancing Characters — looped dance keyframes
+     ═══════════════════════════════════════════════════════════ */
+  .dancer-figure {
+    display: inline-flex;
+    transform-origin: bottom center;
+    will-change: transform;
+  }
+
+  /* Hula — side-to-side sway */
+  .dance-hula {
+    animation: dance-hula 2.4s ease-in-out infinite;
+  }
+  @keyframes dance-hula {
+    0%, 100% { transform: rotate(-8deg) translateY(0); }
+    25%      { transform: rotate(0deg)  translateY(-4px); }
+    50%      { transform: rotate(8deg)  translateY(0); }
+    75%      { transform: rotate(0deg)  translateY(-4px); }
+  }
+
+  /* Salsa — quick hip pivot + lift */
+  .dance-salsa {
+    animation: dance-salsa 1.8s cubic-bezier(0.37, 0, 0.63, 1) infinite;
+  }
+  @keyframes dance-salsa {
+    0%, 100% { transform: translateX(0)   scaleY(1); }
+    20%      { transform: translateX(6px) scaleY(0.94); }
+    40%      { transform: translateX(0)   scaleY(1.04); }
+    60%      { transform: translateX(-6px) scaleY(0.94); }
+    80%      { transform: translateX(0)   scaleY(1.04); }
+  }
+
+  /* Disco — scale up with rotation pop */
+  .dance-disco {
+    animation: dance-disco 2s ease-in-out infinite;
+  }
+  @keyframes dance-disco {
+    0%, 100% { transform: scale(1)    rotate(0deg); }
+    25%      { transform: scale(1.1)  rotate(6deg); }
+    50%      { transform: scale(1)    rotate(0deg); }
+    75%      { transform: scale(1.08) rotate(-6deg); }
+  }
+
+  /* Bounce — vertical bounce */
+  .dance-bounce {
+    animation: dance-bounce 1.4s ease-in-out infinite;
+  }
+  @keyframes dance-bounce {
+    0%, 100% { transform: translateY(0)    scaleY(1); }
+    30%      { transform: translateY(-14px) scaleY(1.05); }
+    50%      { transform: translateY(0)    scaleY(0.92); }
+    70%      { transform: translateY(-8px) scaleY(1.02); }
+  }
+
+  /* Wiggle — quick side-wiggle */
+  .dance-wiggle {
+    animation: dance-wiggle 1.6s ease-in-out infinite;
+  }
+  @keyframes dance-wiggle {
+    0%, 100% { transform: rotate(0deg); }
+    15%      { transform: rotate(10deg); }
+    30%      { transform: rotate(-8deg); }
+    45%      { transform: rotate(6deg); }
+    60%      { transform: rotate(-4deg); }
+    75%      { transform: rotate(2deg); }
+  }
+
+  /* Respect reduced-motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    .dancer-figure,
+    .dance-hula,
+    .dance-salsa,
+    .dance-disco,
+    .dance-bounce,
+    .dance-wiggle {
+      animation: none !important;
+    }
   }
   @keyframes qa-hamsterFRLimb {
     from,25%,50%,75%,to { transform: rotate(50deg) translateZ(-1px); }

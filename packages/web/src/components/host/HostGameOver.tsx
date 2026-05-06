@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { useGameStore } from "@/stores/useGameStore";
 import { Button } from "@/components/ui/button";
 import WinnerCelebration from "@/components/ui/WinnerCelebration";
+import DancingCharacters from "@/components/ui/DancingCharacters";
 import { MEDALS } from "@tukopamoja/shared";
 
 export default function HostGameOver() {
@@ -70,6 +71,13 @@ export default function HostGameOver() {
           );
         })}
       </div>
+
+      {/* Dancing characters beneath the podium */}
+      <DancingCharacters
+        count={6}
+        seed={99}
+        className="relative z-10 mb-4"
+      />
 
       <div className="flex gap-4 relative z-10">
         <Button

@@ -222,7 +222,11 @@ export default function HostQuestion() {
           variant={timerDone || allAnswered ? "game" : "outline"}
           disabled={loading}
           onClick={() => handleAction(showLeaderboard, "show leaderboard")}
-          className={timerDone || allAnswered ? "animate-pulse-glow" : ""}
+          className={
+            timerDone || allAnswered
+              ? "ready-glow transition-shadow duration-700"
+              : ""
+          }
         >
           <BarChart3 className="w-4 h-4 mr-2" />
           {loading ? "Loading…" : "Show Leaderboard"}

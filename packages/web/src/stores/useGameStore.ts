@@ -92,11 +92,36 @@ export const useGameStore = create<GameState>((set, get) => ({
       .is("kicked_at", null)
       .order("score", { ascending: false });
 
+    const s = session as Session;
+    const q = s.questions_snapshot?.[s.current_q_index] || null;
+
     set({
-      session: session as Session,
+      session: s,
       players: (players as SessionPlayer[]) || [],
-      currentQuestion: session.questions_snapshot?.[session.current_q_index] || null,
+      currentQuestion: q,
     });
+
+    // ── Recover timer after browser refresh ──────────────────
+    // When the session is mid-question the realtime UPDATE has
+    // already fired before we reconnected, so the timer never
+    // starts. Compute the remaining seconds from the DB
+    // timestamp and kick the timer off ourselves.
+    if (s.status === "question_active" && s.current_question_started_at) {
+      const limitSec =
+        s.current_question_remaining_sec ??
+        s.current_question_time_limit_sec ??
+        q?.time_limit_sec ??
+        30;
+
+      const elapsedMs = Date.now() - new Date(s.current_question_started_at).getTime();
+      const remaining = Math.max(0, Math.ceil(limitSec - elapsedMs / 1000));
+
+      if (remaining > 0) {
+        get().startTimer(remaining);
+      } else {
+        set({ timeLeft: 0 });
+      }
+    }
   },
 
   setSession: (session) => {
