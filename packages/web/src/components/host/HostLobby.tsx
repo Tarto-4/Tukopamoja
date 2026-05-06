@@ -138,7 +138,7 @@ export default function HostLobby() {
             <span className="text-muted-foreground">
               {players.length} player{players.length !== 1 ? "s" : ""} joined
             </span>
-            <span className="text-xs rounded-full px-2 py-1 bg-[#eecd00]/15 border border-[#eecd00]/30 text-[#eecd00]">
+            <span className="text-xs rounded-full px-2 py-1 bg-primary/15 border border-primary/30 text-primary">
               {players.filter((p) => p.is_ready).length} ready
             </span>
           </div>

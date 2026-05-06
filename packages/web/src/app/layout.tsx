@@ -31,6 +31,9 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <link rel="icon" href={withBasePath("/favicon.svg")} type="image/svg+xml" />
+        <link rel="shortcut icon" href={withBasePath("/favicon.svg")} />
+        <link rel="apple-touch-icon" href={withBasePath("/favicon.svg")} />
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;400;500;700&display=swap"

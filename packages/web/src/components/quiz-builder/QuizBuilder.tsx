@@ -307,7 +307,7 @@ export default function QuizBuilder({
           <Button
             onClick={handleSave}
             disabled={saving}
-            className="gradient-primary border-0"
+            className="gradient-primary border-0 btn-3d text-black font-semibold"
           >
             <Save className="w-4 h-4 mr-2" />
             {saving ? "Saving..." : isEditing ? "Update Template" : "Save Template"}

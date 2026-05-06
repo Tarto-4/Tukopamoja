@@ -70,7 +70,7 @@ export default function GameLogo({
       {/* Subtitle */}
       {showSubtitle && (
         <span
-          className={`${config.subtitleText} uppercase tracking-[0.35em] text-white/60 mt-3 font-medium`}
+          className={`${config.subtitleText} uppercase tracking-[0.35em] text-white/70 mt-3 font-medium drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]`}
         >
           ENS Future Edition
         </span>

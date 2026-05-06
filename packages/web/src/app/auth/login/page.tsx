@@ -145,7 +145,7 @@ export default function LoginPage() {
     <div className="game-screen items-center justify-center gradient-dark px-4 relative overflow-hidden">
       <div className="absolute top-0 left-0 right-0 accent-bar z-20" />
       <div className="absolute top-4 right-4 z-30">
-        <ThemeToggle className="h-9 px-3 glass border-[#eecd00]/30 text-white hover:bg-black/60" />
+        <ThemeToggle className="h-9 px-3 glass border-primary/30 text-foreground hover:bg-primary/10" />
       </div>
 
       <BrandedBackground
@@ -155,7 +155,7 @@ export default function LoginPage() {
         className="z-0"
       />
 
-      <Card className="w-full max-w-md glass relative z-20 border-[#eecd00]/20">
+      <Card className="w-full max-w-md glass relative z-20 border-primary/20">
         <CardHeader className="text-center">
           <Link href="/" className="inline-flex justify-center">
             <GameLogo size="md" static />
@@ -224,7 +224,7 @@ export default function LoginPage() {
                   <Button
                     type="button"
                     variant="outline"
-                    className="w-full border-[#eecd00]/30"
+                    className="w-full border-primary/30 hover:bg-primary/10"
                     onClick={handleResendConfirmation}
                     disabled={loading}
                   >
@@ -272,8 +272,8 @@ export default function LoginPage() {
               </button>
             </p>
 
-            <p className="text-center text-xs text-white/60">
-              <Link href="/" className="hover:text-white underline-offset-4 hover:underline">
+            <p className="text-center text-xs text-muted-foreground">
+              <Link href="/" className="text-primary hover:text-primary/80 underline-offset-4 hover:underline">
                 Back to home
               </Link>
             </p>

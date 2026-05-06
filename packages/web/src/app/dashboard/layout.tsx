@@ -69,21 +69,21 @@ export default function DashboardLayout({
                   href={item.href}
                   className={`transition-colors ${
                     pathname?.startsWith(item.href)
-                      ? "text-[#65513c] dark:text-[#eecd00] font-medium"
-                      : "text-foreground/70 dark:text-muted-foreground hover:text-foreground dark:hover:text-[#eecd00]"
+                      ? "text-primary font-medium"
+                      : "text-foreground/70 hover:text-primary"
                   }`}
                 >
                   {item.label}
                 </Link>
               ))}
-              <ThemeToggle className="h-8 px-2 border-[#eecd00]/30 text-foreground dark:text-white hover:bg-black/5 dark:hover:bg-white/10" />
+              <ThemeToggle className="h-8 px-2 border-primary/30 text-foreground hover:bg-primary/10" />
               <Button
                 type="button"
                 variant="outline"
                 size="sm"
                 onClick={handleSignOut}
                 disabled={signingOut}
-                className="h-8 px-2 border-[#eecd00]/30 text-foreground dark:text-white hover:bg-black/5 dark:hover:bg-white/10"
+                className="h-8 px-2 border-primary/30 text-foreground hover:bg-primary/10"
               >
                 <LogOut className="w-3.5 h-3.5 mr-1.5" />
                 {signingOut ? "Signing out..." : "Sign out"}

@@ -145,13 +145,13 @@ export default function TemplatesPage() {
             variant="outline"
             onClick={handleRefreshStats}
             disabled={refreshing}
-            className="border-[#eecd00]/30 text-foreground dark:text-white hover:bg-black/5 dark:hover:bg-white/10"
+            className="border-primary/30 text-foreground hover:bg-primary/10"
           >
             <RefreshCw className={`w-4 h-4 mr-2 ${refreshing ? "animate-spin" : ""}`} />
             {refreshing ? "Refreshing..." : "Refresh Plays"}
           </Button>
           <Link href="/dashboard/templates/new">
-            <Button className="gradient-primary border-0 btn-3d text-white font-semibold">
+            <Button className="gradient-primary border-0 btn-3d text-black font-semibold">
               <Plus className="w-4 h-4 mr-2" />
               New Template
             </Button>
@@ -168,7 +168,7 @@ export default function TemplatesPage() {
               Create your first quiz template to get started.
             </p>
             <Link href="/dashboard/templates/new">
-              <Button className="gradient-primary border-0 btn-3d text-white font-semibold">
+              <Button className="gradient-primary border-0 btn-3d text-black font-semibold">
                 <Plus className="w-4 h-4 mr-2" />
                 Create Template
               </Button>

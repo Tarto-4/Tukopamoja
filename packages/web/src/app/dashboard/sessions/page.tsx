@@ -328,7 +328,7 @@ export default function SessionsPage() {
             variant="outline"
             onClick={handleRefreshSessions}
             disabled={refreshing}
-            className="border-[#eecd00]/30 text-foreground dark:text-white hover:bg-black/5 dark:hover:bg-white/10"
+            className="border-primary/30 text-foreground hover:bg-primary/10"
           >
             <RefreshCw className={`w-4 h-4 mr-2 ${refreshing ? "animate-spin" : ""}`} />
             {refreshing ? "Refreshing..." : "Refresh Sessions"}
@@ -387,7 +387,7 @@ export default function SessionsPage() {
                       </p>
                       {/* Show winner inline for finished sessions */}
                       {session.status === "finished" && detail && winner && (
-                        <p className="text-xs text-[#eecd00] mt-1 flex items-center gap-1">
+                        <p className="text-xs text-primary mt-1 flex items-center gap-1">
                           <Trophy className="w-3 h-3" />
                           Winner: {winner.first_name || ""} {winner.last_name || winner.nickname} — {winner.score?.toLocaleString()} pts
                         </p>
@@ -433,7 +433,7 @@ export default function SessionsPage() {
                               e.stopPropagation();
                               exportSessionCSV(session);
                             }}
-                            className="border-[#eecd00]/30 text-[#eecd00] hover:bg-[#eecd00]/10"
+                            className="border-primary/30 text-primary hover:bg-primary/10"
                           >
                             <Download className="w-4 h-4 mr-2" />
                             Export CSV
@@ -458,7 +458,7 @@ export default function SessionsPage() {
                         {/* Attendees / Leaderboard */}
                         <div>
                           <div className="flex items-center gap-2 mb-3">
-                            <Users className="w-4 h-4 text-[#eecd00]" />
+                            <Users className="w-4 h-4 text-primary" />
                             <h3 className="text-sm font-semibold uppercase tracking-wider text-white/70">
                               Attendees &amp; Standings ({detail.players.length})
                             </h3>
@@ -568,8 +568,8 @@ export default function SessionsPage() {
           }}
           className="flex items-center gap-2 mb-4 group"
         >
-          <Archive className="w-5 h-5 text-[#eecd00]" />
-          <h2 className="text-xl font-serif font-bold text-white/80 group-hover:text-white transition-colors">
+          <Archive className="w-5 h-5 text-primary" />
+          <h2 className="text-xl font-bold text-foreground/80 group-hover:text-foreground transition-colors">
             Archived Sessions
           </h2>
           {showArchived ? (
@@ -660,8 +660,8 @@ export default function SessionsPage() {
                           {/* Archived players */}
                           <div>
                             <div className="flex items-center gap-2 mb-3">
-                              <Users className="w-4 h-4 text-[#eecd00]" />
-                              <h3 className="text-sm font-semibold uppercase tracking-wider text-white/70">
+                              <Users className="w-4 h-4 text-primary" />
+                              <h3 className="text-sm font-semibold uppercase tracking-wider text-foreground/70">
                                 Players ({players.length})
                               </h3>
                             </div>

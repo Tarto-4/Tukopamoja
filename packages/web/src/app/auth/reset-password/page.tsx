@@ -148,7 +148,7 @@ export default function ResetPasswordPage() {
 
               <Button
                 type="submit"
-                className="w-full gradient-primary border-0 btn-3d text-white font-semibold"
+                className="w-full gradient-primary border-0 btn-3d text-black font-semibold"
                 size="lg"
                 disabled={loading}
               >
@@ -187,7 +187,7 @@ export default function ResetPasswordPage() {
 
               <Button
                 type="submit"
-                className="w-full gradient-primary border-0 btn-3d text-white font-semibold"
+                className="w-full gradient-primary border-0 btn-3d text-black font-semibold"
                 size="lg"
                 disabled={loading}
               >

@@ -64,16 +64,16 @@ export default function HomePage() {
         brandMarkClassName="absolute inset-0 m-auto h-[520px] w-[520px] object-contain opacity-[0.18]"
       />
 
-      <div className="text-center space-y-8 px-4 relative z-10 rounded-2xl glass p-8 sm:p-10 border border-[#eecd00]/20 max-w-6xl w-full mx-4">
+      <div className="text-center space-y-8 px-4 relative z-10 rounded-2xl glass p-8 sm:p-10 border border-primary/20 max-w-6xl w-full mx-4">
         <div className="space-y-3">
           <GameLogo size="xl" showSubtitle className="animate-float-in" />
-          <p className="text-lg text-foreground/80 dark:text-white/70 tracking-wide">
+          <p className="text-lg text-white/80 tracking-wide drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]">
             Premium multiplayer arena for quiz, puzzle, strategy, and word games.
           </p>
         </div>
 
         <div className="space-y-4">
-          <div className="flex items-center justify-center gap-2 text-xs uppercase tracking-[0.25em] text-foreground/60 dark:text-white/60">
+          <div className="flex items-center justify-center gap-2 text-xs uppercase tracking-[0.25em] text-white/60">
             <span>Select game mode</span>
           </div>
 
@@ -115,7 +115,7 @@ export default function HomePage() {
                     </span>
                   </div>
                   <div className="mt-4 space-y-2">
-                    <h2 className={`text-lg font-serif font-bold ${isSelected ? "text-[#EEDC00]" : "text-white"}`}>
+                    <h2 className={`text-lg font-bold ${isSelected ? "text-[#EEDC00] drop-shadow-[0_0_8px_rgba(238,220,0,0.4)]" : "text-white"}`}>
                       {mode.name}
                     </h2>
                     <p className="text-sm text-white/70 leading-relaxed">
@@ -128,9 +128,9 @@ export default function HomePage() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 max-w-3xl mx-auto">
-          <p className="text-sm font-semibold text-foreground">Selected mode: {selectedMode.name}</p>
-          <p className="text-sm text-muted-foreground mt-1">
+        <div className="rounded-2xl border border-white/15 bg-black/40 backdrop-blur-sm px-4 py-4 max-w-3xl mx-auto">
+          <p className="text-sm font-semibold text-white">Selected mode: {selectedMode.name}</p>
+          <p className="text-sm text-white/70 mt-1">
             {isQuizMode
               ? "Quiz mode is fully available right now with multiplayer host and player flows."
               : `${selectedMode.name} is planned as a multiplayer mode and is marked coming soon for now.`}

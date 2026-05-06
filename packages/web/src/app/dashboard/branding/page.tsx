@@ -226,7 +226,7 @@ export default function BrandingPage() {
                 <div>
                   <Label
                     htmlFor="logo-upload"
-                    className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 border border-border rounded-md bg-[#eecd00]/10 text-foreground hover:bg-[#eecd00]/20 transition-colors"
+                    className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 border border-primary/30 rounded-md bg-primary/10 text-foreground hover:bg-primary/20 transition-colors"
                   >
                     <Upload className="w-4 h-4" />
                     Upload Logo
@@ -270,7 +270,7 @@ export default function BrandingPage() {
                       secondary_color: preset.secondary,
                     })
                   }
-                  className="flex flex-col items-center p-2 rounded-lg border border-border bg-gray-50 hover:border-[#eecd00] hover:bg-[#eecd00]/10 transition-colors"
+                  className="flex flex-col items-center p-2 rounded-lg border border-border bg-gray-50 hover:border-primary hover:bg-primary/10 transition-colors"
                   title={preset.name}
                 >
                   <div className="flex gap-1">
