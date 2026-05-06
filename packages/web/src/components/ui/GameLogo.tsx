@@ -1,13 +1,12 @@
 "use client";
 
+import { withBasePath } from "@/lib/base-path";
+
 /**
- * GameLogo — Playful stacked brand mark.
+ * GameLogo — Brand mark using the official tuko-pamoja.png image.
  *
- * "TUKO" sits on top of "PAMOJA" with a slight offset and
- * perspective tilt, giving it a dynamic, game-title feel.
- * Each letter floats independently with staggered animations.
- *
- * Sizes:  sm (nav), md (cards/join), lg (hero), xl (splash)
+ * Sizes: sm (nav), md (cards/join), lg (hero), xl (splash)
+ * Fully responsive with smooth scaling per breakpoint.
  */
 
 type LogoSize = "sm" | "md" | "lg" | "xl";
@@ -23,48 +22,25 @@ interface GameLogoProps {
 
 const SIZE_CONFIG: Record<
   LogoSize,
-  {
-    topText: string;
-    bottomText: string;
-    subtitleText: string;
-    gap: string;
-    container: string;
-  }
+  { imgClass: string; subtitleText: string }
 > = {
   sm: {
-    topText: "text-lg",
-    bottomText: "text-[13px]",
+    imgClass: "h-10 w-auto",
     subtitleText: "text-[7px]",
-    gap: "-space-y-1",
-    container: "",
   },
   md: {
-    topText: "text-3xl",
-    bottomText: "text-xl",
+    imgClass: "h-16 sm:h-20 w-auto",
     subtitleText: "text-[9px]",
-    gap: "-space-y-1.5",
-    container: "",
   },
   lg: {
-    topText: "text-5xl sm:text-6xl",
-    bottomText: "text-3xl sm:text-4xl",
+    imgClass: "h-24 sm:h-32 w-auto",
     subtitleText: "text-[10px] sm:text-xs",
-    gap: "-space-y-2",
-    container: "",
   },
   xl: {
-    topText: "text-6xl sm:text-8xl",
-    bottomText: "text-4xl sm:text-5xl",
+    imgClass: "h-32 sm:h-44 md:h-52 w-auto",
     subtitleText: "text-xs sm:text-sm",
-    gap: "-space-y-3",
-    container: "",
   },
 };
-
-const TOP_ROTATIONS = ["-rotate-3", "-rotate-1", "rotate-1", "rotate-3"];
-const BOTTOM_ROTATIONS = ["-rotate-1", "rotate-1", "-rotate-1", "rotate-1", "-rotate-1", "rotate-1"];
-const TOP_LETTERS = "TUKO".split("");
-const BOTTOM_LETTERS = "PAMOJA".split("");
 
 export default function GameLogo({
   size = "lg",
@@ -82,43 +58,19 @@ export default function GameLogo({
       role="img"
       aria-label="TUKOPAMOJA"
     >
-      <div className={`flex flex-col items-center ${config.gap}`}>
-        {/* T U K O */}
-        <div className="flex items-baseline justify-center">
-          {TOP_LETTERS.map((letter, i) => (
-            <span
-              key={`top-${i}`}
-              className={`${config.topText} font-black tracking-[0.12em] leading-none inline-block
-                text-primary drop-shadow-[0_2px_8px_rgba(238,205,0,0.35)] ${TOP_ROTATIONS[i] ?? ""}
-                transition-transform duration-300 ease-out
-                ${isStatic ? "" : "group-hover:animate-[letter-bounce_0.5s_ease-out]"}
-              `}
-            >
-              {letter}
-            </span>
-          ))}
-        </div>
-
-        {/* P A M O J A */}
-        <div className="flex items-baseline justify-center">
-          {BOTTOM_LETTERS.map((letter, i) => (
-            <span
-              key={`bottom-${i}`}
-              className={`${config.bottomText} font-black tracking-[0.18em] leading-none inline-block
-                text-foreground/85 ${BOTTOM_ROTATIONS[i] ?? ""}
-                transition-transform duration-300 ease-out
-              `}
-            >
-              {letter}
-            </span>
-          ))}
-        </div>
-      </div>
+      <img
+        src={withBasePath("/designs/tuko-pamoja.png")}
+        alt="TUKOPAMOJA"
+        className={`${config.imgClass} object-contain drop-shadow-[0_4px_24px_rgba(238,220,0,0.3)] transition-transform duration-300 ease-out ${
+          isStatic ? "" : "group-hover:scale-105"
+        }`}
+        draggable={false}
+      />
 
       {/* Subtitle */}
       {showSubtitle && (
         <span
-          className={`${config.subtitleText} uppercase tracking-[0.35em] text-muted-foreground mt-2 font-medium`}
+          className={`${config.subtitleText} uppercase tracking-[0.35em] text-white/60 mt-3 font-medium`}
         >
           ENS Future Edition
         </span>
@@ -129,7 +81,7 @@ export default function GameLogo({
 
 /**
  * Compact inline logo for nav bars.
- * Renders "TUKO" in gold + "PAMOJA" in white on one line.
+ * Uses the tuko-pamoja.png at small size for nav placement.
  */
 export function GameLogoInline({
   className = "",
@@ -137,15 +89,13 @@ export function GameLogoInline({
   className?: string;
 }) {
   return (
-    <span
-      className={`font-black text-xl tracking-wide select-none ${className}`}
+    <img
+      src={withBasePath("/designs/tuko-pamoja.png")}
+      alt="TUKOPAMOJA"
+      className={`h-8 w-auto object-contain ${className}`}
       role="img"
       aria-label="TUKOPAMOJA"
-    >
-      <span className="text-primary drop-shadow-[0_1px_4px_rgba(238,205,0,0.3)]">
-        TUKO
-      </span>
-      <span className="text-foreground/85">PAMOJA</span>
-    </span>
+      draggable={false}
+    />
   );
 }

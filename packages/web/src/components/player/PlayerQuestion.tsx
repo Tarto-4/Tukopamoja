@@ -53,7 +53,7 @@ export default function PlayerQuestion() {
     return (
       <div className="game-screen items-center justify-center gradient-dark px-4 relative overflow-hidden">
         <div className="absolute top-0 left-0 right-0 accent-bar z-20" />
-        <BrandedBackground imagePath="/designs/backgrounds/Sessions.avif" className="z-0" />
+        <BrandedBackground imagePath="/designs/backgrounds/dt-wallpaper.png" className="z-0" />
         <motion.div
           initial={{ scale: 0.75, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -108,7 +108,7 @@ export default function PlayerQuestion() {
     return (
       <div className="game-screen items-center justify-center gradient-dark px-4 relative overflow-hidden">
         <div className="absolute top-0 left-0 right-0 accent-bar z-20" />
-        <BrandedBackground imagePath="/designs/backgrounds/Sessions.avif" className="z-0" />
+        <BrandedBackground imagePath="/designs/backgrounds/dt-wallpaper.png" className="z-0" />
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -129,7 +129,7 @@ export default function PlayerQuestion() {
   return (
     <div className="game-screen p-3 gradient-dark relative overflow-hidden">
       <div className="absolute top-0 left-0 right-0 accent-bar z-20" />
-      <BrandedBackground imagePath="/designs/backgrounds/Sessions.avif" className="z-0" />
+      <BrandedBackground imagePath="/designs/backgrounds/dt-wallpaper.png" className="z-0" />
 
       {/* Progress / timer header */}
       <div className="relative z-10 mb-3 rounded-2xl glass px-4 py-3 border border-white/12">

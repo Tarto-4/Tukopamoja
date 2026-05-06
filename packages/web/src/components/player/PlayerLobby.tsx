@@ -22,7 +22,7 @@ export default function PlayerLobby() {
     <div className="game-screen items-center justify-center gradient-dark px-4 relative overflow-hidden">
       <div className="absolute top-0 left-0 right-0 accent-bar z-20" />
       <img
-        src={withBasePath("/designs/backgrounds/brand-mark-overlay.svg")}
+        src={withBasePath("/designs/tuko-pamoja.png")}
         alt=""
         aria-hidden="true"
         className="absolute inset-0 m-auto w-[420px] h-[420px] object-contain opacity-[0.18] pointer-events-none"

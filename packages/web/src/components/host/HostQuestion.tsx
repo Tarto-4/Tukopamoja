@@ -81,7 +81,7 @@ export default function HostQuestion() {
   return (
     <div className="game-screen p-4 sm:p-8 gradient-dark relative overflow-hidden">
       <div className="absolute top-0 left-0 right-0 accent-bar z-20" />
-      <BrandedBackground imagePath="/designs/backgrounds/Template.avif" className="z-0" />
+      <BrandedBackground imagePath="/designs/backgrounds/dt-wallpaper.png" className="z-0" />
       <div className="relative z-10 mb-4 sm:mb-6 grid grid-cols-1 md:grid-cols-3 gap-3">
         <div className="stat-tile">
           <p className="stat-tile__label">Question</p>

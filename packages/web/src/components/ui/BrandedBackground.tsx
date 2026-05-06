@@ -11,7 +11,7 @@ type BrandedBackgroundProps = {
 export default function BrandedBackground({
   className = "",
   overlayClassName = "bg-black/50",
-  imagePath = "/designs/backgrounds/login_background.webp",
+  imagePath = "/designs/backgrounds/dt-wallpaper.png",
   imageClassName = "absolute inset-0 h-full w-full object-cover opacity-100",
   brandMarkClassName = "absolute inset-0 m-auto h-[420px] w-[420px] object-contain opacity-[0.11]",
 }: BrandedBackgroundProps) {
@@ -25,7 +25,7 @@ export default function BrandedBackground({
       <div className={`absolute inset-0 ${overlayClassName}`} />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(135,50,135,0.12),_transparent_38%),radial-gradient(circle_at_bottom_right,_rgba(238,205,0,0.10),_transparent_42%),linear-gradient(180deg,rgba(10,10,10,0.18),rgba(10,10,10,0.65))]" />
       <img
-        src={withBasePath("/designs/backgrounds/brand-mark-overlay.svg")}
+        src={withBasePath("/designs/tuko-pamoja.png")}
         alt=""
         className={brandMarkClassName}
       />

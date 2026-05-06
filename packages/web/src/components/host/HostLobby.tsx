@@ -82,7 +82,7 @@ export default function HostLobby() {
     <div className="game-screen gradient-dark relative overflow-hidden">
       <div className="absolute top-0 left-0 right-0 accent-bar z-20" />
       <img
-        src={withBasePath("/designs/backgrounds/brand-mark-overlay.svg")}
+        src={withBasePath("/designs/tuko-pamoja.png")}
         alt=""
         aria-hidden="true"
         className="absolute inset-0 m-auto w-[560px] h-[560px] object-contain opacity-[0.16] pointer-events-none"

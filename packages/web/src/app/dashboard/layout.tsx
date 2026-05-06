@@ -21,15 +21,7 @@ export default function DashboardLayout({
   const router = useRouter();
   const [signingOut, setSigningOut] = useState(false);
 
-  const backgroundByRoute: Record<string, string> = {
-    "/dashboard/templates": "/designs/backgrounds/Template.avif",
-    "/dashboard/sessions": "/designs/backgrounds/Sessions.avif",
-    "/dashboard/branding": "/designs/backgrounds/Branding.webp",
-  };
-
-  const backgroundImagePath =
-    Object.entries(backgroundByRoute).find(([route]) => pathname?.startsWith(route))?.[1] ||
-    "/designs/backgrounds/Public_One.avif";
+  const backgroundImagePath = "/designs/backgrounds/dt-wallpaper.png";
 
   const navItems = [
     { href: "/dashboard/templates", label: "Templates" },

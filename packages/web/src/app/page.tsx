@@ -60,7 +60,7 @@ export default function HomePage() {
     <div className="game-screen items-center justify-start md:justify-center gradient-dark relative overflow-y-auto py-8">
       <div className="absolute top-0 left-0 right-0 accent-bar z-20" />
       <BrandedBackground
-        imagePath="/designs/backgrounds/Public_One.avif"
+        imagePath="/designs/backgrounds/dt-wallpaper.png"
         brandMarkClassName="absolute inset-0 m-auto h-[520px] w-[520px] object-contain opacity-[0.18]"
       />
 

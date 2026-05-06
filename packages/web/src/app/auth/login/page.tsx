@@ -139,7 +139,7 @@ export default function LoginPage() {
       </div>
 
       <BrandedBackground
-        imagePath="/designs/backgrounds/login_background.png"
+        imagePath="/designs/backgrounds/dt-wallpaper.png"
         imageClassName="absolute inset-0 h-full w-full object-cover object-center opacity-100"
         overlayClassName="bg-black/42"
         className="z-0"
