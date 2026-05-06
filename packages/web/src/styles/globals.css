@@ -437,31 +437,14 @@
   }
   .game-card:active { transform: translateY(0) scale(0.99); }
 
-  /* ─── Ready Glow (replaces strobe-prone pulse-glow) ──── */
-  /* A steady glow + gentle scale to draw attention without
-     strobing or triggering photosensitive seizures.         */
+  /* ─── Ready Glow ──────────────────────────────────────── */
+  /* A static golden glow — no animation, no strobing risk.
+     Uses transition so the glow appears smoothly when the
+     class is first applied (via the variant toggle).        */
   .ready-glow {
-    box-shadow: 0 0 24px rgba(238,220,0,0.5),
-                0 0 48px rgba(238,220,0,0.2);
-    animation: ready-breathe 3s ease-in-out infinite;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .ready-glow {
-      animation: none;
-      box-shadow: 0 0 18px rgba(238,220,0,0.4);
-    }
-  }
-  @keyframes ready-breathe {
-    0%, 100% {
-      box-shadow: 0 0 24px rgba(238,220,0,0.5),
-                  0 0 48px rgba(238,220,0,0.2);
-      transform: scale(1);
-    }
-    50% {
-      box-shadow: 0 0 30px rgba(238,220,0,0.6),
-                  0 0 56px rgba(238,220,0,0.28);
-      transform: scale(1.03);
-    }
+    box-shadow: 0 0 22px rgba(238,220,0,0.45),
+                0 0 44px rgba(238,220,0,0.18) !important;
+    transition: box-shadow 0.6s ease;
   }
 
   /* ─── Timer Bar ────────────────────────────────────────── */

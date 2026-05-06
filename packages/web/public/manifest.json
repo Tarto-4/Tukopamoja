@@ -1,0 +1,17 @@
+{
+  "name": "TUKOPAMOJA",
+  "short_name": "Tukopamoja",
+  "description": "Premium real-time quiz platform by ENS Africa",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#09090b",
+  "theme_color": "#8E191E",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

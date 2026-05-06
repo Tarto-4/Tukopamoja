@@ -219,14 +219,10 @@ export default function HostQuestion() {
       <div className="flex flex-wrap items-center justify-center gap-3 relative z-10">
         <Button
           size="lg"
-          variant={timerDone || allAnswered ? "game" : "outline"}
+          variant="game"
           disabled={loading}
           onClick={() => handleAction(showLeaderboard, "show leaderboard")}
-          className={
-            timerDone || allAnswered
-              ? "ready-glow transition-shadow duration-700"
-              : ""
-          }
+          className={timerDone || allAnswered ? "ready-glow" : ""}
         >
           <BarChart3 className="w-4 h-4 mr-2" />
           {loading ? "Loading…" : "Show Leaderboard"}

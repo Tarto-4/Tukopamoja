@@ -223,46 +223,32 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
 
     const supabase = createClient();
 
-    // Check session still active
-    const { data: session } = await supabase
-      .from("sessions")
-      .select("*")
-      .eq("id", stored.sessionId)
-      .single();
+    // Fetch session + player in parallel (latency optimisation)
+    const [sessionRes, playerRes] = await Promise.all([
+      supabase.from("sessions").select("*").eq("id", stored.sessionId).single(),
+      supabase.from("session_players").select("*").eq("id", stored.playerId).is("kicked_at", null).single(),
+    ]);
 
-    if (!session || session.status === "finished") {
+    const session = sessionRes.data;
+    const player = playerRes.data;
+
+    if (!session || session.status === "finished" || !player) {
       localStorage.removeItem(STORAGE_KEY);
       return false;
     }
 
-    // Check player still exists and not kicked
-    const { data: player } = await supabase
-      .from("session_players")
-      .select("*")
-      .eq("id", stored.playerId)
-      .is("kicked_at", null)
-      .single();
+    // Fetch answer + all players in parallel
+    const [answerRes, allPlayersRes] = await Promise.all([
+      supabase.from("player_answers").select("*")
+        .eq("session_id", session.id).eq("player_id", stored.playerId)
+        .eq("question_index", session.current_q_index).maybeSingle(),
+      supabase.from("session_players").select("*")
+        .eq("session_id", session.id).is("kicked_at", null)
+        .order("score", { ascending: false }),
+    ]);
 
-    if (!player) {
-      localStorage.removeItem(STORAGE_KEY);
-      return false;
-    }
-
-    // Fetch full answer record for current question (not just id)
-    const { data: existingAnswer } = await supabase
-      .from("player_answers")
-      .select("*")
-      .eq("session_id", session.id)
-      .eq("player_id", stored.playerId)
-      .eq("question_index", session.current_q_index)
-      .maybeSingle();
-
-    const { data: allPlayers } = await supabase
-      .from("session_players")
-      .select("*")
-      .eq("session_id", session.id)
-      .is("kicked_at", null)
-      .order("score", { ascending: false });
+    const existingAnswer = answerRes.data;
+    const allPlayers = allPlayersRes.data;
 
     // ── Calculate correct questionStartTime from DB timestamp ──
     const question = session.questions_snapshot?.[session.current_q_index] || null;
@@ -428,26 +414,29 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
       streak: result.newStreak,
     });
 
-    // Persist to DB
-
-    await supabase.from("player_answers").insert({
-      session_id: session.id,
-      player_id: playerId,
-      question_index: session.current_q_index,
-      selected_option: optionIndex,
-      is_correct: isCorrect,
-      time_taken_ms: timeTakenMs,
-      points_awarded: result.points,
-    });
-
-    // Update player score
-    await supabase
-      .from("session_players")
-      .update({
+    // Persist answer + updated score to DB in parallel
+    const [insertRes, updateRes] = await Promise.all([
+      supabase.from("player_answers").insert({
+        session_id: session.id,
+        player_id: playerId,
+        question_index: session.current_q_index,
+        selected_option: optionIndex,
+        is_correct: isCorrect,
+        time_taken_ms: timeTakenMs,
+        points_awarded: result.points,
+      }),
+      supabase.from("session_players").update({
         score: get().totalScore,
         streak: result.newStreak,
-      })
-      .eq("id", playerId);
+      }).eq("id", playerId),
+    ]);
+
+    if (insertRes.error) {
+      console.error("[TUKOPAMOJA] Failed to save answer:", insertRes.error.message);
+    }
+    if (updateRes.error) {
+      console.error("[TUKOPAMOJA] Failed to update score:", updateRes.error.message);
+    }
   },
 
   // ─── Session Updates (from realtime) ───────────────────────
@@ -483,6 +472,9 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
     set({
       leaderboard: rankings,
       rank: me?.rank ?? null,
+      // Sync totalScore from the authoritative server-side score
+      // to correct any client-side drift (rounding, race conditions).
+      ...(me ? { totalScore: me.score } : {}),
     });
   },
 

@@ -13,8 +13,11 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: "TUKOPAMOJA — ENS Africa",
   description: "Premium real-time quiz platform. Create, host, and engage.",
+  manifest: withBasePath("/manifest.json"),
   icons: {
-    icon: withBasePath("/favicon.svg"),
+    icon: [
+      { url: withBasePath("/favicon.svg"), type: "image/svg+xml" },
+    ],
     shortcut: withBasePath("/favicon.svg"),
     apple: withBasePath("/favicon.svg"),
   },

@@ -77,20 +77,17 @@ export const useGameStore = create<GameState>((set, get) => ({
   loadSession: async (sessionId) => {
     const supabase = createClient();
 
-    const { data: session } = await supabase
-      .from("sessions")
-      .select("*")
-      .eq("id", sessionId)
-      .single();
+    // Fetch session + players in parallel for faster hydration
+    const [sessionRes, playersRes] = await Promise.all([
+      supabase.from("sessions").select("*").eq("id", sessionId).single(),
+      supabase.from("session_players").select("*")
+        .eq("session_id", sessionId).is("kicked_at", null)
+        .order("score", { ascending: false }),
+    ]);
 
+    const session = sessionRes.data;
     if (!session) return;
-
-    const { data: players } = await supabase
-      .from("session_players")
-      .select("*")
-      .eq("session_id", sessionId)
-      .is("kicked_at", null)
-      .order("score", { ascending: false });
+    const players = playersRes.data;
 
     const s = session as Session;
     const q = s.questions_snapshot?.[s.current_q_index] || null;
@@ -228,9 +225,11 @@ export const useGameStore = create<GameState>((set, get) => ({
 
     set({ leaderboard: rankings, players: (players as SessionPlayer[]) || [] });
 
-    // Use a unique ephemeral channel to avoid conflicting with the main
-    // realtime subscription managed by useRealtimeGame hook.
-    const broadcastChannel = supabase.channel(`broadcast:${session.id}:${Date.now()}`);
+    // Broadcast on the same channel all clients subscribe to
+    // (`session:<id>`) so players actually receive the event.
+    // Receiving our own broadcast in useRealtimeGame is harmless —
+    // it just calls setLeaderboard again with the same rankings.
+    const broadcastChannel = supabase.channel(`session:${session.id}`);
     await broadcastChannel.subscribe();
     await broadcastChannel.send({
       type: "broadcast",
@@ -240,6 +239,8 @@ export const useGameStore = create<GameState>((set, get) => ({
           ? { type: "GAME_OVER", payload: { final_rankings: rankings } }
           : { type: "LEADERBOARD", payload: { rankings } },
     });
+    // Small delay ensures the message is flushed before cleanup
+    await new Promise((r) => setTimeout(r, 300));
     await broadcastChannel.unsubscribe();
   },
 
