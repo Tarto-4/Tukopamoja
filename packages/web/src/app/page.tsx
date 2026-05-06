@@ -77,7 +77,7 @@ export default function HomePage() {
             <span>Select game mode</span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3 text-left">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 text-left">
             {GAME_MODES.map((mode) => {
               const Icon = mode.icon;
               const isSelected = selectedModeId === mode.id;
@@ -87,31 +87,38 @@ export default function HomePage() {
                   type="button"
                   data-mode-id={mode.id}
                   onClick={() => setSelectedModeId(mode.id)}
-                  className={`home-mode-card rounded-2xl border-2 p-4 transition-all duration-300 game-card ${
+                  className={`home-mode-card relative rounded-2xl p-5 transition-all duration-300 game-card backdrop-blur-xl ${
                     isSelected
-                      ? "border-[#eecd00] bg-[#eecd00]/15 shadow-[0_0_12px_rgba(238,205,0,0.3),0_0_0_1px_rgba(238,205,0,0.4)] ring-1 ring-[#eecd00]/30"
-                      : "border-white/10 bg-white/5 hover:border-[#eecd00]/35 hover:bg-white/10"
+                      ? "bg-gradient-to-br from-[rgba(0,0,0,0.75)] to-[rgba(0,0,0,0.7)] border-2 border-[#EEDC00] shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_16px_rgba(238,220,0,0.25),inset_0_1px_0_rgba(255,255,255,0.1)]"
+                      : "bg-gradient-to-br from-[rgba(0,0,0,0.6)] to-[rgba(0,0,0,0.55)] border border-white/15 shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_0_0_1px_rgba(255,255,255,0.05)] hover:border-[#EEDC00]/40 hover:shadow-[0_8px_32px_rgba(0,0,0,0.5),0_0_8px_rgba(238,220,0,0.1)]"
                   }`}
                 >
+                  {isSelected && (
+                    <div className="absolute top-0 left-4 right-4 h-[3px] rounded-b-full bg-gradient-to-r from-[#EEDC00] via-[#EEDC00]/60 to-transparent" />
+                  )}
                   <div className="flex items-start justify-between gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#eecd00]/30 bg-[#eecd00]/12">
-                      <Icon className="h-5 w-5 text-[#65513c] dark:text-[#eecd00]" />
+                    <div className={`flex h-10 w-10 items-center justify-center rounded-xl border ${
+                      isSelected
+                        ? "border-[#EEDC00]/50 bg-[#EEDC00]/20"
+                        : "border-white/20 bg-white/10"
+                    }`}>
+                      <Icon className={`h-5 w-5 ${isSelected ? "text-[#EEDC00]" : "text-white/80"}`} />
                     </div>
                     <span
                       className={`rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] ${
                         mode.status === "available"
-                          ? "bg-emerald-500/20 text-emerald-300"
-                          : "bg-white/10 text-foreground/65 dark:text-white/70"
+                          ? "bg-emerald-500/30 text-emerald-200 border border-emerald-500/30"
+                          : "bg-white/10 text-white/70 border border-white/10"
                       }`}
                     >
                       {mode.status === "available" ? "Live" : "Coming soon"}
                     </span>
                   </div>
                   <div className="mt-4 space-y-2">
-                    <h2 className="text-lg font-serif font-bold text-foreground">
+                    <h2 className={`text-lg font-serif font-bold ${isSelected ? "text-[#EEDC00]" : "text-white"}`}>
                       {mode.name}
                     </h2>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
+                    <p className="text-sm text-white/70 leading-relaxed">
                       {mode.description}
                     </p>
                   </div>
