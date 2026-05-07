@@ -37,12 +37,13 @@ import {
 export interface DraftQuestion {
   id?: string;
   question_text: string;
-  question_type: "multiple_choice" | "true_false";
+  question_type: "multiple_choice" | "true_false" | "text_input";
   image_url: string | null;
   time_limit_sec: number;
   points: number;
   sort_order: number;
   options: QuestionOption[];
+  accepted_answers: { text: string }[];
 }
 
 function createBlankQuestion(order: number): DraftQuestion {
@@ -59,6 +60,7 @@ function createBlankQuestion(order: number): DraftQuestion {
       { text: "", is_correct: false },
       { text: "", is_correct: false },
     ],
+    accepted_answers: [],
   };
 }
 
@@ -89,6 +91,7 @@ export default function QuizBuilder({
           points: q.points,
           sort_order: q.sort_order,
           options: q.options,
+          accepted_answers: q.accepted_answers || [],
         }))
       : [createBlankQuestion(0)]
   );
@@ -223,7 +226,8 @@ export default function QuizBuilder({
         time_limit_sec: q.time_limit_sec,
         points: q.points,
         sort_order: i,
-        options: q.options.filter((o) => o.text.trim()),
+        options: q.question_type === "text_input" ? [] : q.options.filter((o) => o.text.trim()),
+        accepted_answers: q.question_type === "text_input" ? q.accepted_answers.filter((a) => a.text.trim()) : [],
       }));
 
       const { error: qErr } = await supabase

@@ -19,7 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Check, X, Clock, Award, ImagePlus } from "lucide-react";
+import { Check, X, Clock, Award, ImagePlus, Type, Plus } from "lucide-react";
 
 interface QuestionEditorProps {
   question: DraftQuestion;
@@ -69,7 +69,7 @@ export default function QuestionEditor({
     onChange({ options: newOptions });
   }
 
-  function handleTypeChange(type: "multiple_choice" | "true_false") {
+  function handleTypeChange(type: "multiple_choice" | "true_false" | "text_input") {
     if (type === "true_false") {
       onChange({
         question_type: type,
@@ -77,6 +77,15 @@ export default function QuestionEditor({
           { text: "True", is_correct: true },
           { text: "False", is_correct: false },
         ],
+        accepted_answers: [],
+      });
+    } else if (type === "text_input") {
+      onChange({
+        question_type: type,
+        options: [],
+        accepted_answers: question.accepted_answers?.length
+          ? question.accepted_answers
+          : [{ text: "" }],
       });
     } else {
       onChange({
@@ -87,6 +96,7 @@ export default function QuestionEditor({
           { text: "", is_correct: false },
           { text: "", is_correct: false },
         ],
+        accepted_answers: [],
       });
     }
   }
@@ -120,7 +130,7 @@ export default function QuestionEditor({
             <Select
               value={question.question_type}
               onValueChange={(v) =>
-                handleTypeChange(v as "multiple_choice" | "true_false")
+                handleTypeChange(v as "multiple_choice" | "true_false" | "text_input")
               }
             >
               <SelectTrigger>
@@ -131,6 +141,7 @@ export default function QuestionEditor({
                   Multiple Choice
                 </SelectItem>
                 <SelectItem value="true_false">True / False</SelectItem>
+                <SelectItem value="text_input">Text Input</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -197,63 +208,120 @@ export default function QuestionEditor({
           />
         </div>
 
-        {/* Answer options */}
-        <div className="space-y-3">
-          <Label>Answer Options</Label>
-          <p className="text-xs text-muted-foreground">
-            Click the checkmark to mark the correct answer.
-          </p>
+        {/* Answer options / Accepted answers */}
+        {question.question_type === "text_input" ? (
+          <div className="space-y-3">
+            <Label>Accepted Answers</Label>
+            <p className="text-xs text-muted-foreground">
+              Add all accepted answers. Matching is case-insensitive.
+            </p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {question.options.map((opt, i) => (
-              <div
-                key={i}
-                className={`flex items-center gap-2 rounded-lg border p-1 transition-colors ${
-                  opt.is_correct
-                    ? `${OPTION_BORDER_CLASSES[i] || "border-green-600"} ${OPTION_BG_CORRECT_CLASSES[i] || "bg-green-600/10"}`
-                    : ""
-                }`}
-              >
-                {/* Color indicator */}
-                <div
-                  className={`w-8 h-8 rounded-md flex items-center justify-center text-white text-sm font-bold flex-shrink-0 ${OPTION_INDICATOR_BG_CLASSES[i] || "bg-gray-500"}`}
-                >
-                  {OPTION_COLORS[i]?.shape || "?"}
-                </div>
-
-                {/* Text input */}
-                <Input
-                  value={opt.text}
-                  onChange={(e) =>
-                    updateOption(i, { text: e.target.value })
-                  }
-                  placeholder={`Option ${i + 1}`}
-                  className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
-                  disabled={question.question_type === "true_false"}
-                />
-
-                {/* Correct toggle */}
-                <button
-                  onClick={() => setCorrectAnswer(i)}
-                  className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 transition-colors ${
-                    opt.is_correct
-                      ? "bg-green-500 text-white"
-                      : "bg-muted text-muted-foreground hover:bg-accent"
-                  }`}
-                  title={
-                    opt.is_correct ? "Correct answer" : "Mark as correct"
-                  }
-                >
-                  {opt.is_correct ? (
+            <div className="space-y-2">
+              {(question.accepted_answers ?? []).map((ans, i) => (
+                <div key={i} className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-md flex items-center justify-center bg-emerald-600 text-white text-sm font-bold flex-shrink-0">
                     <Check className="w-4 h-4" />
-                  ) : (
-                    <Check className="w-4 h-4 opacity-30" />
-                  )}
-                </button>
-              </div>
-            ))}
+                  </div>
+                  <Input
+                    value={ans.text}
+                    onChange={(e) => {
+                      const updated = [...(question.accepted_answers ?? [])];
+                      updated[i] = { text: e.target.value };
+                      onChange({ accepted_answers: updated });
+                    }}
+                    placeholder={`Accepted answer ${i + 1}`}
+                    className="flex-1"
+                    aria-label={`Accepted answer ${i + 1}`}
+                  />
+                  <button
+                    onClick={() => {
+                      const updated = (question.accepted_answers ?? []).filter(
+                        (_, j) => j !== i
+                      );
+                      onChange({ accepted_answers: updated });
+                    }}
+                    className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 bg-muted text-muted-foreground hover:bg-destructive hover:text-destructive-foreground transition-colors"
+                    title="Remove answer"
+                    aria-label={`Remove accepted answer ${i + 1}`}
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            <button
+              onClick={() =>
+                onChange({
+                  accepted_answers: [
+                    ...(question.accepted_answers ?? []),
+                    { text: "" },
+                  ],
+                })
+              }
+              className="flex items-center gap-1 text-sm text-primary hover:underline"
+            >
+              <Plus className="w-4 h-4" /> Add accepted answer
+            </button>
           </div>
-        </div>
+        ) : (
+          <div className="space-y-3">
+            <Label>Answer Options</Label>
+            <p className="text-xs text-muted-foreground">
+              Click the checkmark to mark the correct answer.
+            </p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {question.options.map((opt, i) => (
+                <div
+                  key={i}
+                  className={`flex items-center gap-2 rounded-lg border p-1 transition-colors ${
+                    opt.is_correct
+                      ? `${OPTION_BORDER_CLASSES[i] || "border-green-600"} ${OPTION_BG_CORRECT_CLASSES[i] || "bg-green-600/10"}`
+                      : ""
+                  }`}
+                >
+                  {/* Color indicator */}
+                  <div
+                    className={`w-8 h-8 rounded-md flex items-center justify-center text-white text-sm font-bold flex-shrink-0 ${OPTION_INDICATOR_BG_CLASSES[i] || "bg-gray-500"}`}
+                  >
+                    {OPTION_COLORS[i]?.shape || "?"}
+                  </div>
+
+                  {/* Text input */}
+                  <Input
+                    value={opt.text}
+                    onChange={(e) =>
+                      updateOption(i, { text: e.target.value })
+                    }
+                    placeholder={`Option ${i + 1}`}
+                    className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
+                    disabled={question.question_type === "true_false"}
+                  />
+
+                  {/* Correct toggle */}
+                  <button
+                    onClick={() => setCorrectAnswer(i)}
+                    className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 transition-colors ${
+                      opt.is_correct
+                        ? "bg-green-500 text-white"
+                        : "bg-muted text-muted-foreground hover:bg-accent"
+                    }`}
+                    title={
+                      opt.is_correct ? "Correct answer" : "Mark as correct"
+                    }
+                  >
+                    {opt.is_correct ? (
+                      <Check className="w-4 h-4" />
+                    ) : (
+                      <Check className="w-4 h-4 opacity-30" />
+                    )}
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

@@ -43,7 +43,12 @@ export interface QuestionOption {
   is_correct: boolean;
 }
 
-export type QuestionType = "multiple_choice" | "true_false";
+/** Accepted answers for text_input questions (case-insensitive matching) */
+export interface TextAnswer {
+  text: string;
+}
+
+export type QuestionType = "multiple_choice" | "true_false" | "text_input";
 
 export interface Question {
   id: string;
@@ -55,6 +60,7 @@ export interface Question {
   points: number;
   sort_order: number;
   options: QuestionOption[];
+  accepted_answers: TextAnswer[];
   created_at: string;
 }
 
@@ -66,6 +72,7 @@ export interface QuestionSnapshot {
   time_limit_sec: number;
   points: number;
   options: QuestionOption[];
+  accepted_answers?: TextAnswer[];
 }
 
 export type SessionStatus =
@@ -93,6 +100,12 @@ export interface Session {
   current_question_started_at: string | null;
   current_question_time_limit_sec: number | null;
   current_question_remaining_sec: number | null;
+  /** Whether players see a feedback form after game over */
+  require_feedback: boolean;
+  /** Star rating scale: 5 or 10 */
+  feedback_scale: number;
+  /** Whether the comment field is shown */
+  feedback_comment_enabled: boolean;
 }
 
 export interface SessionPlayer {
@@ -120,8 +133,20 @@ export interface PlayerAnswer {
   player_id: string;
   question_index: number;
   selected_option: number;
+  /** Text answer for text_input questions */
+  answer_text: string | null;
   is_correct: boolean;
   time_taken_ms: number;
   points_awarded: number;
   answered_at: string;
+}
+
+/** Player feedback submitted after a game session */
+export interface SessionFeedback {
+  id: string;
+  session_id: string;
+  player_id: string;
+  rating: number;
+  comment: string | null;
+  created_at: string;
 }

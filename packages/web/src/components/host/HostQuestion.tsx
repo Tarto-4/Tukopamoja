@@ -43,6 +43,7 @@ export default function HostQuestion() {
     currentQuestion,
     answeredCount,
     answerDistribution,
+    textAnswers,
     timeLeft,
     showLeaderboard,
     nextQuestion,
@@ -132,55 +133,86 @@ export default function HostQuestion() {
         )}
       </motion.div>
 
-      {/* Options grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 flex-1 mb-4 sm:mb-6 relative z-10">
-        {currentQuestion.options.map((opt, i) => {
-          const color = OPTION_COLORS[i];
-          const showCorrect = isEvaluating && opt.is_correct;
-          const showWrong  = isEvaluating && !opt.is_correct;
-          const count = answerDistribution[i] ?? 0;
-          const pct   = answeredCount > 0 ? Math.round((count / answeredCount) * 100) : 0;
-          const bgClass = OPTION_BG_CLASSES[i] ?? "bg-primary";
-          const textClass = OPTION_TEXT_CLASSES[i] ?? "text-white";
-          const shadowClass = OPTION_SHADOW_CLASSES[i] ?? "";
-          const miniWidth = bucketBarWidth(Math.max(4, pct));
-
-          return (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, scale: 0.88 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: i * 0.08 }}
-              className={`${bgClass} ${textClass} ${shadowClass} rounded-2xl p-4 sm:p-5 font-bold border-2 transition-all duration-300 ${
-                showWrong   ? "opacity-35 saturate-50" : ""
-              } ${showCorrect ? "border-[rgba(0,230,118,0.8)] shadow-correct-glow" : "border-[rgba(255,255,255,0.15)]"}`}
-            >
-              <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0 flex-1">
-                  <p className="text-xs uppercase tracking-wider opacity-65 mb-1.5">
-                    {color.shape} Option {i + 1}
-                  </p>
-                  <p className={`text-base sm:text-xl md:text-2xl leading-snug font-bold ${i === 2 ? "" : "drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)]"}`}>
-                    {opt.text}
-                  </p>
-                </div>
-                <div className="shrink-0 text-right">
-                  <p className="text-sm font-mono tabular-nums opacity-80">
-                    {count} <span className="opacity-70">({pct}%)</span>
-                  </p>
-                  {showCorrect && <span className="text-xl block mt-1">✓</span>}
-                </div>
-              </div>
-              {/* Mini bar showing selection share */}
-              {answeredCount > 0 && (
-                <div className="mt-3 h-1.5 rounded-full bg-black/20 overflow-hidden">
-                  <div className={`h-full rounded-full bg-white/60 transition-all duration-500 ${miniWidth}`} />
-                </div>
+      {/* Options grid / Text answers */}
+      {currentQuestion.question_type === "text_input" ? (
+        /* ─── Text Input Answers Display ─── */
+        <div className="glass rounded-2xl p-5 sm:p-6 mb-4 sm:mb-6 border border-white/15 relative z-10">
+          <p className="text-xs uppercase tracking-wider text-muted-foreground mb-3 font-medium">
+            Text Answers Received
+          </p>
+          {textAnswers.length === 0 ? (
+            <p className="text-muted-foreground text-center py-4">
+              Waiting for answers…
+            </p>
+          ) : (
+            <div className="flex flex-wrap gap-2 max-h-48 overflow-y-auto">
+              {textAnswers.slice(-20).map((text, i) => (
+                <span
+                  key={i}
+                  className="inline-block rounded-full px-3 py-1.5 text-sm font-medium bg-primary/15 text-primary border border-primary/20"
+                >
+                  {text}
+                </span>
+              ))}
+              {textAnswers.length > 20 && (
+                <span className="text-xs text-muted-foreground self-center">
+                  +{textAnswers.length - 20} more
+                </span>
               )}
-            </motion.div>
-          );
-        })}
-      </div>
+            </div>
+          )}
+        </div>
+      ) : (
+        /* ─── Multiple Choice Options Grid ─── */
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 flex-1 mb-4 sm:mb-6 relative z-10">
+          {currentQuestion.options.map((opt, i) => {
+            const color = OPTION_COLORS[i];
+            const showCorrect = isEvaluating && opt.is_correct;
+            const showWrong  = isEvaluating && !opt.is_correct;
+            const count = answerDistribution[i] ?? 0;
+            const pct   = answeredCount > 0 ? Math.round((count / answeredCount) * 100) : 0;
+            const bgClass = OPTION_BG_CLASSES[i] ?? "bg-primary";
+            const textClass = OPTION_TEXT_CLASSES[i] ?? "text-white";
+            const shadowClass = OPTION_SHADOW_CLASSES[i] ?? "";
+            const miniWidth = bucketBarWidth(Math.max(4, pct));
+
+            return (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, scale: 0.88 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: i * 0.08 }}
+                className={`${bgClass} ${textClass} ${shadowClass} rounded-2xl p-4 sm:p-5 font-bold border-2 transition-all duration-300 ${
+                  showWrong   ? "opacity-35 saturate-50" : ""
+                } ${showCorrect ? "border-[rgba(0,230,118,0.8)] shadow-correct-glow" : "border-[rgba(255,255,255,0.15)]"}`}
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs uppercase tracking-wider opacity-65 mb-1.5">
+                      {color.shape} Option {i + 1}
+                    </p>
+                    <p className={`text-base sm:text-xl md:text-2xl leading-snug font-bold ${i === 2 ? "" : "drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)]"}`}>
+                      {opt.text}
+                    </p>
+                  </div>
+                  <div className="shrink-0 text-right">
+                    <p className="text-sm font-mono tabular-nums opacity-80">
+                      {count} <span className="opacity-70">({pct}%)</span>
+                    </p>
+                    {showCorrect && <span className="text-xl block mt-1">✓</span>}
+                  </div>
+                </div>
+                {/* Mini bar showing selection share */}
+                {answeredCount > 0 && (
+                  <div className="mt-3 h-1.5 rounded-full bg-black/20 overflow-hidden">
+                    <div className={`h-full rounded-full bg-white/60 transition-all duration-500 ${miniWidth}`} />
+                  </div>
+                )}
+              </motion.div>
+            );
+          })}
+        </div>
+      )}
 
       {/* Answer counter + distribution */}
       <div className="glass rounded-xl p-4 text-center mb-4 border border-white/10 relative z-10">
@@ -195,8 +227,8 @@ export default function HostQuestion() {
           <p className="text-xs mt-1 text-game-correct">All players answered!</p>
         )}
 
-        {/* Answer distribution bars */}
-        {answeredCount > 0 && (
+        {/* Answer distribution bars (only for non-text-input) */}
+        {answeredCount > 0 && currentQuestion.question_type !== "text_input" && (
           <div className="mt-3 flex items-end justify-center gap-2 h-14">
             {currentQuestion.options.map((_, i) => {
               const count = answerDistribution[i] ?? 0;

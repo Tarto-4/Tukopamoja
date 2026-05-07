@@ -5,10 +5,11 @@
 
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { usePlayerStore } from "@/stores/usePlayerStore";
 import { OPTION_COLORS } from "@tukopamoja/shared";
-import { CheckCircle, XCircle, Clock } from "lucide-react";
+import { CheckCircle, XCircle, Clock, Send } from "lucide-react";
 import BrandedBackground from "@/components/ui/BrandedBackground";
 
 const BAR_WIDTH_CLASSES = ["w-[4%]", "w-[12%]", "w-[24%]", "w-[36%]", "w-[48%]", "w-[60%]", "w-[72%]", "w-[84%]", "w-full"];
@@ -35,9 +36,13 @@ export default function PlayerQuestion() {
     timeLeftMs,
     hasAnswered,
     selectedOption,
+    selectedAnswerText,
     answerResult,
     submitAnswer,
+    submitTextAnswer,
   } = usePlayerStore();
+
+  const [textInput, setTextInput] = useState("");
 
   if (!session || !currentQuestion) return null;
 
@@ -170,34 +175,78 @@ export default function PlayerQuestion() {
         )}
       </motion.div>
 
-      {/* Answer tiles — min-h-[48px] per DESIGN.md touch targets */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 flex-1 relative z-10">
-        {currentQuestion.options.map((opt, i) => {
-          const color = OPTION_COLORS[i];
-          const isSelected = selectedOption === i;
-          const isYellow = color.name === "yellow";
-          const bgClass = ANSWER_BG_CLASSES[i] ?? "bg-primary";
-          const selectedShadowClass = ANSWER_SELECTED_SHADOW_CLASSES[i] ?? "";
-          return (
-            <motion.button
-              key={i}
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.05 }}
-              onClick={() => submitAnswer(i)}
+      {/* Answer area */}
+      {currentQuestion.question_type === "text_input" ? (
+        /* ─── Text Input Answer ─── */
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex-1 relative z-10 flex flex-col gap-3"
+        >
+          <div className="rounded-2xl bg-card border border-border p-4 sm:p-6 shadow-[0px_2px_8px_rgba(0,0,0,0.06)] flex flex-col gap-3 flex-1">
+            <label htmlFor="text-answer" className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+              Type your answer
+            </label>
+            <input
+              id="text-answer"
+              type="text"
+              value={textInput}
+              onChange={(e) => setTextInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && textInput.trim()) {
+                  submitTextAnswer(textInput);
+                }
+              }}
               disabled={hasAnswered}
-              className={`answer-btn min-h-[48px] ${bgClass} ${isYellow ? "answer-btn--yellow" : ""} ${isSelected ? `answer-btn--selected ${selectedShadowClass}` : "shadow-[0_4px_0_rgba(0,0,0,0.38)]"}`}
-              aria-pressed={isSelected}
+              placeholder="Enter your answer…"
+              autoComplete="off"
+              autoCapitalize="off"
+              spellCheck={false}
+              maxLength={200}
+              className="w-full rounded-xl border border-border bg-background px-4 py-3 text-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 disabled:opacity-60"
+              aria-label="Type your answer to the question"
+            />
+            <button
+              onClick={() => submitTextAnswer(textInput)}
+              disabled={hasAnswered || !textInput.trim()}
+              className="flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 text-primary-foreground font-semibold text-lg transition-all hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_4px_0_rgba(0,0,0,0.38)] active:shadow-[0_2px_0_rgba(0,0,0,0.38)] active:translate-y-[2px]"
+              aria-label="Submit your answer"
             >
-              <span className="answer-btn__shape" aria-hidden="true">{color.shape}</span>
-              <span className="answer-btn__text">{opt.text}</span>
-              {isSelected && (
-                <span className="ml-1 text-base shrink-0" aria-hidden="true">✓</span>
-              )}
-            </motion.button>
-          );
-        })}
-      </div>
+              <Send className="w-5 h-5" />
+              Submit
+            </button>
+          </div>
+        </motion.div>
+      ) : (
+        /* ─── Multiple Choice / True-False Answer Tiles ─── */
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 flex-1 relative z-10">
+          {currentQuestion.options.map((opt, i) => {
+            const color = OPTION_COLORS[i];
+            const isSelected = selectedOption === i;
+            const isYellow = color.name === "yellow";
+            const bgClass = ANSWER_BG_CLASSES[i] ?? "bg-primary";
+            const selectedShadowClass = ANSWER_SELECTED_SHADOW_CLASSES[i] ?? "";
+            return (
+              <motion.button
+                key={i}
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.05 }}
+                onClick={() => submitAnswer(i)}
+                disabled={hasAnswered}
+                className={`answer-btn min-h-[48px] ${bgClass} ${isYellow ? "answer-btn--yellow" : ""} ${isSelected ? `answer-btn--selected ${selectedShadowClass}` : "shadow-[0_4px_0_rgba(0,0,0,0.38)]"}`}
+                aria-pressed={isSelected}
+              >
+                <span className="answer-btn__shape" aria-hidden="true">{color.shape}</span>
+                <span className="answer-btn__text">{opt.text}</span>
+                {isSelected && (
+                  <span className="ml-1 text-base shrink-0" aria-hidden="true">✓</span>
+                )}
+              </motion.button>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

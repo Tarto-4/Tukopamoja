@@ -78,6 +78,7 @@ export interface PlayerAnswerEvent {
     player_id: string;
     question_index: number;
     selected_option: number;
+    answer_text: string | null;
     time_taken_ms: number;
   };
 }

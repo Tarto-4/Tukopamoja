@@ -19,6 +19,7 @@ interface GameState {
   leaderboard: LeaderboardEntry[];
   answeredCount: number;
   answerDistribution: number[];
+  textAnswers: string[];
   timeLeft: number;
   realtimeStatus: "connected" | "connecting" | "reconnecting" | "disconnected";
 
@@ -29,7 +30,7 @@ interface GameState {
   addPlayer: (player: SessionPlayer) => void;
   removePlayer: (playerId: string) => void;
   setPlayers: (players: SessionPlayer[]) => void;
-  incrementAnswered: (selectedOption?: number) => void;
+  incrementAnswered: (selectedOption?: number, answerText?: string) => void;
   setLeaderboard: (rankings: LeaderboardEntry[]) => void;
   setRealtimeStatus: (status: "connected" | "connecting" | "reconnecting" | "disconnected") => void;
   setTimeLeft: (t: number) => void;
@@ -45,6 +46,7 @@ interface GameState {
   resumeGame: () => Promise<void>;
   setLobbyLocked: (locked: boolean) => Promise<void>;
   setLateJoin: (enabled: boolean) => Promise<void>;
+  setFeedbackSettings: (settings: { require_feedback?: boolean; feedback_scale?: number; feedback_comment_enabled?: boolean }) => Promise<void>;
   kickPlayer: (playerId: string) => Promise<void>;
   mutePlayer: (playerId: string, muted: boolean) => Promise<void>;
   reset: () => void;
@@ -70,6 +72,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   leaderboard: [],
   answeredCount: 0,
   answerDistribution: [],
+  textAnswers: [],
   timeLeft: 0,
   realtimeStatus: "connecting",
   _timerInterval: null,
@@ -130,6 +133,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       currentQuestion: q,
       answeredCount: questionChanged ? 0 : get().answeredCount,
       answerDistribution: questionChanged ? [] : get().answerDistribution,
+      textAnswers: questionChanged ? [] : get().textAnswers,
     });
   },
 
@@ -145,14 +149,18 @@ export const useGameStore = create<GameState>((set, get) => ({
 
   setPlayers: (players) => set({ players }),
 
-  incrementAnswered: (selectedOption?: number) =>
+  incrementAnswered: (selectedOption?: number, answerText?: string) =>
     set((s) => {
       const dist = [...s.answerDistribution];
       if (selectedOption !== undefined && selectedOption >= 0) {
         while (dist.length <= selectedOption) dist.push(0);
         dist[selectedOption]++;
       }
-      return { answeredCount: s.answeredCount + 1, answerDistribution: dist };
+      const texts = [...s.textAnswers];
+      if (answerText) {
+        texts.push(answerText);
+      }
+      return { answeredCount: s.answeredCount + 1, answerDistribution: dist, textAnswers: texts };
     }),
 
   setLeaderboard: (rankings) => set({ leaderboard: rankings }),
@@ -303,6 +311,7 @@ export const useGameStore = create<GameState>((set, get) => ({
         currentQuestion: s.session.questions_snapshot?.[0] || null,
         answeredCount: 0,
         answerDistribution: [],
+        textAnswers: [],
       };
     });
   },
@@ -374,6 +383,7 @@ export const useGameStore = create<GameState>((set, get) => ({
           currentQuestion: s.session.questions_snapshot?.[next] || null,
           answeredCount: 0,
           answerDistribution: [],
+          textAnswers: [],
         };
       });
     }
@@ -499,6 +509,15 @@ export const useGameStore = create<GameState>((set, get) => ({
     set((s) => (s.session ? { session: { ...s.session, allow_late_join: enabled } } : s));
   },
 
+  setFeedbackSettings: async (settings) => {
+    const session = get().session;
+    if (!session) return;
+    const supabase = createClient();
+    const { error } = await supabase.from("sessions").update(settings).eq("id", session.id);
+    if (error) throw error;
+    set((s) => (s.session ? { session: { ...s.session, ...settings } } : s));
+  },
+
   kickPlayer: async (playerId) => {
     const session = get().session;
     if (!session) return;
@@ -545,6 +564,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       leaderboard: [],
       answeredCount: 0,
       answerDistribution: [],
+      textAnswers: [],
       timeLeft: 0,
       realtimeStatus: "disconnected",
       _timerInterval: null,

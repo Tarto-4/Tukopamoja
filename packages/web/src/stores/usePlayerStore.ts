@@ -70,6 +70,7 @@ interface PlayerState {
 
   // Answer state
   selectedOption: number | null;
+  selectedAnswerText: string | null;
   answerResult: {
     isCorrect: boolean;
     correctIndex: number;
@@ -99,6 +100,8 @@ interface PlayerState {
   rejoinSession: () => Promise<boolean>;
   toggleReady: (ready: boolean) => Promise<void>;
   submitAnswer: (optionIndex: number) => Promise<void>;
+  submitTextAnswer: (answerText: string) => Promise<void>;
+  submitFeedback: (rating: number, comment?: string) => Promise<void>;
   setSession: (session: Session) => void;
   setLeaderboard: (rankings: LeaderboardEntry[]) => void;
   setRealtimeStatus: (status: "connected" | "connecting" | "reconnecting" | "disconnected") => void;
@@ -122,6 +125,7 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
   players: [],
   leaderboard: [],
   selectedOption: null,
+  selectedAnswerText: null,
   answerResult: null,
   questionStartTime: null,
   hasAnswered: false,
@@ -209,6 +213,7 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
         session.status === "question_active" ? Date.now() : null,
       hasAnswered: false,
       selectedOption: null,
+      selectedAnswerText: null,
       answerResult: null,
     });
 
@@ -264,9 +269,11 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
     // ── Restore answer result if player already answered ──
     let restoredAnswerResult: PlayerState["answerResult"] = null;
     let restoredSelectedOption: number | null = null;
+    let restoredAnswerText: string | null = null;
     if (existingAnswer && question) {
       const correctIndex = question.options.findIndex((o: { is_correct: boolean }) => o.is_correct);
       restoredSelectedOption = existingAnswer.selected_option;
+      restoredAnswerText = existingAnswer.answer_text ?? null;
       restoredAnswerResult = {
         isCorrect: existingAnswer.is_correct,
         correctIndex,
@@ -310,6 +317,7 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
       streak: player.streak ?? 0,
       hasAnswered: !!existingAnswer,
       selectedOption: restoredSelectedOption,
+      selectedAnswerText: restoredAnswerText,
       answerResult: restoredAnswerResult,
       questionStartTime,
       leaderboard,
@@ -436,6 +444,112 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
     }
   },
 
+  // ─── Text Answer Submission ──────────────────────────────────
+
+  submitTextAnswer: async (answerText) => {
+    const { session, playerId, questionStartTime, streak, players, hasAnswered } = get();
+    if (!session || !playerId) return;
+    if (hasAnswered) return;
+
+    const trimmed = answerText.trim();
+    if (!trimmed) return;
+
+    set({ hasAnswered: true, selectedAnswerText: trimmed });
+
+    const me = players.find((p) => p.id === playerId);
+    if (me?.kicked_at) throw new Error("You were removed from this session.");
+    if (me?.is_muted) throw new Error("You are muted and cannot answer right now.");
+
+    const question = session.questions_snapshot?.[session.current_q_index];
+    if (!question) return;
+
+    const timeTakenMs = questionStartTime
+      ? Date.now() - questionStartTime
+      : question.time_limit_sec * 1000;
+
+    // Check if answer matches any accepted answer (case-insensitive)
+    const acceptedAnswers: { text: string }[] = question.accepted_answers ?? [];
+    const isCorrect = acceptedAnswers.some(
+      (a) => a.text.toLowerCase().trim() === trimmed.toLowerCase()
+    );
+
+    const supabase = createClient();
+
+    const answerRank = 1; // optimistic — server corrects later
+    const activePlayers = Math.max(1, session.player_count || players.length || 1);
+
+    const result = calculateScore({
+      maxPoints: question.points,
+      timeTakenMs,
+      timeLimitSec: question.time_limit_sec,
+      isCorrect,
+      answerRank,
+      activePlayers,
+      currentStreak: streak,
+    });
+
+    const newTotalScore = get().totalScore + result.points;
+
+    set({
+      answerResult: {
+        isCorrect,
+        correctIndex: -1, // no option index for text answers
+        pointsAwarded: result.points,
+        totalScore: newTotalScore,
+        streak: result.newStreak,
+      },
+      totalScore: newTotalScore,
+      streak: result.newStreak,
+    });
+
+    const [insertRes, updateRes] = await Promise.all([
+      supabase.from("player_answers").insert({
+        session_id: session.id,
+        player_id: playerId,
+        question_index: session.current_q_index,
+        selected_option: -1,
+        answer_text: trimmed,
+        is_correct: isCorrect,
+        time_taken_ms: timeTakenMs,
+        points_awarded: result.points,
+      }),
+      supabase.from("session_players").update({
+        score: get().totalScore,
+        streak: result.newStreak,
+      }).eq("id", playerId),
+    ]);
+
+    if (insertRes.error) {
+      console.error("[TUKOPAMOJA] Failed to save text answer:", insertRes.error.message);
+    }
+    if (updateRes.error) {
+      console.error("[TUKOPAMOJA] Failed to update score:", updateRes.error.message);
+    }
+  },
+
+  // ─── Feedback Submission ────────────────────────────────────
+
+  submitFeedback: async (rating, comment) => {
+    const { session, playerId } = get();
+    if (!session || !playerId) return;
+
+    const supabase = createClient();
+    const { error } = await supabase.from("session_feedback").upsert(
+      {
+        session_id: session.id,
+        player_id: playerId,
+        rating,
+        comment: comment || null,
+      },
+      { onConflict: "session_id,player_id" }
+    );
+
+    if (error) {
+      console.error("[TUKOPAMOJA] Failed to submit feedback:", error.message);
+      throw error;
+    }
+  },
+
   // ─── Session Updates (from realtime) ───────────────────────
 
   setSession: (session) => {
@@ -455,6 +569,7 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
         ? {
             hasAnswered: false,
             selectedOption: null,
+            selectedAnswerText: null,
             answerResult: null,
             questionStartTime:
               session.status === "question_active" ? Date.now() : null,
@@ -539,6 +654,7 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
       players: [],
       leaderboard: [],
       selectedOption: null,
+      selectedAnswerText: null,
       answerResult: null,
       questionStartTime: null,
       hasAnswered: false,

@@ -134,8 +134,8 @@ export function useRealtimeGame(sessionId: string | undefined, role: Role) {
             filter: `session_id=eq.${sessionId}`,
           },
           (payload) => {
-            const answer = payload.new as { selected_option?: number };
-            incrementAnswered(answer.selected_option);
+            const answer = payload.new as { selected_option?: number; answer_text?: string };
+            incrementAnswered(answer.selected_option, answer.answer_text);
           }
         );
       }

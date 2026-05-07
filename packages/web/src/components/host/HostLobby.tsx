@@ -9,7 +9,7 @@ import { useGameStore } from "@/stores/useGameStore";
 import { useBrandingStore } from "@/stores/useBrandingStore";
 import { Button } from "@/components/ui/button";
 import QRCodeDisplay from "./QRCodeDisplay";
-import { Lock, LockOpen, Play, Users, UserX, VolumeX, Volume2, ChevronLeft, ChevronRight } from "lucide-react";
+import { Lock, LockOpen, Play, Users, UserX, VolumeX, Volume2, ChevronLeft, ChevronRight, Star, MessageSquare } from "lucide-react";
 import { withBasePath } from "@/lib/base-path";
 
 const PAGE_SIZE = 12;
@@ -21,6 +21,7 @@ export default function HostLobby() {
     startGame,
     setLobbyLocked,
     setLateJoin,
+    setFeedbackSettings,
     kickPlayer,
     mutePlayer,
   } = useGameStore();
@@ -163,6 +164,48 @@ export default function HostLobby() {
             >
               {session.allow_late_join ? "Late Join: ON" : "Late Join: OFF"}
             </Button>
+          </div>
+
+          {/* Feedback settings */}
+          <div className="flex flex-wrap items-center justify-center gap-2 mb-4">
+            <Button
+              size="sm"
+              variant={session.require_feedback ? "default" : "outline"}
+              onClick={() => setFeedbackSettings({ require_feedback: !session.require_feedback })}
+              title="When enabled, players rate the presentation after the game"
+            >
+              <Star className="w-4 h-4 mr-1" />
+              {session.require_feedback ? "Feedback: ON" : "Feedback: OFF"}
+            </Button>
+            {session.require_feedback && (
+              <>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() =>
+                    setFeedbackSettings({
+                      feedback_scale: session.feedback_scale === 5 ? 10 : 5,
+                    })
+                  }
+                  title="Toggle between 5-star and 10-star rating scale"
+                >
+                  {session.feedback_scale}-Star Scale
+                </Button>
+                <Button
+                  size="sm"
+                  variant={session.feedback_comment_enabled ? "secondary" : "outline"}
+                  onClick={() =>
+                    setFeedbackSettings({
+                      feedback_comment_enabled: !session.feedback_comment_enabled,
+                    })
+                  }
+                  title="Allow players to leave a written comment"
+                >
+                  <MessageSquare className="w-4 h-4 mr-1" />
+                  {session.feedback_comment_enabled ? "Comments: ON" : "Comments: OFF"}
+                </Button>
+              </>
+            )}
           </div>
 
           {players.length > 0 && (
