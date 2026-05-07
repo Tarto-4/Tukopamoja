@@ -9,13 +9,8 @@
 -- ╚══════════════════════════════════════════════════════════════╝
 
 -- ─── 1. Extend question_type enum ────────────────────────────
--- The check constraint on questions.question_type needs updating
-ALTER TABLE public.questions
-  DROP CONSTRAINT IF EXISTS questions_question_type_check;
-
-ALTER TABLE public.questions
-  ADD CONSTRAINT questions_question_type_check
-  CHECK (question_type IN ('multiple_choice', 'true_false', 'text_input'));
+-- Add the new value to the PostgreSQL enum type
+ALTER TYPE public.question_type ADD VALUE IF NOT EXISTS 'text_input';
 
 -- ─── 2. Add accepted_answers column ─────────────────────────
 -- JSON array of {text: string} for text_input questions
