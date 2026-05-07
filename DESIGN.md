@@ -17,11 +17,11 @@ The Tuko Pamoja design system embodies bold African modernism with a focus on ac
 
 ### Primary
 - **Tuko Yellow** (`#EEDC00`): Primary brand accent and call-to-action elements; used for highlight boxes, buttons, and key visual accents throughout the interface
-- **Dark Gray** (`#212529`): Primary text color and navigation elements; used for body copy, headings, and form inputs
+- **Dark Gray** (`#4c4d4e`): Primary text color and navigation elements; used for body copy, headings, and form inputs
 
 ### Accent Colors
 - **Secondary Yellow** (`#FFC107`): Complementary accent for warning states and secondary highlights; used interchangeably with Tuko Yellow for visual variety
-- **Corporate Blue** (`#0D6EFD`): Trust and information accent; used for links and supplementary interactive states
+- **Corporate Blue** (`#42738d`): Trust and information accent; used for links and supplementary interactive states
 - **Cyan Accent** (`#0DCAF0`): Light accent for tertiary states and hover effects
 
 ### Interactive
@@ -30,7 +30,7 @@ The Tuko Pamoja design system embodies bold African modernism with a focus on ac
 
 ### Neutral Scale
 - **White** (`#FFFFFF`): Primary surface and card backgrounds; highest contrast for content areas
-- **Light Gray** (`#F8F9FA`): Subtle background for secondary surfaces and lifted containers
+- **Light Gray** (`#5c6670`): Subtle background for secondary surfaces and lifted containers
 - **Medium Gray** (`#E3E3E3`): Border and divider color; used to separate sections and components
 - **Dark Neutral** (`#808080`): Secondary text color and muted UI elements; used for meta information and captions
 - **Charcoal** (`#343A40`): Deep neutral for dark backgrounds and emphasis

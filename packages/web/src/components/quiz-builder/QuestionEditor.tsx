@@ -29,6 +29,26 @@ interface QuestionEditorProps {
 
 const TIME_OPTIONS = [5, 10, 15, 20, 30, 45, 60, 90, 120];
 
+// Static class maps for option colors — avoids inline styles
+const OPTION_BORDER_CLASSES = [
+  "border-[#E8003E]", // red
+  "border-[#0A62FF]", // blue
+  "border-[#FF9F00]", // yellow
+  "border-[#00A854]", // green
+];
+const OPTION_BG_CORRECT_CLASSES = [
+  "bg-[#E8003E]/10", // red
+  "bg-[#0A62FF]/10", // blue
+  "bg-[#FF9F00]/10", // yellow
+  "bg-[#00A854]/10", // green
+];
+const OPTION_INDICATOR_BG_CLASSES = [
+  "bg-[#E8003E]", // red
+  "bg-[#0A62FF]", // blue
+  "bg-[#FF9F00]", // yellow
+  "bg-[#00A854]", // green
+];
+
 export default function QuestionEditor({
   question,
   index,
@@ -188,22 +208,15 @@ export default function QuestionEditor({
             {question.options.map((opt, i) => (
               <div
                 key={i}
-                className="flex items-center gap-2 rounded-lg border p-1 transition-colors"
-                style={{
-                  borderColor: opt.is_correct
-                    ? OPTION_COLORS[i]?.bg || "#26890C"
-                    : undefined,
-                  backgroundColor: opt.is_correct
-                    ? `${OPTION_COLORS[i]?.bg || "#26890C"}15`
-                    : undefined,
-                }}
+                className={`flex items-center gap-2 rounded-lg border p-1 transition-colors ${
+                  opt.is_correct
+                    ? `${OPTION_BORDER_CLASSES[i] || "border-green-600"} ${OPTION_BG_CORRECT_CLASSES[i] || "bg-green-600/10"}`
+                    : ""
+                }`}
               >
                 {/* Color indicator */}
                 <div
-                  className="w-8 h-8 rounded-md flex items-center justify-center text-white text-sm font-bold flex-shrink-0"
-                  style={{
-                    backgroundColor: OPTION_COLORS[i]?.bg || "#666",
-                  }}
+                  className={`w-8 h-8 rounded-md flex items-center justify-center text-white text-sm font-bold flex-shrink-0 ${OPTION_INDICATOR_BG_CLASSES[i] || "bg-gray-500"}`}
                 >
                   {OPTION_COLORS[i]?.shape || "?"}
                 </div>

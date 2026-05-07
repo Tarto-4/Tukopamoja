@@ -375,6 +375,7 @@ export default function SessionsPage() {
                 <button
                   onClick={() => toggleExpand(session.id)}
                   className="w-full text-left"
+                  role="button"
                   aria-expanded={isExpanded}
                 >
                   <CardContent className="flex items-center justify-between py-4">

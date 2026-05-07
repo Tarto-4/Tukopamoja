@@ -33,10 +33,6 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="icon" href={withBasePath("/favicon.ico")} sizes="32x32" />
-        <link rel="icon" href={withBasePath("/favicon-32x32.png")} type="image/png" sizes="32x32" />
-        <link rel="icon" href={withBasePath("/favicon-16x16.png")} type="image/png" sizes="16x16" />
-        <link rel="apple-touch-icon" href={withBasePath("/apple-touch-icon.png")} />
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;400;500;700&display=swap"
