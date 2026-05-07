@@ -68,7 +68,7 @@ export default function PlayerLobby() {
           </div>
           {players.length > 0 && (
             <div className="flex flex-wrap justify-center gap-2 max-h-32 overflow-y-auto">
-              {players.map((p) => (
+              {players.slice(0, 30).map((p) => (
                 <span
                   key={p.id}
                   className={`px-3 py-1.5 rounded-full text-sm font-semibold transition-colors ${
@@ -80,6 +80,11 @@ export default function PlayerLobby() {
                   {p.avatar} {p.first_name} {p.last_name}{p.is_ready ? " ✓" : ""}
                 </span>
               ))}
+              {players.length > 30 && (
+                <span className="px-3 py-1.5 rounded-full text-sm font-semibold bg-secondary text-muted-foreground border border-border">
+                  +{players.length - 30} more
+                </span>
+              )}
             </div>
           )}
         </div>

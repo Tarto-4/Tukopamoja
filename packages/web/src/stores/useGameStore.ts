@@ -188,6 +188,14 @@ export const useGameStore = create<GameState>((set, get) => ({
     if (!session) return;
 
     const supabase = createClient();
+
+    // ── Deferred scoring: compute ranks once here instead of
+    //    per-row trigger (eliminates O(n²) at 200 players) ──
+    await supabase.rpc("recompute_ranked_question_scores", {
+      p_session_id: session.id,
+      p_question_index: session.current_q_index,
+    });
+
     const { data: leaderboardPage } = await supabase.rpc("get_leaderboard_page", {
       p_session_id: session.id,
       p_limit: pageSize,
@@ -216,19 +224,10 @@ export const useGameStore = create<GameState>((set, get) => ({
       rank: Number(p.rank),
     }));
 
-    const { data: players } = await supabase
-      .from("session_players")
-      .select("*")
-      .eq("session_id", session.id)
-      .is("kicked_at", null)
-      .order("score", { ascending: false });
-
-    set({ leaderboard: rankings, players: (players as SessionPlayer[]) || [] });
+    set({ leaderboard: rankings });
 
     // Broadcast on the same channel all clients subscribe to
     // (`session:<id>`) so players actually receive the event.
-    // Receiving our own broadcast in useRealtimeGame is harmless —
-    // it just calls setLeaderboard again with the same rankings.
     const broadcastChannel = supabase.channel(`session:${session.id}`);
     await broadcastChannel.subscribe();
     await broadcastChannel.send({

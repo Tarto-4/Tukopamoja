@@ -380,13 +380,10 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
 
     const supabase = createClient();
 
-    const { count: existingAnswersCount } = await supabase
-      .from("player_answers")
-      .select("id", { count: "exact", head: true })
-      .eq("session_id", session.id)
-      .eq("question_index", session.current_q_index);
-
-    const answerRank = (existingAnswersCount ?? 0) + 1;
+    // Use a time-based estimate for optimistic rank display.
+    // Server-side recompute_ranked_question_scores() will compute
+    // the authoritative rank when the host shows the leaderboard.
+    const answerRank = 1; // optimistic — server corrects later
     const activePlayers = Math.max(1, session.player_count || players.length || 1);
 
     // Calculate score

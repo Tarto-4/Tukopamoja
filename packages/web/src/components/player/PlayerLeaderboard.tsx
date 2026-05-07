@@ -33,16 +33,16 @@ export default function PlayerLeaderboard() {
           </p>
         </div>
 
-        {/* Rankings */}
+        {/* Rankings — show top 10 + own position for scale */}
         <div className="space-y-2 relative z-10 rounded-2xl glass p-4 border border-white/12">
-          {leaderboard.map((entry, i) => {
+          {leaderboard.slice(0, 10).map((entry, i) => {
             const isMe = entry.player_id === playerId;
             return (
               <motion.div
                 key={entry.player_id}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.05 }}
+                transition={{ delay: Math.min(i, 8) * 0.05 }}
                 className={`lb-row ${isMe ? "lb-row--me" : ""}`}
               >
                 <span className="text-lg w-8 text-center font-serif font-black shrink-0">

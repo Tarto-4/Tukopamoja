@@ -34,14 +34,14 @@ export default function HostLeaderboard() {
         After question {session.current_q_index + 1} of {totalQuestions}
       </p>
 
-      {/* Rankings */}
+      {/* Rankings — show top 20 to keep UI responsive at 200 players */}
       <div className="w-full max-w-lg space-y-2 sm:space-y-3 mb-6 sm:mb-8 max-h-[50vh] overflow-y-auto relative z-10 rounded-2xl glass p-4 border border-white/15">
-        {leaderboard.map((entry, index) => (
+        {leaderboard.slice(0, 20).map((entry, index) => (
           <motion.div
             key={entry.player_id}
             initial={{ opacity: 0, x: -40 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: index * 0.08 }}
+            transition={{ delay: Math.min(index, 10) * 0.06 }}
             className="lb-row"
           >
             <div className="w-10 text-center">
@@ -68,6 +68,11 @@ export default function HostLeaderboard() {
             </span>
           </motion.div>
         ))}
+        {leaderboard.length > 20 && (
+          <p className="text-center text-muted-foreground text-xs pt-2">
+            +{leaderboard.length - 20} more players
+          </p>
+        )}
       </div>
 
       <Button
