@@ -8,6 +8,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { usePlayerStore } from "@/stores/usePlayerStore";
+import { useBrandingStore } from "@/stores/useBrandingStore";
 import { OPTION_COLORS } from "@tukopamoja/shared";
 import { CheckCircle, XCircle, Clock, Send } from "lucide-react";
 import BrandedBackground from "@/components/ui/BrandedBackground";
@@ -43,6 +44,7 @@ export default function PlayerQuestion() {
   } = usePlayerStore();
 
   const [textInput, setTextInput] = useState("");
+  const { branding } = useBrandingStore();
 
   if (!session || !currentQuestion) return null;
 
@@ -58,6 +60,11 @@ export default function PlayerQuestion() {
     return (
       <div className="game-screen items-center justify-center gradient-dark px-4 relative overflow-hidden">
         <BrandedBackground imagePath="/designs/backgrounds/dt-wallpaper.png" className="z-0" />
+        {branding?.logo_url && (
+          <div className="absolute top-4 left-4 flex items-center gap-2 z-30">
+            <img src={branding.logo_url} alt={branding.name} className="w-10 h-10 sm:w-12 sm:h-12 rounded object-contain" />
+          </div>
+        )}
         <motion.div
           initial={{ scale: 0.75, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -112,6 +119,11 @@ export default function PlayerQuestion() {
     return (
       <div className="game-screen items-center justify-center gradient-dark px-4 relative overflow-hidden">
         <BrandedBackground imagePath="/designs/backgrounds/dt-wallpaper.png" className="z-0" />
+        {branding?.logo_url && (
+          <div className="absolute top-4 left-4 flex items-center gap-2 z-30">
+            <img src={branding.logo_url} alt={branding.name} className="w-10 h-10 sm:w-12 sm:h-12 rounded object-contain" />
+          </div>
+        )}
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -132,6 +144,11 @@ export default function PlayerQuestion() {
   return (
     <div className="game-screen p-4 gradient-dark relative overflow-hidden">
       <BrandedBackground imagePath="/designs/backgrounds/dt-wallpaper.png" className="z-0" />
+      {branding?.logo_url && (
+        <div className="absolute top-4 right-4 z-30">
+          <img src={branding.logo_url} alt={branding.name} className="w-10 h-10 sm:w-12 sm:h-12 rounded object-contain" />
+        </div>
+      )}
 
       {/* Progress / timer header */}
       <div className="relative z-10 mb-4 rounded-2xl bg-card px-5 py-4 border border-border shadow-[0px_2px_8px_rgba(0,0,0,0.06)]">

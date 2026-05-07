@@ -8,6 +8,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { usePlayerStore } from "@/stores/usePlayerStore";
+import { useBrandingStore } from "@/stores/useBrandingStore";
 import { Button } from "@/components/ui/button";
 import WinnerCelebration from "@/components/ui/WinnerCelebration";
 import { MEDALS } from "@tukopamoja/shared";
@@ -18,6 +19,7 @@ export default function PlayerGameOver() {
   const router = useRouter();
   const { session, leaderboard, playerId, totalScore, rank, nickname, avatar, reset, submitFeedback } =
     usePlayerStore();
+  const { branding } = useBrandingStore();
   const [countdown, setCountdown] = useState(10);
   const hasRedirected = useRef(false);
 
@@ -71,6 +73,15 @@ export default function PlayerGameOver() {
   return (
     <div className="game-screen items-center justify-center gradient-dark px-4 py-6 relative overflow-hidden">
       <BrandedBackground className="z-0" />
+      {/* Brand identity */}
+      {branding?.logo_url && (
+        <div className="absolute top-4 left-4 flex items-center gap-2 z-30">
+          <img src={branding.logo_url} alt={branding.name} className="w-10 h-10 sm:w-12 sm:h-12 rounded object-contain" />
+          <span className="text-xs font-semibold text-white/60 hidden sm:inline">
+            {branding.name}
+          </span>
+        </div>
+      )}
       <WinnerCelebration active={isWinner} winnerLabel="Champion" />
       <div className="w-full max-w-2xl space-y-6 text-center relative z-10">
         {/* Celebration header */}

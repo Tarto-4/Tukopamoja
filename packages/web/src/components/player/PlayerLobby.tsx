@@ -5,6 +5,7 @@
 "use client";
 
 import { usePlayerStore } from "@/stores/usePlayerStore";
+import { useBrandingStore } from "@/stores/useBrandingStore";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2, Circle, Users } from "lucide-react";
 import HamsterLoader from "@/components/ui/HamsterLoader";
@@ -12,6 +13,7 @@ import BrandedBackground from "@/components/ui/BrandedBackground";
 
 export default function PlayerLobby() {
   const { session, players, nickname, avatar, playerId, toggleReady } = usePlayerStore();
+  const { branding } = useBrandingStore();
 
   if (!session) return null;
 
@@ -21,6 +23,15 @@ export default function PlayerLobby() {
   return (
     <div className="game-screen items-center justify-center gradient-dark px-4 relative overflow-hidden">
       <BrandedBackground className="z-0" />
+      {/* Brand identity */}
+      {branding?.logo_url && (
+        <div className="absolute top-4 left-4 flex items-center gap-2 z-30">
+          <img src={branding.logo_url} alt={branding.name} className="w-10 h-10 sm:w-12 sm:h-12 rounded object-contain" />
+          <span className="text-xs font-semibold text-white/60 hidden sm:inline">
+            {branding.name}
+          </span>
+        </div>
+      )}
       <div className="text-center space-y-6 max-w-md w-full relative z-10">
         {/* Player identity */}
         <div className="space-y-3 rounded-2xl bg-card p-6 border border-border shadow-[0px_2px_8px_rgba(0,0,0,0.06)]">

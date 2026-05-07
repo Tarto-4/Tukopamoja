@@ -9,6 +9,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useGameStore } from "@/stores/useGameStore";
+import { useBrandingStore } from "@/stores/useBrandingStore";
 import { Button } from "@/components/ui/button";
 import BrandedBackground from "@/components/ui/BrandedBackground";
 import { OPTION_COLORS } from "@tukopamoja/shared";
@@ -50,6 +51,7 @@ export default function HostQuestion() {
     endGame,
     stopTimer,
   } = useGameStore();
+  const { branding } = useBrandingStore();
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -83,6 +85,15 @@ export default function HostQuestion() {
     <div className="game-screen p-4 sm:p-8 gradient-dark relative overflow-hidden">
       <div className="absolute top-0 left-0 right-0 accent-bar z-20" />
       <BrandedBackground imagePath="/designs/backgrounds/dt-wallpaper.png" className="z-0" />
+      {/* Brand identity */}
+      {branding?.logo_url && (
+        <div className="absolute top-4 left-4 flex items-center gap-2 z-30">
+          <img src={branding.logo_url} alt={branding.name} className="w-14 h-14 sm:w-16 sm:h-16 rounded-lg object-contain" />
+          <span className="text-sm font-semibold text-white/60">
+            {branding.name}
+          </span>
+        </div>
+      )}
       <div className="relative z-10 mb-4 sm:mb-6 grid grid-cols-1 md:grid-cols-3 gap-3">
         <div className="stat-tile">
           <p className="stat-tile__label">Question</p>

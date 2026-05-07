@@ -26,9 +26,9 @@ export default function HostGameOver() {
       {/* Brand identity */}
       <div className="absolute top-4 left-4 flex items-center gap-2 z-30">
         {branding?.logo_url && (
-          <img src={branding.logo_url} alt={branding.name} className="w-8 h-8 rounded object-contain" />
+          <img src={branding.logo_url} alt={branding.name} className="w-14 h-14 sm:w-16 sm:h-16 rounded-lg object-contain" />
         )}
-        <span className="text-xs font-semibold text-white/60">
+        <span className="text-sm font-semibold text-white/60">
           {branding?.name || "TUKOPAMOJA"}
         </span>
       </div>

@@ -1,9 +1,10 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useSearchParams, useRouter } from "next/navigation";
 import { usePlayerStore, randomAvatar } from "@/stores/usePlayerStore";
+import { useBrandingStore } from "@/stores/useBrandingStore";
 import { Gamepad2, ArrowRight, RefreshCw } from "lucide-react";
 import GameLogo from "@/components/ui/GameLogo";
 
@@ -21,6 +22,9 @@ function JoinPageContent() {
   const [joining, setJoining] = useState(false);
 
   const { joinSession } = usePlayerStore();
+  const { fetchBranding } = useBrandingStore();
+
+  useEffect(() => { fetchBranding(); }, [fetchBranding]);
 
   // Update avatar in store when changed
   const refreshAvatar = () => {

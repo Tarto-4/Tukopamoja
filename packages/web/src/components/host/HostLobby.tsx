@@ -97,7 +97,7 @@ export default function HostLobby() {
               src={branding.logo_url}
               alt={branding.name}
               loading="lazy"
-              className="w-10 h-10 rounded object-contain"
+              className="w-14 h-14 sm:w-16 sm:h-16 rounded-lg object-contain"
             />
           )}
           <span className="font-serif font-bold text-lg text-white">

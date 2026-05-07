@@ -6,14 +6,25 @@
 
 import { motion } from "framer-motion";
 import { usePlayerStore } from "@/stores/usePlayerStore";
+import { useBrandingStore } from "@/stores/useBrandingStore";
 import { MEDALS } from "@tukopamoja/shared";
 
 export default function PlayerLeaderboard() {
   const { leaderboard, playerId, totalScore, rank } = usePlayerStore();
+  const { branding } = useBrandingStore();
 
   return (
     <div className="game-screen items-center gradient-dark px-4 py-6 relative overflow-hidden">
       <div className="absolute top-0 left-0 right-0 accent-bar z-20" />
+      {/* Brand identity */}
+      {branding?.logo_url && (
+        <div className="absolute top-4 left-4 flex items-center gap-2 z-30">
+          <img src={branding.logo_url} alt={branding.name} className="w-10 h-10 sm:w-12 sm:h-12 rounded object-contain" />
+          <span className="text-xs font-semibold text-white/60 hidden sm:inline">
+            {branding.name}
+          </span>
+        </div>
+      )}
       <div className="w-full max-w-md space-y-6">
         {/* Title */}
         <div className="text-center space-y-2 relative z-10">
