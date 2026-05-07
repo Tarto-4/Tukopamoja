@@ -7,11 +7,13 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useGameStore } from "@/stores/useGameStore";
+import { useBrandingStore } from "@/stores/useBrandingStore";
 import { Button } from "@/components/ui/button";
 import { MEDALS } from "@tukopamoja/shared";
 
 export default function HostLeaderboard() {
   const { session, leaderboard, nextQuestion } = useGameStore();
+  const { branding } = useBrandingStore();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -23,6 +25,15 @@ export default function HostLeaderboard() {
   return (
     <div className="game-screen items-center justify-center gradient-dark p-4 sm:p-8 relative overflow-hidden">
       <div className="absolute top-0 left-0 right-0 accent-bar z-20" />
+      {/* Brand identity */}
+      <div className="absolute top-4 left-4 flex items-center gap-2 z-30">
+        {branding?.logo_url && (
+          <img src={branding.logo_url} alt={branding.name} className="w-8 h-8 rounded object-contain" />
+        )}
+        <span className="text-xs font-semibold text-white/60">
+          {branding?.name || "TUKOPAMOJA"}
+        </span>
+      </div>
       <motion.h1
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}

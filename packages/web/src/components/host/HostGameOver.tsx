@@ -7,6 +7,7 @@
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useGameStore } from "@/stores/useGameStore";
+import { useBrandingStore } from "@/stores/useBrandingStore";
 import { Button } from "@/components/ui/button";
 import WinnerCelebration from "@/components/ui/WinnerCelebration";
 import { MEDALS } from "@tukopamoja/shared";
@@ -14,6 +15,7 @@ import { MEDALS } from "@tukopamoja/shared";
 export default function HostGameOver() {
   const router = useRouter();
   const { leaderboard, reset } = useGameStore();
+  const { branding } = useBrandingStore();
 
   const top3 = leaderboard.slice(0, 3);
   const winner = top3[0];
@@ -21,6 +23,15 @@ export default function HostGameOver() {
   return (
     <div className="game-screen items-center justify-center gradient-dark p-4 sm:p-8 relative overflow-hidden">
       <div className="absolute top-0 left-0 right-0 accent-bar z-20" />
+      {/* Brand identity */}
+      <div className="absolute top-4 left-4 flex items-center gap-2 z-30">
+        {branding?.logo_url && (
+          <img src={branding.logo_url} alt={branding.name} className="w-8 h-8 rounded object-contain" />
+        )}
+        <span className="text-xs font-semibold text-white/60">
+          {branding?.name || "TUKOPAMOJA"}
+        </span>
+      </div>
       <WinnerCelebration
         active={!!winner}
         winnerLabel={winner ? `${winner.nickname} wins!` : "Winner"}

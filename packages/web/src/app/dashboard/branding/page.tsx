@@ -15,6 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Save, Palette, Upload } from "lucide-react";
+import { useBrandingStore } from "@/stores/useBrandingStore";
 
 const FONT_OPTIONS = [
   "Inter",
@@ -150,6 +151,8 @@ export default function BrandingPage() {
       setSaveError(error.message);
     } else {
       setSaved(true);
+      // Refresh the global branding store so game screens pick up changes immediately
+      useBrandingStore.getState().fetchBranding(true);
       setTimeout(() => setSaved(false), 3000);
     }
   }

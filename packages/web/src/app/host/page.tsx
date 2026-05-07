@@ -3,6 +3,7 @@
 import { Suspense, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { useGameStore } from "@/stores/useGameStore";
+import { useBrandingStore } from "@/stores/useBrandingStore";
 import { useRealtimeGame } from "@/hooks/useRealtimeGame";
 import HostLobby from "@/components/host/HostLobby";
 import HostQuestion from "@/components/host/HostQuestion";
@@ -13,6 +14,11 @@ function HostSessionContent() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("sessionId") || "";
   const { session, loadSession } = useGameStore();
+  const { fetchBranding } = useBrandingStore();
+
+  useEffect(() => {
+    fetchBranding();
+  }, [fetchBranding]);
 
   useEffect(() => {
     if (sessionId) loadSession(sessionId);

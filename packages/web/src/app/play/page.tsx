@@ -8,6 +8,7 @@
 import { Suspense, useEffect, useMemo, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { usePlayerStore } from "@/stores/usePlayerStore";
+import { useBrandingStore } from "@/stores/useBrandingStore";
 import { usePlayerRealtime } from "@/hooks/usePlayerRealtime";
 import PlayerLobby from "@/components/player/PlayerLobby";
 import PlayerQuestion from "@/components/player/PlayerQuestion";
@@ -20,7 +21,12 @@ function PlayPageContent() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("sessionId") || "";
   const { session, rejoinSession } = usePlayerStore();
+  const { fetchBranding } = useBrandingStore();
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchBranding();
+  }, [fetchBranding]);
 
   // Try to rejoin or redirect to /join if no session.
   // On browser refresh Zustand state is lost — we always attempt a

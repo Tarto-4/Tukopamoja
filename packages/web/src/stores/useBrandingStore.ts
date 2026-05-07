@@ -10,15 +10,16 @@ import type { Organization } from "@tukopamoja/shared";
 interface BrandingState {
   branding: Organization | null;
   loading: boolean;
-  fetchBranding: () => Promise<void>;
+  fetchBranding: (force?: boolean) => Promise<void>;
 }
 
 export const useBrandingStore = create<BrandingState>((set, get) => ({
   branding: null,
   loading: false,
 
-  fetchBranding: async () => {
+  fetchBranding: async (force = false) => {
     if (get().loading) return; // Prevent duplicate concurrent fetches
+    if (!force && get().branding) return; // Already loaded — use force to re-fetch
     set({ loading: true });
     const supabase = createClient();
 
