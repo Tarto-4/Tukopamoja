@@ -158,6 +158,8 @@ export default function BrandingPage() {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    setSaveError(null);
+
     const ext = file.name.split(".").pop();
     const path = `logos/${org!.id}.${ext}`;
 
@@ -165,7 +167,11 @@ export default function BrandingPage() {
       .from("media")
       .upload(path, file, { upsert: true });
 
-    if (uploadErr) return;
+    if (uploadErr) {
+      console.error("[Branding] logo upload error:", uploadErr);
+      setSaveError(`Logo upload failed: ${uploadErr.message}`);
+      return;
+    }
 
     const { data: urlData } = supabase.storage
       .from("media")
