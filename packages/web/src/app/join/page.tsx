@@ -95,10 +95,11 @@ function JoinPageContent() {
             <button
               type="button"
               onClick={refreshAvatar}
-              className="p-2 rounded-full bg-white/5 border border-white/15 hover:bg-primary/10 hover:border-primary/30 transition-colors"
+              className="p-3 rounded-full bg-white/5 border border-white/15 hover:bg-primary/10 hover:border-primary/30 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+              aria-label="Change avatar"
               title="Change avatar"
             >
-              <RefreshCw className="w-4 h-4" />
+              <RefreshCw className="w-5 h-5" />
             </button>
           </div>
 

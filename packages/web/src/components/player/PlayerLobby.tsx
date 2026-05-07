@@ -43,6 +43,7 @@ export default function PlayerLobby() {
               size="lg"
               variant={isReady ? "game" : "game-outline"}
               onClick={() => toggleReady(!isReady)}
+              aria-pressed={isReady}
               className="w-full sm:w-auto min-h-[48px]"
             >
               {isReady ? (

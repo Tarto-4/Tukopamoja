@@ -132,7 +132,7 @@ export default function TemplatesPage() {
 
   return (
     <div className="page-container relative z-10">
-      <div className="flex items-center justify-between mb-8 rounded-2xl glass p-6 border border-border/60 relative overflow-hidden">
+      <div className="flex flex-wrap items-center justify-between gap-4 mb-8 rounded-2xl glass p-6 border border-border/60 relative overflow-hidden">
         <div className="absolute top-0 left-0 right-0 accent-bar" />
         <div>
           <h1 className="text-3xl font-bold">Templates</h1>
@@ -214,7 +214,7 @@ export default function TemplatesPage() {
                   handleDeleteTemplate(template.id, template.title);
                 }}
                 disabled={deletingId === template.id}
-                className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity p-2 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400 hover:bg-rose-500/20 hover:text-rose-300 disabled:opacity-50 z-10"
+                className="absolute top-3 right-3 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 focus:opacity-100 transition-opacity p-2.5 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400 hover:bg-rose-500/20 hover:text-rose-300 disabled:opacity-50 z-10 min-h-[44px] min-w-[44px] flex items-center justify-center"
                 title={`Delete "${template.title}"`}
                 aria-label={`Delete template ${template.title}`}
               >

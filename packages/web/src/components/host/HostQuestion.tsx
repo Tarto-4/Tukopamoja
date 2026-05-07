@@ -125,8 +125,9 @@ export default function HostQuestion() {
         {currentQuestion.image_url && (
           <img
             src={currentQuestion.image_url}
-            alt=""
-            className="max-h-48 mx-auto mt-4 rounded-lg object-contain"
+            alt={`Illustration for: ${currentQuestion.question_text}`}
+            loading="lazy"
+            className="max-h-36 sm:max-h-48 mx-auto mt-4 rounded-lg object-contain"
           />
         )}
       </motion.div>

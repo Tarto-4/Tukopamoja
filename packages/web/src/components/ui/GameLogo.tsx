@@ -61,6 +61,7 @@ export default function GameLogo({
       <img
         src={withBasePath("/designs/tuko-pamoja.png")}
         alt="TUKOPAMOJA"
+        loading="lazy"
         className={`${config.imgClass} object-contain drop-shadow-[0_4px_24px_rgba(238,220,0,0.3)] transition-transform duration-300 ease-out ${
           isStatic ? "" : "group-hover:scale-105"
         }`}
@@ -92,6 +93,7 @@ export function GameLogoInline({
     <img
       src={withBasePath("/designs/tuko-pamoja.png")}
       alt="TUKOPAMOJA"
+      loading="lazy"
       className={`h-8 w-auto object-contain ${className}`}
       role="img"
       aria-label="TUKOPAMOJA"

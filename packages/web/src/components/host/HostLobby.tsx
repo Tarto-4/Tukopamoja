@@ -85,7 +85,8 @@ export default function HostLobby() {
         src={withBasePath("/designs/tuko-pamoja.png")}
         alt=""
         aria-hidden="true"
-        className="absolute inset-0 m-auto w-[560px] h-[560px] object-contain opacity-[0.16] pointer-events-none"
+        loading="lazy"
+        className="absolute inset-0 m-auto w-[280px] h-[280px] sm:w-[420px] sm:h-[420px] md:w-[560px] md:h-[560px] object-contain opacity-[0.16] pointer-events-none"
       />
       {/* Header */}
       <div className="flex items-center justify-between p-4 sm:p-6 relative z-10">
@@ -94,6 +95,7 @@ export default function HostLobby() {
             <img
               src={branding.logo_url}
               alt={branding.name}
+              loading="lazy"
               className="w-10 h-10 rounded object-contain"
             />
           )}
@@ -121,7 +123,9 @@ export default function HostLobby() {
               Game PIN
             </h2>
             <div
-              className="text-6xl sm:text-7xl font-serif font-black tracking-[0.2em] py-4 px-8 rounded-2xl glow-crimson gradient-primary text-black"
+              role="status"
+              aria-label={`Game PIN: ${session.pin}`}
+              className="text-5xl sm:text-6xl md:text-7xl font-serif font-black tracking-[0.15em] sm:tracking-[0.2em] py-3 px-5 sm:py-4 sm:px-8 rounded-2xl glow-crimson gradient-primary text-black"
             >
               {session.pin}
             </div>
@@ -177,10 +181,10 @@ export default function HostLobby() {
                       </p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Button size="sm" variant="outline" onClick={() => mutePlayer(p.id, !p.is_muted)}>
+                      <Button size="sm" variant="outline" onClick={() => mutePlayer(p.id, !p.is_muted)} aria-label={p.is_muted ? `Unmute ${p.first_name}` : `Mute ${p.first_name}`}>
                         {p.is_muted ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
                       </Button>
-                      <Button size="sm" variant="destructive" onClick={() => kickPlayer(p.id)}>
+                      <Button size="sm" variant="destructive" onClick={() => kickPlayer(p.id)} aria-label={`Kick ${p.first_name}`}>
                         <UserX className="w-4 h-4" />
                       </Button>
                     </div>

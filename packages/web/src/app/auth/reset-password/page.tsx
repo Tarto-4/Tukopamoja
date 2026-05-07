@@ -143,8 +143,8 @@ export default function ResetPasswordPage() {
                 />
               </div>
 
-              {error && <p className="text-sm text-destructive">{error}</p>}
-              {message && <p className="text-sm text-quiz-green">{message}</p>}
+              {error && <p className="text-sm text-destructive" role="alert" aria-live="polite">{error}</p>}
+              {message && <p className="text-sm text-quiz-green" role="status" aria-live="polite">{message}</p>}
 
               <Button
                 type="submit"
@@ -183,7 +183,7 @@ export default function ResetPasswordPage() {
                 />
               </div>
 
-              {error && <p className="text-sm text-destructive">{error}</p>}
+              {error && <p className="text-sm text-destructive" role="alert" aria-live="polite">{error}</p>}
 
               <Button
                 type="submit"

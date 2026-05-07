@@ -220,6 +220,7 @@ export default function BrandingPage() {
                   <img
                     src={org.logo_url}
                     alt="Logo"
+                    loading="lazy"
                     className="w-16 h-16 rounded-lg object-contain bg-gray-50 border border-border p-2"
                   />
                 )}
@@ -337,6 +338,7 @@ export default function BrandingPage() {
               <img
                 src={livePreviewSvg}
                 alt="Brand preview"
+                loading="lazy"
                 className="block w-full h-auto"
               />
             </div>

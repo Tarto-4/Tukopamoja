@@ -45,7 +45,7 @@ export default function DashboardLayout({
 
   return (
     <AuthGuard>
-      <div className="min-h-[100dvh] flex flex-col gradient-dark relative overflow-hidden">
+      <div className="min-h-screen min-h-[100dvh] flex flex-col gradient-dark relative overflow-hidden">
         <BrandedBackground
           imagePath={backgroundImagePath}
           overlayClassName="bg-black/55 dark:bg-black/55"
@@ -62,28 +62,29 @@ export default function DashboardLayout({
               <GameLogoInline />
             </Link>
 
-            <nav className="flex items-center gap-3 sm:gap-6 text-sm">
+            <nav className="flex flex-wrap items-center gap-2 sm:gap-4 text-sm" aria-label="Dashboard navigation">
               {navItems.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`transition-colors ${
+                  aria-current={pathname?.startsWith(item.href) ? "page" : undefined}
+                  className={`px-3 py-2 rounded-lg min-h-[44px] flex items-center transition-colors ${
                     pathname?.startsWith(item.href)
-                      ? "text-primary font-medium"
-                      : "text-foreground/70 hover:text-primary"
+                      ? "text-primary font-medium bg-primary/10"
+                      : "text-foreground/70 hover:text-primary hover:bg-primary/5"
                   }`}
                 >
                   {item.label}
                 </Link>
               ))}
-              <ThemeToggle className="h-8 px-2 border-primary/30 text-foreground hover:bg-primary/10" />
+              <ThemeToggle className="h-10 w-10 min-h-[44px] min-w-[44px] border-primary/30 text-foreground hover:bg-primary/10" />
               <Button
                 type="button"
                 variant="outline"
                 size="sm"
                 onClick={handleSignOut}
                 disabled={signingOut}
-                className="h-8 px-2 border-primary/30 text-foreground hover:bg-primary/10"
+                className="h-10 px-3 min-h-[44px] border-primary/30 text-foreground hover:bg-primary/10"
               >
                 <LogOut className="w-3.5 h-3.5 mr-1.5" />
                 {signingOut ? "Signing out..." : "Sign out"}

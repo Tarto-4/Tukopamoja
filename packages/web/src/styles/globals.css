@@ -489,17 +489,6 @@
     border-color: rgba(101,81,60,0.28) !important;
   }
 
-  /* ─── Score pop animation overlay ─────────────────────── */
-  .score-pop-label {
-    position: absolute;
-    pointer-events: none;
-    font-size: 1.5rem;
-    font-weight: 900;
-    color: #eecd00;
-    text-shadow: 0 0 14px rgba(238,205,0,0.8);
-    animation: score-pop 0.9s ease-out both;
-  }
-
   /* ─── Pulse indicator (waiting) ────────────────────────── */
   .game-pulse { animation: game-pulse 2.5s cubic-bezier(0.4,0,0.6,1) infinite; }
 
@@ -528,11 +517,6 @@
     40%     { transform: translateX(9px); }
     60%     { transform: translateX(-5px); }
     80%     { transform: translateX(5px); }
-  }
-  @keyframes score-pop {
-    0%   { transform: translateY(0)    scale(1);    opacity: 1; }
-    50%  { transform: translateY(-30px) scale(1.35); opacity: 1; }
-    100% { transform: translateY(-58px) scale(0.9);  opacity: 0; }
   }
   @keyframes glow-pulse {
     0%,100% { opacity: 0.65; }

@@ -163,8 +163,9 @@ export default function PlayerQuestion() {
         {currentQuestion.image_url && (
           <img
             src={currentQuestion.image_url}
-            alt=""
-            className="max-h-36 mx-auto mt-4 rounded-xl object-contain"
+            alt={`Illustration for: ${currentQuestion.question_text}`}
+            loading="lazy"
+            className="max-h-28 sm:max-h-36 mx-auto mt-4 rounded-xl object-contain"
           />
         )}
       </motion.div>

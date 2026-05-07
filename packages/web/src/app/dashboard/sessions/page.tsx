@@ -317,7 +317,7 @@ export default function SessionsPage() {
     <div className="page-container relative z-10">
       <div className="mb-8 rounded-2xl glass p-6 border border-border/60 relative overflow-hidden">
         <div className="absolute top-0 left-0 right-0 accent-bar" />
-        <div className="flex items-start justify-between gap-3">
+        <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <h1 className="text-3xl font-bold">Game Sessions</h1>
             <p className="text-muted-foreground mt-1">
@@ -375,6 +375,7 @@ export default function SessionsPage() {
                 <button
                   onClick={() => toggleExpand(session.id)}
                   className="w-full text-left"
+                  aria-expanded={isExpanded}
                 >
                   <CardContent className="flex items-center justify-between py-4">
                     <div className="min-w-0">
