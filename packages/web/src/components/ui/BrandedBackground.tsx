@@ -25,9 +25,9 @@ export default function BrandedBackground({
     >
       {/* Solid fallback */}
       <div className="absolute inset-0 bg-[#050405]" />
-      {/* Background image — responsive cover on all viewports and orientations */}
+      {/* Background image — fully visible, scaled to fit all viewports */}
       <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        className="absolute inset-0 bg-contain bg-center bg-no-repeat"
         style={{ backgroundImage: `url(${withBasePath(imagePath)})` }}
       />
       {/* Overlay */}
