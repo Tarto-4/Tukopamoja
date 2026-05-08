@@ -66,14 +66,11 @@ export default function HomePage() {
 
       <div className="text-center space-y-8 px-4 relative z-10 rounded-2xl glass p-8 sm:p-10 border border-primary/20 max-w-6xl w-full mx-4">
         <div className="space-y-3">
-          <GameLogo size="xl" showSubtitle className="animate-float-in" />
-          <p className="text-lg text-white/80 tracking-wide drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]">
-            Premium multiplayer arena for quiz, puzzle, strategy, and word games.
-          </p>
+          <GameLogo size="xl" className="animate-float-in" />
         </div>
 
         <div className="space-y-4">
-          <div className="flex items-center justify-center gap-2 text-xs uppercase tracking-[0.25em] text-white/60">
+          <div className="flex items-center justify-center gap-2 text-xs uppercase tracking-[0.25em] text-muted-foreground">
             <span>Select game mode</span>
           </div>
 
@@ -89,8 +86,8 @@ export default function HomePage() {
                   onClick={() => setSelectedModeId(mode.id)}
                   className={`relative rounded-2xl p-5 transition-all duration-300 game-card backdrop-blur-xl ${
                     isSelected
-                      ? "bg-gradient-to-br from-[rgba(0,0,0,0.75)] to-[rgba(0,0,0,0.7)] border-2 border-[#EEDC00] shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_16px_rgba(238,220,0,0.25),inset_0_1px_0_rgba(255,255,255,0.1)]"
-                      : "bg-gradient-to-br from-[rgba(0,0,0,0.6)] to-[rgba(0,0,0,0.55)] border border-white/15 shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_0_0_1px_rgba(255,255,255,0.05)] hover:border-[#EEDC00]/40 hover:shadow-[0_8px_32px_rgba(0,0,0,0.5),0_0_8px_rgba(238,220,0,0.1)]"
+                      ? "bg-card border-2 border-primary shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_16px_rgba(238,220,0,0.25),inset_0_1px_0_rgba(255,255,255,0.1)]"
+                      : "bg-card border border-border shadow-[0_8px_32px_rgba(0,0,0,0.15)] hover:border-primary/40"
                   }`}
                 >
                   {isSelected && (
@@ -99,26 +96,26 @@ export default function HomePage() {
                   <div className="flex items-start justify-between gap-3">
                     <div className={`flex h-10 w-10 items-center justify-center rounded-xl border ${
                       isSelected
-                        ? "border-[#EEDC00]/50 bg-[#EEDC00]/20"
-                        : "border-white/20 bg-white/10"
+                        ? "border-primary/50 bg-primary/20"
+                        : "border-border bg-muted"
                     }`}>
-                      <Icon className={`h-5 w-5 ${isSelected ? "text-[#EEDC00]" : "text-white/80"}`} />
+                      <Icon className={`h-5 w-5 ${isSelected ? "text-primary" : "text-muted-foreground"}`} />
                     </div>
                     <span
                       className={`rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] ${
                         mode.status === "available"
-                          ? "bg-emerald-500/30 text-emerald-200 border border-emerald-500/30"
-                          : "bg-white/10 text-white/70 border border-white/10"
+                          ? "bg-emerald-500/20 text-emerald-600 dark:text-emerald-200 border border-emerald-500/30"
+                          : "bg-muted text-muted-foreground border border-border"
                       }`}
                     >
                       {mode.status === "available" ? "Live" : "Coming soon"}
                     </span>
                   </div>
                   <div className="mt-4 space-y-2">
-                    <h2 className={`text-lg font-bold ${isSelected ? "text-[#EEDC00] drop-shadow-[0_0_8px_rgba(238,220,0,0.4)]" : "text-white"}`}>
+                    <h2 className={`text-lg font-bold ${isSelected ? "text-primary" : "text-foreground"}`}>
                       {mode.name}
                     </h2>
-                    <p className="text-sm text-white/70 leading-relaxed">
+                    <p className="text-sm text-muted-foreground leading-relaxed">
                       {mode.description}
                     </p>
                   </div>
@@ -128,9 +125,9 @@ export default function HomePage() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-white/15 bg-black/40 backdrop-blur-sm px-4 py-4 max-w-3xl mx-auto">
-          <p className="text-sm font-semibold text-white">Selected mode: {selectedMode.name}</p>
-          <p className="text-sm text-white/70 mt-1">
+        <div className="rounded-2xl border border-border bg-card backdrop-blur-sm px-4 py-4 max-w-3xl mx-auto">
+          <p className="text-sm font-semibold text-foreground">Selected mode: {selectedMode.name}</p>
+          <p className="text-sm text-muted-foreground mt-1">
             {isQuizMode
               ? "Quiz mode is fully available right now with multiplayer host and player flows."
               : `${selectedMode.name} is planned as a multiplayer mode and is marked coming soon for now.`}

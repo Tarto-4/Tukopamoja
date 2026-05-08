@@ -16,29 +16,23 @@ interface GameLogoProps {
   className?: string;
   /** Disable the hover animation */
   static?: boolean;
-  /** Show the subtitle "ENS FUTURE EDITION" */
-  showSubtitle?: boolean;
 }
 
 const SIZE_CONFIG: Record<
   LogoSize,
-  { imgClass: string; subtitleText: string }
+  { imgClass: string }
 > = {
   sm: {
     imgClass: "h-10 w-auto",
-    subtitleText: "text-[7px]",
   },
   md: {
     imgClass: "h-16 sm:h-20 w-auto",
-    subtitleText: "text-[9px]",
   },
   lg: {
     imgClass: "h-24 sm:h-32 w-auto",
-    subtitleText: "text-[10px] sm:text-xs",
   },
   xl: {
     imgClass: "h-32 sm:h-44 md:h-52 w-auto",
-    subtitleText: "text-xs sm:text-sm",
   },
 };
 
@@ -46,7 +40,6 @@ export default function GameLogo({
   size = "lg",
   className = "",
   static: isStatic = false,
-  showSubtitle = false,
 }: GameLogoProps) {
   const config = SIZE_CONFIG[size];
 
@@ -68,14 +61,7 @@ export default function GameLogo({
         draggable={false}
       />
 
-      {/* Subtitle */}
-      {showSubtitle && (
-        <span
-          className={`${config.subtitleText} uppercase tracking-[0.35em] text-white/70 mt-3 font-medium drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]`}
-        >
-          ENS Future Edition
-        </span>
-      )}
+
     </div>
   );
 }

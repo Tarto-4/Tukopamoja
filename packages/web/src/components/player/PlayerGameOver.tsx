@@ -98,16 +98,128 @@ export default function PlayerGameOver() {
           )}
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground">Game Complete</h1>
           <p className="text-muted-foreground max-w-xl mx-auto text-sm sm:text-base">
-            Great run, {nickname}. Your results are locked in and you will return to the player home screen automatically.
+            Great run, {nickname}. Your results are locked in.
           </p>
         </motion.div>
+
+        {/* Player result card */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="rounded-2xl bg-card p-6 sm:p-8 space-y-5 border border-border shadow-[0px_2px_8px_rgba(0,0,0,0.06)]"
+        >
+          <div className="flex items-center justify-center gap-3">
+            <span className="text-5xl">{avatar}</span>
+            <div className="text-left">
+              <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Player Summary</p>
+              <p className="font-bold text-xl text-foreground">{nickname}</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div>
+              <div className="rounded-2xl border border-border bg-muted px-4 py-4">
+                <p className="text-xs text-muted-foreground">Final Score</p>
+                <p className="text-2xl font-bold text-primary mt-1">
+                  {totalScore.toLocaleString()}
+                </p>
+              </div>
+            </div>
+            <div>
+              <div className="rounded-2xl border border-border bg-muted px-4 py-4">
+                <p className="text-xs text-muted-foreground">Rank</p>
+                <p className="text-2xl font-bold mt-1 text-foreground">
+                  {rank ? `#${rank}` : "—"}
+                </p>
+              </div>
+            </div>
+            <div>
+              <div className="rounded-2xl border border-border bg-muted px-4 py-4">
+                <p className="text-xs text-muted-foreground">Players</p>
+                <p className="text-2xl font-bold mt-1 text-foreground">
+                  {playerCount}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-left">
+            <div className="rounded-2xl border border-primary/20 bg-primary/10 px-4 py-4">
+              <div className="flex items-center gap-2 text-primary mb-2">
+                <Sparkles className="w-4 h-4" />
+                <span className="text-sm font-semibold">Finish highlight</span>
+              </div>
+              <p className="text-sm text-foreground/80">
+                {isWinner
+                  ? "You finished at the top of the leaderboard. Outstanding performance."
+                  : isTop3
+                  ? "You landed on the podium. Strong finish."
+                  : "Your results are saved. Jump back in for another round."}
+              </p>
+            </div>
+            <div className="rounded-2xl border border-border bg-muted px-4 py-4">
+              <div className="flex items-center gap-2 text-foreground/75 mb-2">
+                <TimerReset className="w-4 h-4" />
+                <span className="text-sm font-semibold">Auto return</span>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Returning to the player home screen in <span className="font-semibold text-foreground">{countdown}s</span>.
+              </p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Final standings */}
+        {top5.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="space-y-3 rounded-2xl bg-card p-5 border border-border shadow-[0px_2px_8px_rgba(0,0,0,0.06)]"
+          >
+            <div className="flex items-center justify-center gap-2 text-muted-foreground">
+              <Users className="w-4 h-4" />
+              <h3 className="text-sm uppercase tracking-[0.2em] font-medium">
+                Final Standings
+              </h3>
+            </div>
+            {top5.map((entry, i) => {
+              const isMe = entry.player_id === playerId;
+              return (
+                <div
+                  key={entry.player_id}
+                  className={`flex items-center gap-3 p-3 rounded-xl ${
+                    isMe
+                      ? "bg-primary/10 border border-primary/30"
+                      : "bg-muted border border-border"
+                  }`}
+                >
+                  <span className="text-lg w-8 text-center">
+                    {i < 3 ? MEDALS[i] : `#${i + 1}`}
+                  </span>
+                  <span>{entry.avatar}</span>
+                  <span
+                    className={`flex-1 text-sm truncate ${isMe ? "font-bold text-primary" : ""}`}
+                  >
+                    {entry.nickname}
+                    {isMe && " (you)"}
+                  </span>
+                  <span className="text-sm font-bold tabular-nums text-foreground">
+                    {entry.score.toLocaleString()}
+                  </span>
+                </div>
+              );
+            })}
+          </motion.div>
+        )}
 
         {/* Feedback form */}
         {requireFeedback && !feedbackSubmitted && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.25 }}
+            transition={{ delay: 0.6 }}
             className="rounded-2xl bg-card p-6 sm:p-8 space-y-5 border border-border shadow-[0px_2px_8px_rgba(0,0,0,0.06)]"
           >
             <div className="space-y-1">
@@ -191,118 +303,6 @@ export default function PlayerGameOver() {
             >
               Skip feedback
             </button>
-          </motion.div>
-        )}
-
-        {/* Player result card */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="rounded-2xl bg-card p-6 sm:p-8 space-y-5 border border-border shadow-[0px_2px_8px_rgba(0,0,0,0.06)]"
-        >
-          <div className="flex items-center justify-center gap-3">
-            <span className="text-5xl">{avatar}</span>
-            <div className="text-left">
-              <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Player Summary</p>
-              <p className="font-bold text-xl text-foreground">{nickname}</p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div>
-              <div className="rounded-2xl border border-border bg-muted px-4 py-4">
-                <p className="text-xs text-muted-foreground">Final Score</p>
-                <p className="text-2xl font-bold text-primary mt-1">
-                  {totalScore.toLocaleString()}
-                </p>
-              </div>
-            </div>
-            <div>
-              <div className="rounded-2xl border border-border bg-muted px-4 py-4">
-                <p className="text-xs text-muted-foreground">Rank</p>
-                <p className="text-2xl font-bold mt-1 text-foreground">
-                  {rank ? `#${rank}` : "—"}
-                </p>
-              </div>
-            </div>
-            <div>
-              <div className="rounded-2xl border border-border bg-muted px-4 py-4">
-                <p className="text-xs text-muted-foreground">Players</p>
-                <p className="text-2xl font-bold mt-1 text-foreground">
-                  {playerCount}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-left">
-            <div className="rounded-2xl border border-primary/20 bg-primary/10 px-4 py-4">
-              <div className="flex items-center gap-2 text-primary mb-2">
-                <Sparkles className="w-4 h-4" />
-                <span className="text-sm font-semibold">Finish highlight</span>
-              </div>
-              <p className="text-sm text-foreground/80 dark:text-white/75">
-                {isWinner
-                  ? "You finished at the top of the leaderboard. Outstanding performance."
-                  : isTop3
-                  ? "You landed on the podium. Strong finish."
-                  : "Your results are saved. Jump back in for another round."}
-              </p>
-            </div>
-            <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-4">
-              <div className="flex items-center gap-2 text-foreground/75 dark:text-white/75 mb-2">
-                <TimerReset className="w-4 h-4" />
-                <span className="text-sm font-semibold">Auto return</span>
-              </div>
-              <p className="text-sm text-muted-foreground">
-                Returning to the player home screen in <span className="font-semibold text-foreground dark:text-white">{countdown}s</span>.
-              </p>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Final standings */}
-        {top5.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-            className="space-y-3 rounded-2xl bg-card p-5 border border-border shadow-[0px_2px_8px_rgba(0,0,0,0.06)]"
-          >
-            <div className="flex items-center justify-center gap-2 text-muted-foreground">
-              <Users className="w-4 h-4" />
-              <h3 className="text-sm uppercase tracking-[0.2em] font-medium">
-                Final Standings
-              </h3>
-            </div>
-            {top5.map((entry, i) => {
-              const isMe = entry.player_id === playerId;
-              return (
-                <div
-                  key={entry.player_id}
-                  className={`flex items-center gap-3 p-3 rounded-xl ${
-                    isMe
-                      ? "bg-primary/10 border border-primary/30"
-                      : "bg-muted border border-border"
-                  }`}
-                >
-                  <span className="text-lg w-8 text-center">
-                    {i < 3 ? MEDALS[i] : `#${i + 1}`}
-                  </span>
-                  <span>{entry.avatar}</span>
-                  <span
-                    className={`flex-1 text-sm truncate ${isMe ? "font-bold text-primary" : ""}`}
-                  >
-                    {entry.nickname}
-                    {isMe && " (you)"}
-                  </span>
-                  <span className="text-sm font-bold tabular-nums text-foreground">
-                    {entry.score.toLocaleString()}
-                  </span>
-                </div>
-              );
-            })}
           </motion.div>
         )}
 

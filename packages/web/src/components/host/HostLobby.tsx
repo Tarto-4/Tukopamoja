@@ -100,8 +100,8 @@ export default function HostLobby() {
               className="w-14 h-14 sm:w-16 sm:h-16 rounded-lg object-contain"
             />
           )}
-          <span className="font-serif font-bold text-lg text-white">
-            {branding?.name || (<><span className="text-[#eecd00]">TUKO</span><span className="text-white/90">PAMOJA</span></>)}
+          <span className="font-serif font-bold text-lg text-foreground">
+            {branding?.name || (<><span className="text-primary">TUKO</span><span className="text-foreground">PAMOJA</span></>)}
           </span>
         </div>
       </div>
@@ -111,16 +111,16 @@ export default function HostLobby() {
         {/* Join methods */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-3xl w-full">
           {/* QR Code */}
-          <div className="flex flex-col items-center gap-4 rounded-2xl glass p-6 border border-white/15">
-            <h2 className="text-lg font-serif text-white/70">
+          <div className="flex flex-col items-center gap-4 rounded-2xl glass p-6 border border-border">
+            <h2 className="text-lg font-serif text-muted-foreground">
               Scan to Join
             </h2>
             <QRCodeDisplay value={joinUrl} />
           </div>
 
           {/* PIN display */}
-          <div className="flex flex-col items-center justify-center gap-4 rounded-2xl glass p-6 border border-white/15">
-            <h2 className="text-lg font-serif text-white/70">
+          <div className="flex flex-col items-center justify-center gap-4 rounded-2xl glass p-6 border border-border">
+            <h2 className="text-lg font-serif text-muted-foreground">
               Game PIN
             </h2>
             <div
@@ -137,7 +137,7 @@ export default function HostLobby() {
         </div>
 
         {/* Player list */}
-        <div className="text-center w-full max-w-3xl rounded-2xl glass p-6 border border-white/15">
+        <div className="text-center w-full max-w-3xl rounded-2xl glass p-6 border border-border">
           <div className="flex flex-wrap items-center justify-center gap-2 mb-3">
             <Users className="w-5 h-5 text-muted-foreground" />
             <span className="text-muted-foreground">
@@ -214,7 +214,7 @@ export default function HostLobby() {
                 {currentPlayers.map((p) => (
                   <div
                     key={p.id}
-                      className="rounded-xl px-3 py-2 flex items-center justify-between gap-3 bg-white/5 border border-white/10"
+                      className="rounded-xl px-3 py-2 flex items-center justify-between gap-3 bg-muted border border-border"
                   >
                     <div className="text-left min-w-0">
                       <p className="font-medium truncate">{p.avatar} {p.first_name} {p.last_name}</p>
