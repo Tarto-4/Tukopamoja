@@ -11,7 +11,7 @@ export default function HomePage() {
       <div className="absolute top-0 left-0 right-0 accent-bar z-20" />
       <BrandedBackground
         imagePath="/designs/backgrounds/dt-wallpaper.png"
-        brandMarkClassName="absolute inset-0 m-auto h-[300px] w-[300px] sm:h-[420px] sm:w-[420px] md:h-[520px] md:w-[520px] object-contain opacity-[0.18]"
+        brandMarkClassName="absolute inset-0 m-auto h-[min(300px,65vw)] w-[min(300px,65vw)] sm:h-[min(420px,50vw)] sm:w-[min(420px,50vw)] md:h-[min(520px,45vw)] md:w-[min(520px,45vw)] object-contain opacity-[0.18]"
       />
 
       <div className="text-center space-y-8 px-4 relative z-10 rounded-2xl glass p-8 sm:p-10 border border-primary/20 max-w-2xl w-full mx-4">

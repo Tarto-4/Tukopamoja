@@ -87,7 +87,7 @@ export default function HostLobby() {
         alt=""
         aria-hidden="true"
         loading="lazy"
-        className="absolute inset-0 m-auto w-[280px] h-[280px] sm:w-[420px] sm:h-[420px] md:w-[560px] md:h-[560px] object-contain opacity-[0.16] pointer-events-none"
+        className="absolute inset-0 m-auto w-[min(280px,60vw)] h-[min(280px,60vw)] sm:w-[min(420px,50vw)] sm:h-[min(420px,50vw)] md:w-[min(560px,45vw)] md:h-[min(560px,45vw)] object-contain opacity-[0.16] pointer-events-none"
       />
       {/* Header */}
       <div className="flex items-center justify-between p-4 sm:p-6 relative z-10">

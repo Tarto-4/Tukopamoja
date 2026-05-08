@@ -539,6 +539,11 @@
       scroll-behavior: auto !important;
     }
   }
+
+  /* ─── Landscape mobile — constrain brand watermark ────── */
+  @media (orientation: landscape) and (max-height: 500px) {
+    .game-screen { min-height: 100vh; }
+  }
 }
 
 /* ══════════════════════════════════════════════════════════════

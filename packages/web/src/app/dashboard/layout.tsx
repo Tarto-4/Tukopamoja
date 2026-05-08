@@ -50,6 +50,7 @@ export default function DashboardLayout({
           imagePath={backgroundImagePath}
           overlayClassName="bg-black/55 dark:bg-black/55"
           className="z-0"
+          absolute
         />
 
         <header className="border-b glass-header sticky top-0 z-40 relative">
