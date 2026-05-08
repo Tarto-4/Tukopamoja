@@ -7,7 +7,7 @@ import GameLogo from "@/components/ui/GameLogo";
 
 export default function HomePage() {
   return (
-    <div className="game-screen items-center justify-start md:justify-center gradient-dark relative overflow-y-auto py-8">
+    <div className="game-screen items-center justify-start md:justify-center gradient-dark relative py-8">
       <div className="absolute top-0 left-0 right-0 accent-bar z-20" />
       <BrandedBackground
         imagePath="/designs/backgrounds/dt-wallpaper.png"
